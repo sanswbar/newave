@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WNMFCN55');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casos de éxito — NEWAVE Academy</title>
+  <meta name="description" content="Más de 500 profesionales de LATAM que ya consiguieron trabajo remoto con empresas globales gracias a NEWAVE Academy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="images/NEWAVEISO.png" />
+  <link rel="stylesheet" href="styles.css?v=70" />
+  <style>
+    .casos-hero {
+      background: var(--brand-black);
+      padding: 6rem clamp(1.25rem, 5vw, 3rem) 4rem;
+      text-align: center;
+    }
+    .casos-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      color: var(--white); line-height: 1.15;
+      margin: 1rem 0 1.25rem;
+    }
+    .casos-hero p {
+      font-size: 1.1rem; color: var(--muted);
+      max-width: 540px; margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .casos-section {
+      padding: 4rem clamp(1.25rem, 5vw, 3rem);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .casos-section h2 {
+      font-size: 1.1rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 1.5rem;
+    }
+    /* Testimonios escritos */
+    .casos-tcards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 4rem;
+    }
+    /* Posts de comunidad */
+    .casos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 4rem;
+    }
+    .casos-img-card {
+      border-radius: var(--r);
+      border: 1px solid rgba(20,24,30,0.09);
+      border-top: 3px solid var(--orange);
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      background: #fff;
+    }
+    .casos-img-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+    }
+    .casos-img-card img {
+      width: 100%; height: auto; display: block;
+    }
+    /* CTA final */
+    .casos-cta {
+      background: var(--brand-black);
+      border-radius: 24px;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .casos-cta h2 {
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      color: var(--white); margin-bottom: 1rem;
+      text-transform: none;
+    }
+    .casos-cta p {
+      color: var(--muted); font-size: 1rem;
+      margin-bottom: 2rem; line-height: 1.7;
+    }
+    /* Modal */
+    .casos-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.8);
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+    .casos-modal.active { display: flex; }
+    .casos-modal-inner {
+      position: relative;
+      max-width: 680px; width: 100%;
+      max-height: 90vh;
+      border-radius: 16px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .casos-modal-inner img { width: 100%; display: block; border-radius: 16px; }
+    .casos-modal-close {
+      position: sticky; top: 0.75rem; left: 100%;
+      margin: 0.75rem 0.75rem 0 0;
+      float: right;
+      background: rgba(0,0,0,0.55); color: #fff;
+      border: none; border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+    }
+    @media (max-width: 600px) {
+      .casos-tcards { grid-template-columns: 1fr; }
+      .casos-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNMFCN55" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="logo">
+      <img src="images/logo.svg" alt="NEWAVƎ" class="logo-img" />
+    </a>
+    <div class="nav-right">
+      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="nav-cta">Únete</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="casos-hero">
+    <span class="mono-tag dark">CASOS DE ÉXITO</span>
+    <h1>+500 personas que ya<br>trabajan remoto.</h1>
+    <p>Desde México, Colombia, Argentina, España y más. Perfiles no técnicos que consiguieron trabajo remoto con empresas globales pagado en dólares.</p>
+    <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-primary">Quiero ser el siguiente</a>
+  </div>
+
+  <div class="casos-section">
+
+    <!-- TESTIMONIOS ESCRITOS -->
+    <h2>Lo que dicen de NEWAVE</h2>
+    <div class="casos-tcards">
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Antes trabajaba en la planta de Pepsico: turnos presenciales de 12 horas, sin flexibilidad. Tres años después, hice 4x mi sueldo en Zappi, una empresa de Londres."</p>
+        <div class="tcard-author">
+          <img src="images/maria.jpg" loading="lazy" width="42" height="42" alt="María Castañeda" class="avatar-photo" />
+          <div><strong>María Castañeda</strong><span>Account Director @ Zappi</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Soy abogada y trabajé años en el mundo corporativo. Conseguí mi primer trabajo como Customer Success Manager en una empresa de legal tech. Mi experiencia legal, pero con la libertad que siempre quise."</p>
+        <div class="tcard-author">
+          <img src="images/valeria.jpg" loading="lazy" width="42" height="42" alt="Valeria de la Torre" class="avatar-photo" />
+          <div><strong>Valeria de la Torre</strong><span>Customer Success Lead @ SimplyAgree</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Hoy vivo en España con mi novio, los dos trabajamos remoto y ganamos en dólares. Pudimos tener carrera y vida juntos."</p>
+        <div class="tcard-author">
+          <img src="images/pamela.jpg" loading="lazy" width="42" height="42" alt="Pamela Gallegos" class="avatar-photo" />
+          <div><strong>Pamela Gallegos</strong><span>Onboarding Specialist @ Pulse Protocol</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Después del programa conseguí dos trabajos remotos diferentes. Lo que aprendí no fue solo para un trabajo, fue una habilidad que puedo usar una y otra vez."</p>
+        <div class="tcard-author">
+          <img src="images/ximena.jpg" loading="lazy" width="42" height="42" alt="Ximena Tendilla" class="avatar-photo" />
+          <div><strong>Ximena Tendilla</strong><span>Customer Success Manager @ Mendel</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Trabajaba en DHL haciendo lo mismo todos los días. Hoy gano más de $5,000 USD al mes con prestaciones que en México parecen de otro planeta."</p>
+        <div class="tcard-author">
+          <img src="images/ruben.jpg" loading="lazy" width="42" height="42" alt="Rubén López" class="avatar-photo" />
+          <div><strong>Rubén López</strong><span>Project Manager @ BarresDev</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Trabajo en Stripe y me promovieron a Renewals. Este año viví meses en Chicago para correr el maratón, trabajando desde allá. El mundo es tu oficina."</p>
+        <div class="tcard-author">
+          <img src="images/juanpablo.jpg" loading="lazy" width="42" height="42" alt="Juan Pablo Martínez" class="avatar-photo" />
+          <div><strong>Juan Pablo Martínez</strong><span>Operations Associate @ Stripe</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Todavía estaba en la universidad cuando conseguí un internship remoto en una startup internacional. Empecé ganando más que muchos compañeros con trabajos presenciales."</p>
+        <div class="tcard-author">
+          <img src="images/diego.png" loading="lazy" width="42" height="42" alt="Diego García" class="avatar-photo" />
+          <div><strong>Diego García</strong><span>Data &amp; Insights @ FXP</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);">
+        <div class="tcard-quote">"</div>
+        <p>"Tenía un trabajo tradicional en Aguascalientes. Hoy gano en dólares, tengo seguro internacional, presupuesto para mi home office, y viajes pagados."</p>
+        <div class="tcard-author">
+          <img src="images/diana.jpg" loading="lazy" width="42" height="42" alt="Diana Pedroza" class="avatar-photo" />
+          <div><strong>Diana Pedroza</strong><span>Key Account Manager @ CarbonSpaceTech</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- POSTS DE LA COMUNIDAD -->
+    <h2>Directo de la comunidad</h2>
+    <div class="casos-grid">
+      <div class="casos-img-card" onclick="openModal('testimonials/poncho.png')">
+        <img src="testimonials/poncho.png" alt="Alfonso Villa" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/mariana.png')">
+        <img src="testimonials/mariana.png" alt="Mariana Díaz" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/sasha.png')">
+        <img src="testimonials/sasha.png" alt="Sasha Samano" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/luis.png')">
+        <img src="testimonials/luis.png" alt="Luis Aguilar" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/dani.png')">
+        <img src="testimonials/dani.png" alt="Dani" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/diego.png')">
+        <img src="testimonials/diego.png" alt="Diego" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/kike.png')">
+        <img src="testimonials/kike.png" alt="Kike" loading="lazy" />
+      </div>
+      <div class="casos-img-card" onclick="openModal('testimonials/rebe.png')">
+        <img src="testimonials/rebe.png" alt="Rebe" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- CTA FINAL -->
+    <div class="casos-cta">
+      <h2>¿Quieres ser el siguiente caso de éxito?</h2>
+      <p>Únete a NEWAVE Academy y consigue tu primer trabajo remoto en 30–60 días.</p>
+      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-primary">Empieza hoy</a>
+    </div>
+
+  </div>
+
+  <!-- MODAL -->
+  <div class="casos-modal" id="casosModal" onclick="closeModal()">
+    <div class="casos-modal-inner" onclick="event.stopPropagation()">
+      <button class="casos-modal-close" onclick="closeModal()">✕</button>
+      <img id="casosModalImg" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('casosModalImg').src = src;
+      document.getElementById('casosModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('casosModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Nav scroll behavior
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
+</body>
+</html>
