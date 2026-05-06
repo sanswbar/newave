@@ -1547,37 +1547,39 @@ a.autoridad-stat-pill:hover {
 /* COMMUNITY CAROUSEL */
 .comunidad-section {
   background: var(--brand-black);
-  padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+  padding: 3.5rem clamp(1.25rem, 5vw, 3rem);
 }
 .comunidad-inner {
-  max-width: 680px; margin: 0 auto; text-align: center;
+  max-width: 480px; margin: 0 auto; text-align: center;
 }
 .comunidad-inner h2 {
-  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-  font-weight: 800; letter-spacing: -0.03em;
-  color: var(--white); line-height: 1.2;
-  margin: 1rem 0 2.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800; letter-spacing: -0.02em;
+  color: var(--white); line-height: 1.25;
+  margin: 0.75rem 0 1.75rem;
 }
 .comunidad-carousel {
   position: relative;
-  display: flex; align-items: center; gap: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
 }
 .comunidad-track {
   flex: 1;
   display: flex;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 16px;
   transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  max-height: 340px;
 }
 .comunidad-slide {
   flex: 0 0 100%;
   background: #fff;
-  border-radius: 20px;
+  border-radius: 16px;
   border-top: 3px solid var(--orange);
   overflow: hidden;
 }
 .comunidad-img {
-  width: 100%; height: auto;
+  width: 100%; height: 340px;
+  object-fit: cover; object-position: top;
   display: block;
 }
 .comunidad-arrow {
