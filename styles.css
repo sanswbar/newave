@@ -1413,9 +1413,8 @@ a.autoridad-stat-pill:hover {
   border-radius: 980px;
   color: var(--white);
   background: rgba(252,115,66,0.08);
-  transition: background 0.2s, border-color 0.2s;
+  cursor: default;
 }
-.perfil-tag:hover { background: rgba(252,115,66,0.18); border-color: rgba(252,115,66,0.6); }
 .perfiles-note {
   font-size: 0.95rem; color: var(--muted); font-style: italic; text-align: center;
 }
