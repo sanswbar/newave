@@ -395,6 +395,11 @@
       </div>
 
     </div>
+    <div class="quotes-scrollbar-wrap">
+      <div class="quotes-scrollbar-track">
+        <div class="quotes-scrollbar-thumb" id="quotesScrollThumb"></div>
+      </div>
+    </div>
     <p class="testimonials-footer" style="color:rgba(20,24,30,0.5);" data-animate>Más de <strong style="color:var(--brand-black)">+500 profesionales</strong> que ya transformaron su carrera</p>
   </section>
 
@@ -840,6 +845,23 @@
         btn.querySelector('.faq-icon').textContent = expanded ? '+' : '×';
       });
     });
+
+    /* QUOTES SCROLLBAR */
+    (function() {
+      var grid = document.querySelector('.quotes-grid');
+      var thumb = document.getElementById('quotesScrollThumb');
+      if (!grid || !thumb) return;
+      function updateThumb() {
+        var ratio = grid.scrollLeft / (grid.scrollWidth - grid.clientWidth);
+        var trackW = thumb.parentElement.offsetWidth;
+        var thumbW = Math.max(40, trackW * (grid.clientWidth / grid.scrollWidth));
+        thumb.style.width = thumbW + 'px';
+        thumb.style.transform = 'translateX(' + (ratio * (trackW - thumbW)) + 'px)';
+      }
+      grid.addEventListener('scroll', updateThumb, { passive: true });
+      window.addEventListener('resize', updateThumb);
+      updateThumb();
+    })();
 
     /* GOOGLE ADS CONVERSION TRACKING */
     document.querySelectorAll('a[href*="skool.com"]').forEach(link => {

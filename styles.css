@@ -1706,6 +1706,25 @@ a.autoridad-stat-pill:hover {
   padding: 2.75rem clamp(1.25rem, 5vw, 3rem);
   text-align: center;
 }
+.quotes-scrollbar-wrap {
+  padding: 1.25rem clamp(1.25rem, 5vw, 3rem) 0;
+}
+.quotes-scrollbar-track {
+  position: relative;
+  height: 4px;
+  background: rgba(20,24,30,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.quotes-scrollbar-thumb {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  background: var(--orange);
+  border-radius: 4px;
+  transition: transform 0.1s linear, width 0.1s linear;
+  min-width: 40px;
+}
 .quotes-title {
   font-size: clamp(1.3rem, 3vw, 2rem);
   font-weight: 800; letter-spacing: -0.02em;
