@@ -408,8 +408,13 @@ a   { text-decoration: none; color: inherit; }
   display: flex; gap: 1.25rem;
   padding: 0 clamp(1.25rem, 5vw, 2.5rem); margin-bottom: 2.5rem;
   overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-padding-left: clamp(1.25rem, 5vw, 2.5rem);
   background: transparent; border: none; scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
+}
+.testimonials-grid::after {
+  content: ''; flex: 0 0 clamp(0.5rem, 3vw, 1.5rem); display: block;
 }
 .testimonials-grid::-webkit-scrollbar { display: none; }
 
