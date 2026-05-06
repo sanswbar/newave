@@ -26,7 +26,7 @@
   --r-sm:      10px;
   --max:       680px;
   --max-wide:  1020px;
-  --section:   clamp(3.5rem, 7vw, 6rem);
+  --section:   clamp(2.5rem, 5vw, 4rem);
 }
 
 html { scroll-behavior: smooth; font-size: 18px; overflow-x: hidden; }
@@ -294,7 +294,7 @@ a   { text-decoration: none; color: inherit; }
 .why-section h2 {
   font-size: clamp(1.8rem, 4vw, 2.75rem);
   font-weight: 700; line-height: 1.1; letter-spacing: -0.03em;
-  margin-bottom: 3.5rem;
+  margin-bottom: 2rem;
 }
 @media (max-width: 640px) {
   .why-section h2 { font-size: 1.5rem; }
@@ -392,7 +392,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .testimonials-header {
   padding: 0 clamp(1.25rem, 5vw, 2.5rem);
-  margin-bottom: 3rem;
+  margin-bottom: 1.75rem;
 }
 .testimonials-section h2 {
   font-size: clamp(2rem, 5vw, 3.25rem);
@@ -502,7 +502,7 @@ a   { text-decoration: none; color: inherit; }
   font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.75rem;
 }
-.pricing-sub { color: var(--muted); font-size: 1rem; margin-bottom: 3rem; }
+.pricing-sub { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; }
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; align-items: stretch; }
 .pricing-note { text-align: center; margin-top: 1.25rem; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); }
 
@@ -634,7 +634,7 @@ a   { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 768px) {
-  :root { --section: 3rem; }
+  :root { --section: 2rem; }
 
   /* Nav */
   .nav { padding: 0 1.25rem; height: 54px; }
@@ -1595,7 +1595,7 @@ a.autoridad-stat-pill:hover {
 /* COMMUNITY CAROUSEL */
 .comunidad-section {
   background: var(--brand-black);
-  padding: 5rem clamp(1.25rem, 5vw, 3rem);
+  padding: 3.5rem clamp(1.25rem, 5vw, 3rem);
 }
 .comunidad-inner {
   max-width: 780px; margin: 0 auto; text-align: center;
@@ -1604,7 +1604,7 @@ a.autoridad-stat-pill:hover {
   font-size: clamp(1.8rem, 3.5vw, 2.8rem);
   font-weight: 800; letter-spacing: -0.03em;
   color: var(--white); line-height: 1.15;
-  margin: 0.75rem 0 2rem;
+  margin: 0.5rem 0 1.5rem;
 }
 .comunidad-counter {
   font-family: 'DM Mono', monospace;
@@ -1703,7 +1703,7 @@ a.autoridad-stat-pill:hover {
 /* QUOTES CAROUSEL */
 .quotes-section {
   background: #f5f5f7;
-  padding: 4rem clamp(1.25rem, 5vw, 3rem);
+  padding: 2.75rem clamp(1.25rem, 5vw, 3rem);
   text-align: center;
 }
 .quotes-title {
