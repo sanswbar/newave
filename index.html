@@ -405,7 +405,66 @@
 
       </div>
       <p class="testimonials-footer" data-animate>Más de <strong>+500 profesionales</strong> que ya transformaron su carrera</p>
+
+      <!-- COMMUNITY POSTS -->
+      <div class="community-header" data-animate>
+        <span class="mono-tag dark">DE LA COMUNIDAD</span>
+        <p class="testimonials-scroll-hint">← desliza para ver más →</p>
+      </div>
+      <div class="community-grid">
+        <div class="community-card" onclick="openModal('testimonials/poncho.png')">
+          <img src="testimonials/poncho.png" alt="Alfonso Villa" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/luis.png')">
+          <img src="testimonials/luis.png" alt="Luis Aguilar" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/sasha.png')">
+          <img src="testimonials/sasha.png" alt="Sasha Samano" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/mariana1.png')">
+          <img src="testimonials/mariana1.png" alt="Mariana Díaz" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/mariana2.png')">
+          <img src="testimonials/mariana2.png" alt="Mariana Díaz" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/dani.png')">
+          <img src="testimonials/dani.png" alt="Dani" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/diego.png')">
+          <img src="testimonials/diego.png" alt="Diego" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/kike.png')">
+          <img src="testimonials/kike.png" alt="Kike" loading="lazy" />
+        </div>
+        <div class="community-card" onclick="openModal('testimonials/rebe.png')">
+          <img src="testimonials/rebe.png" alt="Rebe" loading="lazy" />
+        </div>
+      </div>
+
   </section>
+
+  <!-- MODAL -->
+  <div class="community-modal" id="communityModal" onclick="closeModal()">
+    <div class="community-modal-inner" onclick="event.stopPropagation()">
+      <button class="community-modal-close" onclick="closeModal()">✕</button>
+      <img id="communityModalImg" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('communityModalImg').src = src;
+      document.getElementById('communityModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('communityModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
 
   <!-- VIDEO -->
   <section class="video-section" id="video">
