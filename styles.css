@@ -141,6 +141,22 @@ a   { text-decoration: none; color: inherit; }
 .btn-primary:hover { background: rgba(245,245,247,0.88); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.12); }
 .btn-large { font-size: 1.075rem; padding: 1rem 2.5rem; }
 
+.btn-casos {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent;
+  color: var(--orange);
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;
+  padding: 0.85rem 2rem;
+  border-radius: 980px;
+  border: 2px solid var(--orange);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.btn-casos:hover {
+  background: var(--orange);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 0.4rem;
   font-size: 1rem; font-weight: 600; color: var(--orange);
@@ -1528,74 +1544,67 @@ a.autoridad-stat-pill:hover {
   .metrics-grid { grid-template-columns: 1fr; }
 }
 
-/* COMMUNITY POSTS */
-.community-header {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 0.5rem; margin: 2.5rem 0 1.25rem;
+/* COMMUNITY CAROUSEL */
+.comunidad-section {
+  background: var(--brand-black);
+  padding: var(--section) clamp(1.25rem, 5vw, 3rem);
 }
-.community-grid {
-  display: flex; gap: 1.25rem;
-  padding: 0 clamp(1.25rem, 5vw, 2.5rem); margin-bottom: 2.5rem;
-  overflow-x: auto; scroll-snap-type: x mandatory;
-  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+.comunidad-inner {
+  max-width: 680px; margin: 0 auto; text-align: center;
 }
-.community-grid::-webkit-scrollbar { display: none; }
-.community-card {
-  width: 85vw; min-width: 320px; max-width: 400px; flex-shrink: 0;
-  height: 180px;
-  border-radius: var(--r);
-  border: 1px solid var(--border);
+.comunidad-inner h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  color: var(--white); line-height: 1.2;
+  margin: 1rem 0 2.5rem;
+}
+.comunidad-carousel {
+  position: relative;
+  display: flex; align-items: center; gap: 1rem;
+}
+.comunidad-track {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.comunidad-slide {
+  flex: 0 0 100%;
+  background: #fff;
+  border-radius: 20px;
   border-top: 3px solid var(--orange);
   overflow: hidden;
-  cursor: pointer;
-  scroll-snap-align: center;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-  background: #fff;
 }
-.community-card:hover {
-  border-color: rgba(252,115,66,0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-}
-.community-card img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: top;
+.comunidad-img {
+  width: 100%; height: auto;
   display: block;
 }
-
-/* MODAL */
-.community-modal {
-  display: none;
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.75);
-  align-items: center; justify-content: center;
-  padding: 1.5rem;
-}
-.community-modal.active { display: flex; }
-.community-modal-inner {
-  position: relative;
-  max-width: 680px; width: 100%;
-  max-height: 90vh;
-  border-radius: 16px;
-  overflow-y: auto;
-  background: #fff;
-}
-.community-modal-inner img {
-  width: 100%; display: block; border-radius: 16px;
-}
-.community-modal-close {
-  position: sticky; top: 0.75rem; left: 100%;
-  margin: 0.75rem 0.75rem 0 0;
-  float: right;
-  background: rgba(0,0,0,0.55); color: #fff;
-  border: none; border-radius: 50%;
-  width: 32px; height: 32px;
-  font-size: 0.9rem; cursor: pointer;
+.comunidad-arrow {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--white);
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 1.5rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  z-index: 10;
+  transition: background 0.2s;
+}
+.comunidad-arrow:hover { background: var(--orange); border-color: var(--orange); }
+.comunidad-dots {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 1.5rem;
+}
+.comunidad-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.25);
+  padding: 0; transition: background 0.2s, transform 0.2s;
+}
+.comunidad-dot.active {
+  background: var(--orange);
+  transform: scale(1.3);
 }
 @media (max-width: 600px) {
-  .community-card { flex: 0 0 240px; height: 290px; }
-  .community-grid { padding: 0.5rem 1.25rem 1.25rem; }
+  .comunidad-arrow { width: 36px; height: 36px; font-size: 1.2rem; }
 }

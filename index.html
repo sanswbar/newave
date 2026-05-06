@@ -406,65 +406,81 @@
       </div>
       <p class="testimonials-footer" data-animate>Más de <strong>+500 profesionales</strong> que ya transformaron su carrera</p>
 
-      <!-- COMMUNITY POSTS -->
-      <div class="community-header" data-animate>
-        <span class="mono-tag dark">DE LA COMUNIDAD</span>
-        <p class="testimonials-scroll-hint">← desliza para ver más →</p>
-      </div>
-      <div class="community-grid">
-        <div class="community-card" onclick="openModal('testimonials/poncho.png')">
-          <img src="testimonials/poncho.png" alt="Alfonso Villa" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/luis.png')">
-          <img src="testimonials/luis.png" alt="Luis Aguilar" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/sasha.png')">
-          <img src="testimonials/sasha.png" alt="Sasha Samano" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/mariana.png')">
-          <img src="testimonials/mariana.png" alt="Mariana Díaz" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/dani.png')">
-          <img src="testimonials/dani.png" alt="Dani" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/diego.png')">
-          <img src="testimonials/diego.png" alt="Diego" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/kike.png')">
-          <img src="testimonials/kike.png" alt="Kike" loading="lazy" />
-        </div>
-        <div class="community-card" onclick="openModal('testimonials/rebe.png')">
-          <img src="testimonials/rebe.png" alt="Rebe" loading="lazy" />
-        </div>
-      </div>
-
-      <div style="text-align:center; margin: 2rem 0 0.5rem;">
-        <a href="/casos" class="btn-primary">Ver más casos de éxito</a>
-      </div>
-
   </section>
 
-  <!-- MODAL -->
-  <div class="community-modal" id="communityModal" onclick="closeModal()">
-    <div class="community-modal-inner" onclick="event.stopPropagation()">
-      <button class="community-modal-close" onclick="closeModal()">✕</button>
-      <img id="communityModalImg" src="" alt="" />
+  <!-- COMMUNITY CAROUSEL -->
+  <section class="comunidad-section">
+    <div class="comunidad-inner">
+      <span class="mono-tag dark" data-animate>DE LA COMUNIDAD</span>
+      <h2 data-animate data-delay="1">Lo que está viviendo la gente dentro de la comunidad</h2>
+
+      <div class="comunidad-carousel">
+        <button class="comunidad-arrow comunidad-prev" onclick="comunidadSlide(-1)">&#8249;</button>
+
+        <div class="comunidad-track" id="comunidadTrack">
+
+          <div class="comunidad-slide">
+            <img src="testimonials/poncho.png" alt="Alfonso Villa" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/mariana.png" alt="Mariana Díaz" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/sasha.png" alt="Sasha Samano" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/luis.png" alt="Luis Aguilar" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/dani.png" alt="Dani" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/diego.png" alt="Diego" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/kike.png" alt="Kike" class="comunidad-img" />
+          </div>
+          <div class="comunidad-slide">
+            <img src="testimonials/rebe.png" alt="Rebe" class="comunidad-img" />
+          </div>
+
+        </div>
+
+        <button class="comunidad-arrow comunidad-next" onclick="comunidadSlide(1)">&#8250;</button>
+      </div>
+
+      <div class="comunidad-dots" id="comunidadDots"></div>
+
+      <div style="text-align:center; margin-top: 2.5rem;">
+        <a href="/casos" class="btn-casos">Ver todos los casos de éxito →</a>
+      </div>
     </div>
-  </div>
+  </section>
 
   <script>
-    function openModal(src) {
-      document.getElementById('communityModalImg').src = src;
-      document.getElementById('communityModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
+    var comunidadIndex = 0;
+    var comunidadTotal = document.querySelectorAll('.comunidad-slide').length;
+    var dotsContainer = document.getElementById('comunidadDots');
+
+    for (var i = 0; i < comunidadTotal; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('data-i', i);
+      dot.onclick = function() { comunidadGoTo(parseInt(this.getAttribute('data-i'))); };
+      dotsContainer.appendChild(dot);
     }
-    function closeModal() {
-      document.getElementById('communityModal').classList.remove('active');
-      document.body.style.overflow = '';
+
+    function comunidadGoTo(n) {
+      comunidadIndex = n;
+      document.getElementById('comunidadTrack').style.transform = 'translateX(-' + (100 * n) + '%)';
+      document.querySelectorAll('.comunidad-dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === n);
+      });
     }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeModal();
-    });
+
+    function comunidadSlide(dir) {
+      comunidadGoTo((comunidadIndex + dir + comunidadTotal) % comunidadTotal);
+    }
   </script>
 
   <!-- VIDEO -->
