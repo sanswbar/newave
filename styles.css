@@ -1632,7 +1632,7 @@ a.autoridad-stat-pill:hover {
   background: #fff;
   border-radius: 20px;
   border-top: 4px solid var(--orange);
-  height: 320px;
+  height: 260px;
   overflow: hidden;
 }
 .comunidad-img {
@@ -1697,7 +1697,7 @@ a.autoridad-stat-pill:hover {
   .comunidad-section { padding: 3.5rem 1rem; }
   .comunidad-inner h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
   .comunidad-carousel { gap: 0.5rem; }
-  .comunidad-slide { height: 240px; }
+  .comunidad-slide { height: 200px; }
 }
 
 /* QUOTES CAROUSEL */
