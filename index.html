@@ -501,26 +501,54 @@
       comunidadGoTo((comunidadIndex + dir + comunidadTotal) % comunidadTotal);
     }
 
+    var modalIndex = 0;
+    var slides = [];
+
+    function buildSlideList() {
+      slides = Array.from(document.querySelectorAll('.comunidad-slide')).map(function(el) {
+        return { src: el.querySelector('img').src, alt: el.querySelector('img').alt };
+      });
+    }
+
     function comunidadModal(src) {
-      document.getElementById('comunidadModalImg').src = src;
+      buildSlideList();
+      modalIndex = slides.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
+      if (modalIndex < 0) modalIndex = 0;
+      showModalSlide(modalIndex);
       document.getElementById('comunidadModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
+
+    function showModalSlide(n) {
+      var img = document.getElementById('comunidadModalImg');
+      img.src = slides[n].src;
+      img.alt = slides[n].alt;
+    }
+
+    function modalNav(dir) {
+      modalIndex = (modalIndex + dir + slides.length) % slides.length;
+      showModalSlide(modalIndex);
+    }
+
     function comunidadModalClose() {
       document.getElementById('comunidadModal').classList.remove('active');
       document.body.style.overflow = '';
     }
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') comunidadModalClose();
+      if (e.key === 'ArrowRight') modalNav(1);
+      if (e.key === 'ArrowLeft') modalNav(-1);
     });
   </script>
 
   <!-- MODAL COMUNIDAD -->
   <div class="comunidad-modal" id="comunidadModal" onclick="comunidadModalClose()">
+    <button class="comunidad-modal-nav comunidad-modal-prev" onclick="event.stopPropagation(); modalNav(-1)">&#8249;</button>
     <div class="comunidad-modal-inner" onclick="event.stopPropagation()">
       <button class="comunidad-modal-close" onclick="comunidadModalClose()">✕</button>
       <img id="comunidadModalImg" src="" alt="" />
     </div>
+    <button class="comunidad-modal-nav comunidad-modal-next" onclick="event.stopPropagation(); modalNav(1)">&#8250;</button>
   </div>
 
   <!-- VIDEO -->
