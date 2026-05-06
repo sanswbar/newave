@@ -1554,14 +1554,38 @@ a.autoridad-stat-pill:hover {
 .quotes-title { color: var(--brand-black); }
 .quotes-section .mono-tag { color: var(--orange); border-color: rgba(252,115,66,0.3); background: rgba(252,115,66,0.08); }
 .quotes-section .testimonials-scroll-hint { color: rgba(20,24,30,0.4); }
+.quotes-stats {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1.5rem; margin: 1.25rem 0 0.25rem;
+  flex-wrap: wrap;
+}
+.quotes-stat { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+.quotes-stat-num {
+  font-size: 1.6rem; font-weight: 800; letter-spacing: -0.04em;
+  color: var(--orange); line-height: 1;
+}
+.quotes-stat-label { font-size: 0.72rem; color: rgba(20,24,30,0.5); letter-spacing: 0.02em; }
+.quotes-stat-div { width: 1px; height: 32px; background: rgba(20,24,30,0.12); }
 .tcard-light {
   background: #fff !important;
   border-color: rgba(20,24,30,0.09) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;
 }
+.tcard-light:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10) !important; }
 .tcard-light p { color: rgba(20,24,30,0.75) !important; }
 .tcard-light .tcard-author strong { color: var(--brand-black) !important; }
 .tcard-light .tcard-author span { color: rgba(20,24,30,0.5) !important; }
 .tcard-light .tcard-author { border-color: rgba(20,24,30,0.08) !important; }
+.tcard-badge {
+  display: inline-block;
+  background: rgba(252,115,66,0.1);
+  color: var(--orange);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.3rem 0.75rem; border-radius: 980px;
+  border: 1px solid rgba(252,115,66,0.25);
+  align-self: flex-start;
+}
 
 /* COMMUNITY CAROUSEL */
 .comunidad-section {
