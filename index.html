@@ -420,29 +420,37 @@
         <div class="comunidad-track-wrap">
         <div class="comunidad-track" id="comunidadTrack">
 
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/poncho.png')">
             <img src="testimonials/poncho.png" alt="Alfonso Villa" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/mariana.png')">
             <img src="testimonials/mariana.png" alt="Mariana Díaz" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/sasha.png')">
             <img src="testimonials/sasha.png" alt="Sasha Samano" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/luis.png')">
             <img src="testimonials/luis.png" alt="Luis Aguilar" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/dani.png')">
             <img src="testimonials/dani.png" alt="Dani" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/diego.png')">
             <img src="testimonials/diego.png" alt="Diego" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/kike.png')">
             <img src="testimonials/kike.png" alt="Kike" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
-          <div class="comunidad-slide">
+          <div class="comunidad-slide" onclick="comunidadModal('testimonials/rebe.png')">
             <img src="testimonials/rebe.png" alt="Rebe" class="comunidad-img" />
+            <div class="comunidad-hint">Toca para leer completo</div>
           </div>
 
         </div>
@@ -483,7 +491,28 @@
     function comunidadSlide(dir) {
       comunidadGoTo((comunidadIndex + dir + comunidadTotal) % comunidadTotal);
     }
+
+    function comunidadModal(src) {
+      document.getElementById('comunidadModalImg').src = src;
+      document.getElementById('comunidadModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function comunidadModalClose() {
+      document.getElementById('comunidadModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') comunidadModalClose();
+    });
   </script>
+
+  <!-- MODAL COMUNIDAD -->
+  <div class="comunidad-modal" id="comunidadModal" onclick="comunidadModalClose()">
+    <div class="comunidad-modal-inner" onclick="event.stopPropagation()">
+      <button class="comunidad-modal-close" onclick="comunidadModalClose()">✕</button>
+      <img id="comunidadModalImg" src="" alt="" />
+    </div>
+  </div>
 
   <!-- VIDEO -->
   <section class="video-section" id="video">
