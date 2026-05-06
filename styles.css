@@ -1643,5 +1643,10 @@ a.autoridad-stat-pill:hover {
   display: flex; align-items: center; justify-content: center;
 }
 @media (max-width: 600px) {
-  .comunidad-arrow { width: 36px; height: 36px; font-size: 1.2rem; }
+  .comunidad-arrow { width: 32px; height: 32px; font-size: 1.1rem; }
+  .comunidad-inner { max-width: 100%; }
+  .comunidad-section { padding: 2.5rem 0.75rem; }
+  .comunidad-inner h2 { font-size: 1.15rem; margin-bottom: 1.25rem; }
+  .comunidad-carousel { gap: 0.4rem; }
+  .comunidad-slide { height: 180px; }
 }
