@@ -539,16 +539,33 @@
       if (e.key === 'ArrowRight') modalNav(1);
       if (e.key === 'ArrowLeft') modalNav(-1);
     });
+
+    /* Swipe táctil en modal */
+    (function() {
+      var track = document.getElementById('comunidadModalTrack');
+      var startX = 0;
+      track.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+      track.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) modalNav(dx < 0 ? 1 : -1);
+      }, { passive: true });
+      /* Tap en el fondo oscuro para cerrar */
+      document.getElementById('comunidadModal').addEventListener('click', function(e) {
+        if (e.target === this) comunidadModalClose();
+      });
+    })();
   </script>
 
   <!-- MODAL COMUNIDAD -->
-  <div class="comunidad-modal" id="comunidadModal" onclick="comunidadModalClose()">
-    <button class="comunidad-modal-nav comunidad-modal-prev" onclick="event.stopPropagation(); modalNav(-1)">&#8249;</button>
-    <div class="comunidad-modal-inner" onclick="event.stopPropagation()">
-      <button class="comunidad-modal-close" onclick="comunidadModalClose()">✕</button>
+  <div class="comunidad-modal" id="comunidadModal">
+    <button class="comunidad-modal-close" onclick="comunidadModalClose()">✕</button>
+    <button class="comunidad-modal-nav comunidad-modal-prev" onclick="modalNav(-1)">&#8249;</button>
+    <div class="comunidad-modal-track" id="comunidadModalTrack">
       <img id="comunidadModalImg" src="" alt="" />
     </div>
-    <button class="comunidad-modal-nav comunidad-modal-next" onclick="event.stopPropagation(); modalNav(1)">&#8250;</button>
+    <button class="comunidad-modal-nav comunidad-modal-next" onclick="modalNav(1)">&#8250;</button>
   </div>
 
   <!-- VIDEO -->
