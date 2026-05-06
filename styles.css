@@ -1544,6 +1544,25 @@ a.autoridad-stat-pill:hover {
   .metrics-grid { grid-template-columns: 1fr; }
 }
 
+/* QUOTES SECTION (light) */
+.quotes-section {
+  background: #f5f5f7;
+  padding: var(--section) 0;
+}
+.quotes-section .testimonials-header { padding: 0 clamp(1.25rem, 5vw, 2.5rem); }
+.quotes-section .testimonials-header h2,
+.quotes-title { color: var(--brand-black); }
+.quotes-section .mono-tag { color: var(--orange); border-color: rgba(252,115,66,0.3); background: rgba(252,115,66,0.08); }
+.quotes-section .testimonials-scroll-hint { color: rgba(20,24,30,0.4); }
+.tcard-light {
+  background: #fff !important;
+  border-color: rgba(20,24,30,0.09) !important;
+}
+.tcard-light p { color: rgba(20,24,30,0.75) !important; }
+.tcard-light .tcard-author strong { color: var(--brand-black) !important; }
+.tcard-light .tcard-author span { color: rgba(20,24,30,0.5) !important; }
+.tcard-light .tcard-author { border-color: rgba(20,24,30,0.08) !important; }
+
 /* COMMUNITY CAROUSEL */
 .comunidad-section {
   background: var(--brand-black);
