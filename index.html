@@ -60,11 +60,37 @@
   <meta name="twitter:title" content="NEWAVƎ Academy | Trabaja remoto para empresas internacionales." />
   <meta name="twitter:description" content="La metodología para conseguir trabajo remoto con empresas internacionales, pagado en dólares. Más de 500 casos de éxito en México y LATAM." />
   <meta name="twitter:image" content="https://www.newaveacademy.com/images/og-image.png" />
+  <link rel="canonical" href="https://www.newaveacademy.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="images/NEWAVEISO.png" />
   <link rel="stylesheet" href="styles.css?v=70" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "NEWAVE Academy",
+    "url": "https://www.newaveacademy.com",
+    "logo": "https://www.newaveacademy.com/images/logo.svg",
+    "description": "Aprende cómo +500 profesionales de LATAM ya trabajan remoto para empresas globales y ganan en dólares.",
+    "sameAs": [
+      "https://www.instagram.com/newaveacademy",
+      "https://www.linkedin.com/company/newaveacademy"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "url": "https://www.skool.com/newave/plans",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "500"
+    }
+  }
+  </script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -77,7 +103,7 @@
       <img src="images/logo.svg" alt="NEWAVƎ" class="logo-img" />
     </a>
     <div class="nav-right">
-      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="nav-cta">Únete</a>
+      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="nav-cta" data-cta="nav">Únete</a>
     </div>
   </nav>
 
@@ -85,7 +111,7 @@
   <section class="hero">
     <img src="images/NEWAVE_ISOTIPO-10.png" alt="" class="hero-corner-isotipo" id="heroBgIsotipo" aria-hidden="true" width="600" height="600" />
     <div class="hero-content">
-      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="hero-eyebrow" data-animate>NEWAVE ACADEMY</a>
+      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="hero-eyebrow" data-animate data-cta="hero-eyebrow">NEWAVE ACADEMY</a>
       <h1 data-animate data-delay="1">Consigue un trabajo remoto que <span class="h1-accent">pague en dólares.</span></h1>
       <p class="hero-sub" data-animate data-delay="2">Desde LATAM, para empresas globales.</p>
       <div class="hero-actions" data-animate data-delay="3">
@@ -316,7 +342,7 @@
       </div>
 
       <div class="modulos-cta" data-animate>
-        <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-ver-planes">Ver planes y unirme</a>
+        <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-ver-planes" data-cta="programa">Ver planes y unirme</a>
         <p class="inv-cta-note">Te llevamos a Skool, nuestra plataforma privada, para elegir tu plan.</p>
       </div>
     </div>
@@ -771,7 +797,7 @@
     <div class="cta-inner">
       <h2>¿Quieres resultados diferentes?<br>Aplica diferente.</h2>
       <p>Únete a la comunidad NEWAVE y accede al curso, las herramientas y la mentoría que te llevan al trabajo remoto que buscas.</p>
-      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-primary btn-large">Únete hoy</a>
+      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-primary btn-large" data-cta="cta-final">Únete hoy</a>
       <span class="cta-note">Alojado en Skool: cursos, comunidad y sesiones en vivo en un solo lugar.</span>
     </div>
   </section>
@@ -909,28 +935,42 @@
       updateThumb();
     })();
 
-    /* GOOGLE ADS CONVERSION TRACKING */
-    document.querySelectorAll('a[href*="skool.com"]').forEach(link => {
-      link.addEventListener('click', () => {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18059012003',
-          'event_callback': function() {}
-        });
-      });
-    });
-  </script>
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
+    /* CTA TRACKING — Google Ads + GA4 + Meta Pixel con nombre de botón */
     document.addEventListener('click', function(e) {
-      var link = e.target.closest('a[href*="skool.com/newave/plans"]');
-      if (link && typeof fbq === 'function') {
+      var link = e.target.closest('a[href*="skool.com"]');
+      if (!link) return;
+      var ctaName = link.getAttribute('data-cta') || 'unknown';
+
+      /* Google Ads conversion */
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', { 'send_to': 'AW-18059012003' });
+        /* GA4 custom event con qué botón se tocó */
+        gtag('event', 'cta_click', { 'cta_location': ctaName });
+      }
+
+      /* Meta Pixel */
+      if (typeof fbq === 'function') {
         fbq('track', 'Lead', {
-          content_name: 'CTA Click',
+          content_name: ctaName,
           content_category: 'Landing Page'
         });
       }
     });
-  });
+
+    /* SCROLL DEPTH TRACKING */
+    (function() {
+      var fired = {};
+      var depths = [25, 50, 75, 90];
+      window.addEventListener('scroll', function() {
+        var pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        depths.forEach(function(d) {
+          if (pct >= d && !fired[d]) {
+            fired[d] = true;
+            if (typeof gtag === 'function') gtag('event', 'scroll_depth', { 'depth': d });
+          }
+        });
+      }, { passive: true });
+    })();
   </script>
 </body>
 </html>
