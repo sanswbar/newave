@@ -1557,7 +1557,7 @@ a.autoridad-stat-pill:hover {
 }
 .quotes-section .testimonials-header h2,
 .quotes-title { color: var(--brand-black); }
-.quotes-section .mono-tag { color: var(--orange); border-color: rgba(252,115,66,0.3); background: rgba(252,115,66,0.08); }
+.quotes-section .mono-tag { color: var(--orange); border-color: transparent; background: transparent; }
 .quotes-section .testimonials-scroll-hint { color: rgba(20,24,30,0.4); }
 .quotes-stats {
   display: flex; align-items: center; justify-content: center;
