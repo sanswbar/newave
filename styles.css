@@ -31,7 +31,6 @@
 
 html { scroll-behavior: smooth; font-size: 18px; overflow-x: hidden; }
 p { text-align: center; }
-@media (max-width: 768px) { p { text-align: center; } }
 
 body {
   font-family: var(--sans);
@@ -635,6 +634,7 @@ a   { text-decoration: none; color: inherit; }
 @media (max-width: 1024px) {
   .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
   .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-corner-isotipo { display: none; }
 }
 
 @media (max-width: 768px) {
@@ -662,7 +662,7 @@ a   { text-decoration: none; color: inherit; }
   .autoridad-section { padding: 3rem 1.25rem; }
   .autoridad-inner { text-align: center; }
   .autoridad-text h2 { font-size: 0.95rem; text-align: center; }
-  .autoridad-method-sub { font-size: 2rem; }
+  .autoridad-method-sub { font-size: clamp(1.2rem, 5.5vw, 1.5rem) !important; }
   .autoridad-text p { font-size: 0.975rem; text-align: center; }
   .autoridad-stats-row { flex-direction: column; gap: 0.75rem; }
   .autoridad-stat-pill { flex-direction: row; align-items: center; justify-content: flex-start; gap: 1rem; padding: 1rem 1.25rem; min-width: unset; }
@@ -687,7 +687,6 @@ a   { text-decoration: none; color: inherit; }
 
   /* Módulos */
   .modulos-section { padding: 3rem 1.25rem; }
-  .modulos-inner h2 { font-size: 1.4rem; text-align: center; }
   .modulos-sub { font-size: 0.95rem; margin-bottom: 2rem; text-align: center; }
   .modulos-grid { grid-template-columns: 1fr; gap: 0.85rem; margin-bottom: 2rem; }
   .modulo-thumb { height: 100px; }
@@ -703,7 +702,6 @@ a   { text-decoration: none; color: inherit; }
   /* Testimonials */
   .testimonials-section { padding-bottom: 2.5rem; }
   .testimonials-header { padding: 3rem 1.25rem 1.5rem; text-align: center; }
-  .testimonials-section h2 { font-size: 1.4rem; text-align: center; }
   .testimonials-grid { gap: 0.85rem; padding: 0.5rem 1.25rem 1.25rem; }
   .tcard { scroll-snap-align: start; flex: 0 0 82vw; max-width: 82vw; text-align: center; }
   .tcard p { font-size: 0.925rem; text-align: center; }
@@ -712,19 +710,16 @@ a   { text-decoration: none; color: inherit; }
 
   /* Video */
   .video-section { padding: 3rem 1.25rem; }
-  .video-inner h2 { font-size: 1.4rem; text-align: center; }
   .video-sub { font-size: 0.925rem; margin-bottom: 1.5rem; text-align: center; }
 
   /* Perfiles */
   .perfiles-section { padding: 3rem 1.25rem; }
-  .perfiles-inner h2 { font-size: 1.4rem; text-align: center; }
   .perfiles-sub { font-size: 0.925rem; margin-bottom: 1.75rem; text-align: center; }
   .perfil-tag { font-size: 0.9rem; padding: 0.55rem 1.1rem; }
   .perfiles-note { text-align: center; }
 
   /* Lo que lograrás */
   .logras-section { padding: 3rem 1.25rem; }
-  .logras-inner h2 { font-size: 1.4rem; margin-bottom: 2rem; text-align: center; }
   .logras-grid { grid-template-columns: 1fr 1fr; gap: 0.85rem; }
   .logra-card { padding: 1.35rem 1.1rem; text-align: center; }
   .logra-card h3 { font-size: 1rem; text-align: center; }
@@ -735,7 +730,6 @@ a   { text-decoration: none; color: inherit; }
   .how-section { padding: 3rem 1.25rem; }
   .how-inner { max-width: 100%; }
   .how-section .mono-tag { display: block; text-align: center; }
-  .how-inner h2 { font-size: 1.4rem; text-align: center; }
   .how-sub { font-size: 0.925rem; margin-bottom: 2rem; text-align: center; }
   .how-steps { flex-direction: column; gap: 1.5rem; align-items: center; }
   .how-step { flex-direction: column; align-items: center; padding: 0; max-width: 280px; }
@@ -751,20 +745,18 @@ a   { text-decoration: none; color: inherit; }
 
   /* Pricing */
   .pricing-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .pricing-section h2 { font-size: 1.4rem; text-align: center; }
   .pricing-card { max-width: 420px; margin: 0 auto; width: 100%; }
   .price-amount { font-size: 2.25rem; }
 
   /* FAQ */
   .faq-section { padding: 3rem 1.25rem; }
-  .faq-inner h2 { font-size: 1.4rem; margin-bottom: 0.6rem; text-align: center; }
   .faq-sub { font-size: 0.925rem; margin-bottom: 2rem; text-align: center; }
-  .faq-trigger { font-size: 0.925rem; padding: 1.1rem 0; }
+  .faq-trigger { font-size: 0.925rem; padding: 1.1rem 0; min-height: 48px; }
+  .faq-icon { width: 36px; height: 36px; }
   .faq-body-inner { padding-right: 0.5rem; font-size: 0.9rem; line-height: 1.7; text-align: left; }
 
   /* CTA */
   .cta-section { padding: 3rem 1.25rem; }
-  .cta-section h2 { font-size: 1.4rem; text-align: center; }
   .cta-section p { font-size: 0.975rem; text-align: center; }
   .btn-large { width: 100%; padding: 1.1rem; font-size: 1.05rem; border-radius: 14px; }
 
@@ -774,7 +766,6 @@ a   { text-decoration: none; color: inherit; }
   .quotes-scrollbar-wrap { padding: 1rem 1.25rem 0; }
 
   /* Comunidad */
-  .comunidad-inner h2 { font-size: 1.6rem; }
 
   /* Footer */
   .footer-inner { padding: 2.5rem 1.25rem 1.5rem; }
@@ -958,7 +949,6 @@ a   { text-decoration: none; color: inherit; }
 @media (max-width: 600px) {
   .modulos-section { padding: 3.5rem 1.25rem; }
   .modulos-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .modulos-inner h2 { font-size: 1.6rem; }
   .modulos-sub { font-size: 0.95rem; margin-bottom: 2.5rem; }
   .modulo-thumb { height: 100px; }
   .modulo-num { font-size: 2.75rem; }
@@ -1023,7 +1013,7 @@ a   { text-decoration: none; color: inherit; }
   align-items: center;
 }
 .inversion-inner h2 {
-  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -1151,7 +1141,6 @@ a   { text-decoration: none; color: inherit; }
 }
 @media (max-width: 768px) {
   .faq-section { padding: 3.5rem 1.25rem; }
-  .faq-inner h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
   .faq-sub { font-size: 0.9rem; margin-bottom: 2rem; }
   .faq-trigger { font-size: 0.9rem; padding: 1rem 0; }
   .faq-body-inner { padding-right: 0.5rem; font-size: 0.875rem; }
@@ -1430,9 +1419,6 @@ a.autoridad-stat-pill:hover {
 .autoridad-stat-label {
   font-size: 0.85rem; color: rgba(20,24,30,0.6); line-height: 1.5;
 }
-@media (max-width: 768px) {
-  .autoridad-text h2 { font-size: 1.5rem; }
-}
 
 /* ── PERFILES ── */
 .perfiles-section {
@@ -1442,7 +1428,7 @@ a.autoridad-stat-pill:hover {
 }
 .perfiles-inner { max-width: var(--max-wide); margin: 0 auto; }
 .perfiles-inner h2 {
-  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
   font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.75rem;
 }
 .perfiles-sub {
@@ -1467,7 +1453,6 @@ a.autoridad-stat-pill:hover {
 }
 @media (max-width: 600px) {
   .perfiles-section { padding: 3.5rem 1.25rem; }
-  .perfiles-inner h2 { font-size: 1.6rem; }
   .perfil-tag { font-size: 0.875rem; padding: 0.5rem 1rem; }
 }
 
@@ -1479,7 +1464,7 @@ a.autoridad-stat-pill:hover {
 }
 .logras-inner { max-width: var(--max-wide); margin: 0 auto; }
 .logras-inner h2 {
-  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
   font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3rem;
 }
 .logras-grid {
@@ -1519,7 +1504,6 @@ a.autoridad-stat-pill:hover {
 @media (max-width: 600px) {
   .logras-section { padding: 3.5rem 1.25rem; }
   .logras-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .logras-inner h2 { font-size: 1.4rem; margin-bottom: 2rem; }
 }
 
 /* ── SOCIAL PROOF METRICS ── */
@@ -1724,7 +1708,7 @@ a.autoridad-stat-pill:hover {
   position: fixed; top: 1rem; right: 1rem;
   background: rgba(255,255,255,0.15); color: #fff;
   border: none; border-radius: 50%;
-  width: 40px; height: 40px; font-size: 1rem; cursor: pointer;
+  width: 48px; height: 48px; font-size: 1rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   z-index: 10;
   backdrop-filter: blur(4px);
@@ -1746,10 +1730,10 @@ a.autoridad-stat-pill:hover {
   .comunidad-modal-nav { display: none; }
 }
 @media (max-width: 600px) {
-  .comunidad-arrow { width: 36px; height: 36px; font-size: 1.2rem; }
+  .comunidad-arrow { width: 44px; height: 44px; font-size: 1.3rem; }
   .comunidad-inner { max-width: 100%; }
   .comunidad-section { padding: 3.5rem 1rem; }
-  .comunidad-inner h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .comunidad-inner h2 { margin-bottom: 1.5rem; }
   .comunidad-carousel { gap: 0.5rem; }
   .comunidad-slide { height: 200px; }
 }
