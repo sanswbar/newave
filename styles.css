@@ -1781,9 +1781,9 @@ a.autoridad-stat-pill:hover {
   min-width: 40px;
 }
 .quotes-title {
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800; letter-spacing: -0.03em;
-  color: var(--brand-black); line-height: 1.15;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  font-weight: 800 !important; letter-spacing: -0.03em;
+  color: var(--brand-black) !important; line-height: 1.15;
   margin: 0.75rem auto 2rem; max-width: 620px;
 }
 .quotes-carousel {
