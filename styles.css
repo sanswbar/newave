@@ -98,8 +98,7 @@ a   { text-decoration: none; color: inherit; }
   font-family: var(--mono);
   font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--orange);
   margin-bottom: 1.1rem;
 }
@@ -1258,7 +1257,7 @@ a   { text-decoration: none; color: inherit; }
   text-align: center;
   font-size: clamp(1.5rem, 3vw, 2.1rem);
   font-weight: 800; letter-spacing: -0.01em;
-  text-transform: uppercase;
+  text-transform: none;
   margin-bottom: 2.5rem;
   line-height: 1.2;
 }
@@ -1633,7 +1632,7 @@ a.autoridad-stat-pill:hover {
   max-width: 780px; margin: 0 auto; text-align: center;
 }
 .comunidad-inner h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
   font-weight: 800; letter-spacing: -0.03em;
   color: var(--white); line-height: 1.15;
   margin: 0.5rem 0 1.5rem;
@@ -1781,7 +1780,7 @@ a.autoridad-stat-pill:hover {
   min-width: 40px;
 }
 .quotes-title {
-  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  font-size: clamp(1.5rem, 3vw, 2.1rem) !important;
   font-weight: 800 !important; letter-spacing: -0.03em;
   color: var(--brand-black) !important; line-height: 1.15;
   margin: 0.75rem auto 2rem; max-width: 620px;
