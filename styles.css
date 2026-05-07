@@ -412,7 +412,7 @@ a   { text-decoration: none; color: inherit; }
   justify-content: flex-start;
 }
 .testimonials-grid::after {
-  content: ''; flex: 0 0 clamp(0.5rem, 3vw, 1.5rem); display: block;
+  content: ''; flex: 0 0 clamp(1.25rem, 5vw, 2.5rem); display: block;
 }
 .testimonials-grid::-webkit-scrollbar { display: none; }
 
@@ -702,9 +702,16 @@ a   { text-decoration: none; color: inherit; }
   /* Testimonials */
   .testimonials-section { padding-bottom: 2.5rem; }
   .testimonials-header { padding: 3rem 1.25rem 1.5rem; text-align: center; }
-  .testimonials-grid { gap: 0.85rem; padding: 0.5rem 1.25rem 1.25rem; }
-  .quotes-grid { padding-right: 1.25rem !important; -webkit-mask-image: none; mask-image: none; }
-  .tcard { scroll-snap-align: center; flex: 0 0 82vw; max-width: 82vw; text-align: center; }
+  .testimonials-grid {
+    gap: 0.85rem;
+    padding: 0.5rem 0 1.25rem;
+    scroll-padding-left: 9vw;
+    scroll-padding-right: 9vw;
+  }
+  .quotes-grid { padding: 0.5rem 0 1.25rem !important; -webkit-mask-image: none; mask-image: none; }
+  .testimonials-grid::after { flex: 0 0 9vw; }
+  .tcard { scroll-snap-align: center; flex: 0 0 82vw; max-width: 82vw; text-align: center; margin-left: 9vw; }
+  .tcard ~ .tcard { margin-left: 0; }
   .tcard p { font-size: 0.925rem; text-align: center; }
   .tcard-author { justify-content: center; }
   .testimonials-footer { padding: 0 1.25rem; font-size: 0.875rem; text-align: center; }
