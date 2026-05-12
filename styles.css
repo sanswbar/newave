@@ -1,5 +1,5 @@
 /* ============================================================
-   NEWAVE ACADEMY — styles.css v11
+   NEWAVE ACADEMY — styles.css v12
    Apple-inspired minimal dark · Mobile-first · Conversion-optimized
    ============================================================ */
 
@@ -101,7 +101,7 @@ a   { text-decoration: none; color: inherit; }
   color: var(--orange);
   margin-bottom: 1.1rem;
 }
-.mono-tag.dark { color: var(--subtle); }
+.mono-tag.dark { color: rgba(232,231,231,0.55); }
 
 /* ── NAV ── */
 .nav {
@@ -137,7 +137,7 @@ a   { text-decoration: none; color: inherit; }
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 .btn-primary:hover { background: rgba(245,245,247,0.88); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.12); }
-.btn-large { font-size: 1.075rem; padding: 1rem 2.5rem; }
+.btn-large { font-size: 1.1rem; padding: 1.05rem 2.75rem; box-shadow: 0 0 40px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3); }
 
 .btn-casos {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -171,14 +171,15 @@ a   { text-decoration: none; color: inherit; }
   padding: 7rem 1.5rem 5rem;
   text-align: center;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 0%, var(--bg-3), var(--bg) 80%);
+  background: radial-gradient(circle at 50% 0%, #1a1f26, var(--bg) 75%);
 }
 .hero::before {
   content: '';
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% 10%, rgba(252,115,66,0.14) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 30% at 20% 90%, rgba(252,115,66,0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 55% at 50% 5%, rgba(252,115,66,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 30% at 20% 90%, rgba(252,115,66,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 25% at 80% 80%, rgba(252,115,66,0.05) 0%, transparent 60%);
   pointer-events: none;
 }
 .hero-eyebrow {
@@ -214,14 +215,18 @@ a   { text-decoration: none; color: inherit; }
   display: flex; flex-direction: column; align-items: center; gap: 0;
 }
 .hero h1 {
-  font-size: clamp(2.1rem, 5.5vw, 3.9rem);
-  font-weight: 700; line-height: 1.04;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+  font-weight: 800; line-height: 1.02;
+  letter-spacing: -0.045em;
   margin-bottom: 1.35rem;
 }
-.h1-accent { color: var(--orange); display: block; }
+.h1-accent {
+  color: var(--orange);
+  display: block;
+  text-shadow: 0 0 60px rgba(252,115,66,0.35);
+}
 .hero-sub {
-  color: var(--muted); font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  color: rgba(232,231,231,0.9); font-size: clamp(1.1rem, 2.5vw, 1.3rem);
   max-width: 800px; line-height: 1.65;
   margin-bottom: 2.5rem; text-align: center;
 }
@@ -573,16 +578,16 @@ a   { text-decoration: none; color: inherit; }
 /* ── CTA SECTION ── */
 .cta-section {
   padding: var(--section) clamp(1.25rem, 5vw, 2.5rem);
-  background: var(--bg-2);
+  background: var(--bg);
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(252,115,66,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(252,115,66,0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(252,115,66,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(252,115,66,0.08) 0%, transparent 60%);
   text-align: center;
-  border-top: 1px solid rgba(252,115,66,0.15);
+  border-top: 1px solid rgba(252,115,66,0.25);
 }
 .cta-inner { max-width: var(--max); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-.cta-section h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; }
-.cta-section p { font-size: 1.05rem; color: var(--muted); max-width: 480px; line-height: 1.75; }
+.cta-section h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: var(--white); }
+.cta-section p { font-size: 1.05rem; color: rgba(232,231,231,0.75); max-width: 480px; line-height: 1.75; }
 .cta-note { font-family: var(--mono); font-size: 0.68rem; color: var(--subtle); letter-spacing: 0.06em; }
 
 /* ── VER PLANES ── */
@@ -645,8 +650,8 @@ a   { text-decoration: none; color: inherit; }
 
   /* Hero */
   .hero { padding: 5.5rem 1.25rem 3rem; text-align: center; }
-  .hero h1 { font-size: clamp(2rem, 9vw, 2.75rem); letter-spacing: -0.04em; line-height: 1.08; margin-bottom: 1rem; }
-  .hero-sub { font-size: 1.05rem; color: var(--muted); margin-bottom: 2rem; text-align: center; }
+  .hero h1 { font-size: clamp(2.2rem, 10vw, 3rem); letter-spacing: -0.045em; line-height: 1.06; margin-bottom: 1rem; }
+  .hero-sub { font-size: 1.05rem; color: rgba(232,231,231,0.85); margin-bottom: 2rem; text-align: center; }
   .hero-eyebrow { font-size: 0.65rem; }
   .hero-actions { flex-direction: column; gap: 0.75rem; align-items: center; width: 100%; margin-bottom: 1.75rem; }
   .hero-actions .btn-primary { padding: 0.8rem 1.75rem; font-size: 0.95rem; border-radius: 980px; }
@@ -681,9 +686,9 @@ a   { text-decoration: none; color: inherit; }
   .parati-section { padding: 3rem 1.25rem; }
   .parati-h2 { font-size: 1.4rem; margin-bottom: 2rem; text-align: center; }
   .parati-grid { grid-template-columns: 1fr; gap: 0.85rem; }
-  .parati-card { padding: 1.25rem 1.1rem; gap: 0.75rem; align-items: center; text-align: center; }
+  .parati-card { padding: 1.25rem 1.1rem; gap: 0.75rem; align-items: flex-start; text-align: left; }
   .parati-emoji { font-size: 1.6rem; }
-  .parati-card p { font-size: 0.925rem; line-height: 1.65; text-align: center; }
+  .parati-card p { font-size: 0.925rem; line-height: 1.7; text-align: left; color: rgba(232,231,231,0.85); }
 
   /* Módulos */
   .modulos-section { padding: 3rem 1.25rem; }
@@ -766,7 +771,7 @@ a   { text-decoration: none; color: inherit; }
   /* CTA */
   .cta-section { padding: 3rem 1.25rem; }
   .cta-section p { font-size: 0.975rem; text-align: center; }
-  .btn-large { width: 100%; padding: 1.1rem; font-size: 1.05rem; border-radius: 14px; }
+  .btn-large { width: 100%; padding: 1.1rem; font-size: 1.05rem; border-radius: 980px; }
 
   /* Quotes section */
   .quotes-section { padding: 2rem 0; }
@@ -862,17 +867,18 @@ a   { text-decoration: none; color: inherit; }
 /* ── MÓDULOS ── */
 .modulos-section {
   padding: var(--section) clamp(1.25rem, 5vw, 2.5rem);
-  background: var(--bg-2);
+  background: var(--bg);
   text-align: center;
 }
 .modulos-inner { max-width: var(--max-wide); margin: 0 auto; }
 .modulos-inner h2 {
   font-size: clamp(1.5rem, 3vw, 2.1rem);
-  font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+  font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
   margin-bottom: 0.75rem;
+  color: var(--white);
 }
 .modulos-sub {
-  font-size: 1.05rem; color: var(--muted); line-height: 1.7;
+  font-size: 1.05rem; color: rgba(232,231,231,0.7); line-height: 1.7;
   max-width: 560px; margin: 0 auto 3.5rem; text-align: center;
 }
 .modulos-grid {
@@ -883,16 +889,16 @@ a   { text-decoration: none; color: inherit; }
   text-align: left;
 }
 .modulo-card {
-  background: var(--bg-3);
-  border: 1px solid var(--border);
+  background: var(--bg-2);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: var(--r);
   overflow: hidden;
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 .modulo-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  border-color: rgba(252,115,66,0.25);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(252,115,66,0.2);
+  border-color: rgba(252,115,66,0.2);
 }
 .modulo-thumb {
   background: linear-gradient(135deg, #1a1f26 0%, #0d1117 100%);
@@ -1088,16 +1094,17 @@ a   { text-decoration: none; color: inherit; }
 }
 .modulos-precio {
   font-size: 1rem;
-  color: var(--muted);
+  color: rgba(232,231,231,0.6);
   margin-top: 0.5rem;
   text-align: center;
   letter-spacing: -0.01em;
 }
 .modulos-precio strong {
   color: var(--orange);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  text-shadow: 0 0 24px rgba(252,115,66,0.4);
 }
 
 @media (max-width: 768px) {
@@ -1260,7 +1267,7 @@ a   { text-decoration: none; color: inherit; }
 /* ── PARA TI SI ── */
 .parati-section {
   padding: var(--section) clamp(1.25rem, 5vw, 3rem);
-  background: var(--bg-2);
+  background: var(--bg);
 }
 .parati-inner { max-width: var(--max-wide); margin: 0 auto; }
 .parati-h2 {
@@ -1270,8 +1277,9 @@ a   { text-decoration: none; color: inherit; }
   text-transform: none;
   margin-bottom: 2.5rem;
   line-height: 1.2;
+  color: var(--white);
 }
-.parati-h2 .parati-ellipsis { color: var(--white); }
+.parati-h2 .parati-ellipsis { color: var(--orange); }
 .parati-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1280,24 +1288,24 @@ a   { text-decoration: none; color: inherit; }
 .parati-card {
   display: flex; flex-direction: column; align-items: flex-start;
   text-align: left; gap: 1rem;
-  background: var(--bg-3);
-  border: 1px solid var(--border);
+  background: var(--bg-2);
+  border: 1px solid rgba(252,115,66,0.15);
   border-left: 3px solid var(--orange);
   border-radius: var(--r);
   padding: 1.75rem 1.5rem;
-  transition: border-color 0.25s, transform 0.25s;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 .parati-card:hover {
-  border-left-color: var(--orange);
-  border-color: rgba(252,115,66,0.35);
+  border-color: rgba(252,115,66,0.4);
   transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(252,115,66,0.08);
 }
 .parati-emoji {
   font-size: 2rem; line-height: 1;
   display: block;
 }
 .parati-card p {
-  font-size: 0.925rem; color: var(--muted); line-height: 1.75; text-align: left;
+  font-size: 0.925rem; color: rgba(232,231,231,0.8); line-height: 1.75; text-align: left;
 }
 @media (max-width: 900px) {
   .parati-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1313,7 +1321,7 @@ a   { text-decoration: none; color: inherit; }
 /* ── AUTORIDAD ── */
 .autoridad-section {
   padding: var(--section) clamp(1.25rem, 5vw, 2.5rem);
-  background: #f5f5f7;
+  background: #ffffff;
 }
 .autoridad-inner {
   max-width: var(--max-wide); margin: 0 auto;
@@ -1337,7 +1345,7 @@ a   { text-decoration: none; color: inherit; }
   color: var(--brand-black); margin-bottom: 1.5rem; text-align: center;
 }
 .autoridad-text p {
-  font-size: 1rem; color: rgba(20,24,30,0.65); line-height: 1.75;
+  font-size: 1rem; color: rgba(20,24,30,0.75); line-height: 1.75;
   margin-bottom: 1.5rem; text-align: center;
 }
 .autoridad-list {
