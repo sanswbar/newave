@@ -8,6 +8,8 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-18059012003');
+    gtag('config', 'AW-17772404542');
+    gtag('config', 'G-MF4KQT22MK');
   </script>
   <!-- End Google tag -->
   <!-- Google Tag Manager -->
@@ -871,17 +873,18 @@
       updateThumb();
     })();
 
-    /* CTA TRACKING — Google Ads + GA4 + Meta Pixel con nombre de botón */
+    /* CTA TRACKING — GA4 + Meta Pixel con nombre de botón */
     document.addEventListener('click', function(e) {
-      var link = e.target.closest('a[href*="skool.com"]');
+      var link = e.target.closest('a[href="https://www.skool.com/newave/plans"]');
       if (!link) return;
       var ctaName = link.getAttribute('data-cta') || 'unknown';
 
-      /* Google Ads conversion */
       if (typeof gtag === 'function') {
-        gtag('event', 'conversion', { 'send_to': 'AW-18059012003' });
-        /* GA4 custom event con qué botón se tocó */
-        gtag('event', 'cta_click', { 'cta_location': ctaName });
+        /* GA4: registra qué botón se tocó para análisis interno */
+        gtag('event', 'cta_click', {
+          'cta_location': ctaName,
+          'destination_url': 'https://www.skool.com/newave/plans'
+        });
       }
 
       /* Meta Pixel */
