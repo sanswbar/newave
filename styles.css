@@ -612,6 +612,18 @@ a   { text-decoration: none; color: inherit; }
   box-shadow: 0 8px 28px rgba(252,115,66,0.5);
 }
 
+.btn-webinar {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.btn-webinar:hover { color: rgba(255,255,255,0.9); }
+.faq-webinar { text-align: center; margin-top: 2rem; }
+
 /* ── FOOTER ── */
 .footer { background: var(--brand-black); border-top: 1px solid var(--border); }
 .footer-inner { max-width: 1100px; margin: 0 auto; padding: 3.5rem clamp(1.25rem, 5vw, 2.5rem) 2rem; }
