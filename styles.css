@@ -1131,6 +1131,13 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: -0.02em;
   text-shadow: 0 0 24px rgba(252,115,66,0.4);
 }
+.modulos-precio-sub {
+  display: block;
+  font-size: 0.82rem;
+  color: rgba(232,231,231,0.45);
+  margin-top: 0.25rem;
+  letter-spacing: 0;
+}
 
 @media (max-width: 768px) {
   /* Hero: contener layout dentro del viewport */
