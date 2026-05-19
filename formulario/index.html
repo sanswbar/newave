@@ -451,8 +451,8 @@
     .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
 
     /* ── Page thanks ── */
-    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; }
-    .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; }
+    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; align-self: stretch; }
+    .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; align-self: stretch; }
     .thanks-videos-tag { font-family: 'DM Mono','Courier New',monospace; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; text-align: center; margin-bottom: 0.75rem; }
     .thanks-videos-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; margin-bottom: 1.25rem; line-height: 1.2; }
     .thanks-videos-list { display: flex; flex-direction: column; gap: 1.25rem; max-width: 260px; margin: 0 auto; }
@@ -1191,7 +1191,7 @@
 
   // ── Detectar cuando Calendly confirma el agendamiento ──
   window.addEventListener('message', function(e) {
-    if (e.data.event && e.data.event === 'calendly.event_scheduled') {
+    if (e.data && e.data.event === 'calendly.event_scheduled') {
       document.getElementById('page-high').classList.remove('active');
       show('page-thanks');
       window.scrollTo({ top: 0, behavior: 'smooth' });
