@@ -450,14 +450,14 @@
     .mono-tag.dark { color: var(--orange); }
     .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
 
-    /* ── Comunidad carrusel (thanks page) ── */
+    /* ── Comunidad carrusel (thanks page) — copia exacta de la landing ── */
     .comunidad-section {
       background: var(--bg-2);
-      padding: 2.5rem clamp(1rem, 4vw, 2rem);
-      border: 1px solid var(--border);
+      padding: 3.5rem clamp(1.25rem, 5vw, 3rem);
       overflow-x: hidden;
     }
     .comunidad-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+    .comunidad-inner h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
     .comunidad-carousel { position: relative; display: flex; align-items: center; gap: 1rem; }
     .comunidad-track-wrap { flex: 1; overflow: hidden; border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
     .comunidad-track { display: flex; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -476,6 +476,16 @@
     .comunidad-modal-close { position: fixed; top: 1rem; right: 1rem; background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px); }
     .comunidad-modal-nav { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 50%; width: 48px; height: 48px; flex-shrink: 0; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; }
     .comunidad-modal-nav:hover { background: var(--orange); border-color: var(--orange); }
+    @media (max-width: 600px) {
+      .comunidad-modal-track { border-radius: 12px; max-width: calc(100vw - 2rem); }
+      .comunidad-modal-nav { display: none; }
+      .comunidad-arrow { width: 44px; height: 44px; font-size: 1.3rem; }
+      .comunidad-inner { max-width: 100%; }
+      .comunidad-section { padding: 3.5rem 1rem; }
+      .comunidad-inner h2 { margin-bottom: 1.5rem; }
+      .comunidad-carousel { gap: 0.5rem; }
+      .comunidad-slide { height: 200px; }
+    }
 
     /* ── Mobile first ── */
     @media (max-width: 600px) {
@@ -510,24 +520,6 @@
       #page-thanks [style*="max-width:260px"] { max-width: 100% !important; }
       /* high-ticket card */
       #page-high { max-width: 100% !important; }
-
-      /* ── Comunidad carousel ── */
-      .comunidad-section { padding: 2.5rem 1rem; }
-      .comunidad-inner { max-width: 100%; }
-      .comunidad-inner h2 { font-size: 1.25rem; margin-bottom: 1.25rem; }
-      /* En mobile las flechas van flotando sobre el slide para no achicarlo */
-      .comunidad-carousel { gap: 0; }
-      .comunidad-track-wrap { flex: 1; border-radius: 16px; }
-      .comunidad-slide { height: 220px; border-radius: 16px; }
-      .comunidad-arrow {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        width: 40px; height: 40px; font-size: 1.3rem;
-        z-index: 2; background: rgba(0,0,0,0.45); border-color: rgba(255,255,255,0.3);
-      }
-      .comunidad-prev { left: 8px; }
-      .comunidad-next { right: 8px; }
-      .comunidad-modal-nav { display: none; }
-      .comunidad-modal-track { max-width: calc(100vw - 2rem); border-radius: 12px; }
     }
   </style>
 </head>
@@ -1035,26 +1027,24 @@
     }
   }
 
-  // ── Carrusel página de gracias — mismo patrón que la landing ──
+  // ── Carrusel página de gracias — copia exacta de la landing ──
   var thanksIdx = 0;
-  var thanksSlides = [];
+  var thanksTotal = 0;
+  var thanksSlideList = [];
   var thanksModalIdx = 0;
 
   function initThanksCarousel() {
     const dots = document.getElementById('thanksComunidadDots');
     if (!dots || dots.children.length) return;
     const slideEls = document.querySelectorAll('#thanksComunidadTrack .comunidad-slide');
-    thanksSlides = Array.from(slideEls).map(el => ({
-      src: el.querySelector('img').src,
-      alt: el.querySelector('img').alt
-    }));
-    thanksSlides.forEach((_, i) => {
-      const d = document.createElement('button');
+    thanksTotal = slideEls.length;
+    for (var i = 0; i < thanksTotal; i++) {
+      var d = document.createElement('button');
       d.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
       d.setAttribute('data-i', i);
       d.onclick = function() { thanksGoTo(parseInt(this.getAttribute('data-i'))); };
       dots.appendChild(d);
-    });
+    }
   }
 
   function thanksGoTo(n) {
@@ -1066,26 +1056,32 @@
   }
 
   function thanksSlide(dir) {
-    thanksGoTo((thanksIdx + dir + thanksSlides.length) % thanksSlides.length);
+    thanksGoTo((thanksIdx + dir + thanksTotal) % thanksTotal);
+  }
+
+  function buildThanksSlideList() {
+    thanksSlideList = Array.from(document.querySelectorAll('#thanksComunidadTrack .comunidad-slide')).map(function(el) {
+      return { src: el.querySelector('img').src, alt: el.querySelector('img').alt };
+    });
   }
 
   function thanksModal(src) {
-    if (!thanksSlides.length) {
-      const slideEls = document.querySelectorAll('#thanksComunidadTrack .comunidad-slide');
-      thanksSlides = Array.from(slideEls).map(el => ({ src: el.querySelector('img').src, alt: el.querySelector('img').alt }));
-    }
-    thanksModalIdx = thanksSlides.findIndex(s => s.src.endsWith(src.split('/').pop()));
+    buildThanksSlideList();
+    thanksModalIdx = thanksSlideList.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
     if (thanksModalIdx < 0) thanksModalIdx = 0;
-    document.getElementById('thanksModalImg').src = thanksSlides[thanksModalIdx].src;
-    document.getElementById('thanksModalImg').alt = thanksSlides[thanksModalIdx].alt;
+    showThanksModalSlide(thanksModalIdx);
     document.getElementById('thanksModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
+  function showThanksModalSlide(n) {
+    document.getElementById('thanksModalImg').src = thanksSlideList[n].src;
+    document.getElementById('thanksModalImg').alt = thanksSlideList[n].alt;
+  }
+
   function thanksModalNav(dir) {
-    thanksModalIdx = (thanksModalIdx + dir + thanksSlides.length) % thanksSlides.length;
-    document.getElementById('thanksModalImg').src = thanksSlides[thanksModalIdx].src;
-    document.getElementById('thanksModalImg').alt = thanksSlides[thanksModalIdx].alt;
+    thanksModalIdx = (thanksModalIdx + dir + thanksSlideList.length) % thanksSlideList.length;
+    showThanksModalSlide(thanksModalIdx);
   }
 
   function thanksModalClose() {
@@ -1094,39 +1090,36 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    if (!document.getElementById('thanksModal').classList.contains('active')) return;
     if (e.key === 'Escape') thanksModalClose();
-    if (e.key === 'ArrowLeft') thanksModalNav(-1);
     if (e.key === 'ArrowRight') thanksModalNav(1);
+    if (e.key === 'ArrowLeft') thanksModalNav(-1);
   });
 
-  (function() {
-    // Swipe en el modal
-    var track = document.getElementById('thanksModalTrack');
+  document.addEventListener('DOMContentLoaded', function() {
+    var modalTrack = document.getElementById('thanksModalTrack');
     var modal = document.getElementById('thanksModal');
-    var startX = 0, startY = 0;
-    track.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    var mStartX = 0, mStartY = 0;
+    modalTrack.addEventListener('touchstart', function(e) {
+      mStartX = e.touches[0].clientX; mStartY = e.touches[0].clientY;
     }, { passive: true });
-    track.addEventListener('touchend', function(e) {
-      var dx = e.changedTouches[0].clientX - startX;
-      var dy = e.changedTouches[0].clientY - startY;
+    modalTrack.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - mStartX;
+      var dy = e.changedTouches[0].clientY - mStartY;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) thanksModalNav(dx < 0 ? 1 : -1);
     }, { passive: true });
-    modal.addEventListener('click', function(e) { if (e.target === modal) thanksModalClose(); });
+    modal.addEventListener('click', function(e) { if (e.target === this) thanksModalClose(); });
 
-    // Swipe en el carousel
-    var carouselWrap = document.getElementById('thanksComunidadTrack');
+    var carouselTrack = document.getElementById('thanksComunidadTrack');
     var cStartX = 0, cStartY = 0;
-    carouselWrap.addEventListener('touchstart', function(e) {
+    carouselTrack.addEventListener('touchstart', function(e) {
       cStartX = e.touches[0].clientX; cStartY = e.touches[0].clientY;
     }, { passive: true });
-    carouselWrap.addEventListener('touchend', function(e) {
+    carouselTrack.addEventListener('touchend', function(e) {
       var dx = e.changedTouches[0].clientX - cStartX;
       var dy = e.changedTouches[0].clientY - cStartY;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) thanksSlide(dx < 0 ? 1 : -1);
     }, { passive: true });
-  })();
+  });
 
   function show(id) {
     document.querySelectorAll('.result-page').forEach(p => p.classList.remove('active'));
