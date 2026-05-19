@@ -450,6 +450,15 @@
     .mono-tag.dark { color: var(--orange); }
     .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
 
+    /* ── Page thanks ── */
+    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; }
+    .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; }
+    .thanks-videos-tag { font-family: 'DM Mono','Courier New',monospace; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; text-align: center; margin-bottom: 0.75rem; }
+    .thanks-videos-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; margin-bottom: 1.25rem; line-height: 1.2; }
+    .thanks-videos-list { display: flex; flex-direction: column; gap: 1.25rem; max-width: 260px; margin: 0 auto; }
+    .thanks-video-item { background: var(--bg-2); border: 1px solid var(--border); border-top: 3px solid var(--orange); border-radius: var(--r-sm); overflow: hidden; }
+    .thanks-video-ratio { position: relative; padding-top: 177.78%; }
+
     /* ── Comunidad carrusel (thanks page) — copia exacta de la landing ── */
     .comunidad-section {
       background: var(--bg-2);
@@ -514,11 +523,11 @@
       .calendly-wrap { min-height: 900px; }
       .calendly-inline-widget { height: 900px !important; }
 
-      /* ── Page thanks — videos ── */
-      #page-thanks .card { max-width: 100% !important; }
-      #page-thanks > div { padding-left: 0.5rem; padding-right: 0.5rem; }
-      #page-thanks [style*="max-width:260px"] { max-width: 100% !important; }
-      /* high-ticket card */
+      /* ── Page thanks ── */
+      .thanks-header-card { max-width: 100% !important; padding: 1.25rem 1rem !important; }
+      .thanks-videos-wrap { padding: 0 0.5rem; }
+      .thanks-videos-list { max-width: 100% !important; }
+      .thanks-videos-title { font-size: 1rem !important; }
       #page-high { max-width: 100% !important; }
     }
   </style>
@@ -774,7 +783,7 @@
   <div class="result-page" id="page-thanks">
 
     <!-- Header -->
-    <div class="card" style="max-width:520px;width:100%;text-align:center;margin-bottom:2rem">
+    <div class="card thanks-header-card">
       <div class="confirm-check">
         <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
@@ -785,30 +794,30 @@
     </div>
 
     <!-- Videos de casos de éxito -->
-    <div style="width:100%;max-width:520px;margin:0 auto 2rem;padding:0 1rem">
-      <p style="font-family:'DM Mono','Courier New',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--orange);text-transform:uppercase;text-align:center;margin-bottom:0.75rem">Casos de éxito</p>
-      <h3 style="font-size:1.2rem;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:1.25rem;line-height:1.2">Lo que han logrado nuestros miembros</h3>
+    <div class="thanks-videos-wrap">
+      <p class="thanks-videos-tag">Casos de éxito</p>
+      <h3 class="thanks-videos-title">Lo que han logrado nuestros miembros</h3>
 
-      <div style="display:flex;flex-direction:column;gap:1.25rem;max-width:260px;margin:0 auto">
+      <div class="thanks-videos-list">
 
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
-          <div style="position:relative;padding-top:177.78%">
+        <div class="thanks-video-item">
+          <div class="thanks-video-ratio">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
               src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479"
               title="Caso de éxito 1" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
           </div>
         </div>
 
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
-          <div style="position:relative;padding-top:177.78%">
+        <div class="thanks-video-item">
+          <div class="thanks-video-ratio">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
               src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479"
               title="Caso de éxito 2" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
           </div>
         </div>
 
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
-          <div style="position:relative;padding-top:177.78%">
+        <div class="thanks-video-item">
+          <div class="thanks-video-ratio">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
               src="https://player.vimeo.com/video/1193720193?badge=0&autopause=0&player_id=0&app_id=58479"
               title="Caso de éxito 3" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
