@@ -478,7 +478,8 @@
 
     /* ── Mobile first ── */
     @media (max-width: 600px) {
-      .shell { padding: 1.25rem 0.85rem 3rem; justify-content: flex-start; }
+      html, body { overflow-x: hidden; }
+      .shell { padding: 1.25rem 0.85rem 3rem; justify-content: flex-start; overflow-x: hidden; }
       .logo { margin-bottom: 1.5rem; margin-top: 0.5rem; }
       .progress-wrap { margin-bottom: 1.25rem; }
       .card { padding: 1.5rem 1.1rem; border-radius: 14px; }
@@ -501,6 +502,22 @@
       .cal-btn { font-size: 0.92rem; padding: 1rem; }
       .calendly-wrap { min-height: 900px; }
       .calendly-inline-widget { height: 900px !important; }
+
+      /* ── Page thanks — videos ── */
+      #page-thanks .card { max-width: 100% !important; }
+      #page-thanks > div { padding-left: 0.5rem; padding-right: 0.5rem; }
+      #page-thanks [style*="max-width:260px"] { max-width: 100% !important; }
+      /* high-ticket card */
+      #page-high { max-width: 100% !important; }
+
+      /* ── Comunidad carousel ── */
+      .comunidad-section { padding: 2.5rem 1rem; }
+      .comunidad-inner { max-width: 100%; }
+      .comunidad-inner h2 { font-size: 1.25rem; margin-bottom: 1.25rem; }
+      .comunidad-slide { height: 200px; }
+      .comunidad-arrow { width: 44px; height: 44px; font-size: 1.3rem; }
+      .comunidad-modal-nav { display: none; }
+      .comunidad-modal-track { max-width: calc(100vw - 2rem); border-radius: 12px; }
     }
   </style>
 </head>
