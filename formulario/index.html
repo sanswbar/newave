@@ -444,6 +444,32 @@
       margin: 1.5rem 0;
     }
 
+    /* ── Comunidad carrusel (thanks page) ── */
+    .comunidad-section {
+      background: var(--bg-2);
+      padding: 2.5rem clamp(1rem, 4vw, 2rem);
+      border: 1px solid var(--border);
+    }
+    .comunidad-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+    .comunidad-carousel { position: relative; display: flex; align-items: center; gap: 1rem; }
+    .comunidad-track-wrap { flex: 1; overflow: hidden; border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+    .comunidad-track { display: flex; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .comunidad-slide { position: relative; cursor: pointer; flex: 0 0 100%; background: #fff; border-radius: 20px; border-top: 4px solid var(--orange); height: 260px; overflow: hidden; }
+    .comunidad-img { width: 100%; height: auto; display: block; }
+    .comunidad-arrow { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white); width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; font-size: 1.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; }
+    .comunidad-arrow:hover { background: var(--orange); border-color: var(--orange); }
+    .comunidad-dots { display: flex; justify-content: center; gap: 8px; margin-top: 1.75rem; }
+    .comunidad-dot { width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer; background: rgba(255,255,255,0.25); padding: 0; transition: background 0.2s, transform 0.2s; }
+    .comunidad-dot.active { background: var(--orange); transform: scale(1.3); }
+    .comunidad-hint { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.72)); color: #fff; font-size: 0.8rem; font-weight: 700; text-align: center; padding: 2.5rem 1rem 1rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .comunidad-modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; gap: 1rem; padding: 0; }
+    .comunidad-modal.active { display: flex; }
+    .comunidad-modal-track { flex: 1; max-width: 680px; max-height: 100vh; overflow-y: auto; border-radius: 16px; -webkit-overflow-scrolling: touch; }
+    .comunidad-modal-track img { width: 100%; display: block; border-radius: 16px; }
+    .comunidad-modal-close { position: fixed; top: 1rem; right: 1rem; background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px); }
+    .comunidad-modal-nav { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 50%; width: 48px; height: 48px; flex-shrink: 0; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; }
+    .comunidad-modal-nav:hover { background: var(--orange); border-color: var(--orange); }
+
     /* ── Mobile first ── */
     @media (max-width: 600px) {
       .shell { padding: 1.25rem 0.85rem 3rem; justify-content: flex-start; }
@@ -721,71 +747,99 @@
     <p style="font-size:0.82rem;color:var(--subtle);text-align:center">¿Preguntas? Escríbenos por WhatsApp.</p>
   </div>
 
-  <!-- ── RESULTADO: High Ticket — Gracias (post-Calendly) ── -->
-  <div class="card result-page" id="page-thanks" style="max-width:680px">
-    <div class="result-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-      </svg>
-    </div>
-    <h2 class="result-title">Llamada agendada. ¡Nos vemos pronto!</h2>
-    <p class="result-body">Mientras esperas, mira lo que han logrado los miembros de nuestra comunidad.</p>
+  <!-- ── RESULTADO: High Ticket — Gracias ── -->
+  <div class="result-page" id="page-thanks">
 
-    <div class="divider"></div>
-    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1.25rem">Casos de éxito 🏆</h3>
-
-    <!-- Testimonios en video — reemplaza los src con tus URLs reales -->
-    <div style="display:flex;flex-direction:column;gap:1.25rem" id="testimonials-video">
-
-      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden">
-        <div style="position:relative;padding-top:56.25%">
-          <iframe
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-            src="VIDEO_1_URL_AQUI"
-            title="Testimonio 1"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div style="padding:0.85rem 1rem">
-          <p style="font-size:0.88rem;font-weight:600">Nombre del miembro</p>
-          <p style="font-size:0.8rem;color:var(--subtle)">Consiguió trabajo remoto en X empresa — +$XXX/mes</p>
-        </div>
+    <!-- Header -->
+    <div class="card" style="max-width:520px;width:100%;text-align:center;margin-bottom:2rem">
+      <div class="confirm-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
       </div>
-
-      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden">
-        <div style="position:relative;padding-top:56.25%">
-          <iframe
-            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-            src="VIDEO_2_URL_AQUI"
-            title="Testimonio 2"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div style="padding:0.85rem 1rem">
-          <p style="font-size:0.88rem;font-weight:600">Nombre del miembro</p>
-          <p style="font-size:0.8rem;color:var(--subtle)">Consiguió trabajo remoto en X empresa — +$XXX/mes</p>
-        </div>
-      </div>
-
+      <h2 class="result-title">¡Tu llamada está agendada, <span id="thanksNombre"></span>!</h2>
+      <p class="result-body" style="color:var(--white)">Te esperamos en la llamada. Mientras tanto, mira lo que está viviendo la gente dentro de nuestro programa.</p>
     </div>
 
-    <!-- Screenshots de resultados -->
-    <div class="divider"></div>
-    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1.25rem">Resultados de la comunidad 📸</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem" id="screenshots">
-      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
-        Screenshot 1
-      </div>
-      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
-        Screenshot 2
-      </div>
-      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
-        Screenshot 3
+    <!-- Videos de casos de éxito -->
+    <div style="width:100%;max-width:520px;margin-bottom:2rem">
+      <p style="font-family:'DM Mono','Courier New',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--orange);text-transform:uppercase;text-align:center;margin-bottom:0.75rem">Casos de éxito</p>
+      <h3 style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:1.5rem;line-height:1.2">Lo que han logrado nuestros miembros</h3>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+        <!-- Video 1 — reemplaza VIDEO_1_ID con el ID de YouTube -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
+          <div style="position:relative;padding-top:56.25%">
+            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+              src="https://www.youtube.com/embed/VIDEO_1_ID?rel=0"
+              title="Caso de éxito 1" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <!-- Video 2 -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
+          <div style="position:relative;padding-top:56.25%">
+            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+              src="https://www.youtube.com/embed/VIDEO_2_ID?rel=0"
+              title="Caso de éxito 2" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <!-- Video 3 -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
+          <div style="position:relative;padding-top:56.25%">
+            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+              src="https://www.youtube.com/embed/VIDEO_3_ID?rel=0"
+              title="Caso de éxito 3" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="divider"></div>
-    <p style="font-size:0.82rem;color:var(--subtle);text-align:center">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
+    <!-- Carrusel comunidad — idéntico a la landing -->
+    <div class="comunidad-section" style="width:100%;border-radius:var(--r)">
+      <div class="comunidad-inner">
+        <span style="font-family:'DM Mono','Courier New',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.5rem">Nuestra comunidad</span>
+        <h2 style="font-size:clamp(1.3rem,3vw,1.9rem);font-weight:800;letter-spacing:-0.03em;color:var(--white);line-height:1.15;margin:0.5rem 0 1.5rem">Esto es lo que está viviendo la gente dentro de nuestro programa.</h2>
+
+        <div class="comunidad-carousel">
+          <button class="comunidad-arrow comunidad-prev" onclick="thanksSlide(-1)">&#8249;</button>
+          <div class="comunidad-track-wrap">
+            <div class="comunidad-track" id="thanksComunidadTrack">
+              <div class="comunidad-slide" onclick="thanksModal(0)"><img class="comunidad-img" src="/testimonials/rebe.png" alt="Rebe"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(1)"><img class="comunidad-img" src="/testimonials/bren.png" alt="Bren"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(2)"><img class="comunidad-img" src="/testimonials/dani.png" alt="Dani"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(3)"><img class="comunidad-img" src="/testimonials/diego.png" alt="Diego"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(4)"><img class="comunidad-img" src="/testimonials/fer.png" alt="Fer"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(5)"><img class="comunidad-img" src="/testimonials/kike.png" alt="Kike"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(6)"><img class="comunidad-img" src="/testimonials/lili.png" alt="Lili"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(7)"><img class="comunidad-img" src="/testimonials/luis.png" alt="Luis"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(8)"><img class="comunidad-img" src="/testimonials/majo.png" alt="Majo"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(9)"><img class="comunidad-img" src="/testimonials/mariana.png" alt="Mariana"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(10)"><img class="comunidad-img" src="/testimonials/poncho.png" alt="Poncho"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal(11)"><img class="comunidad-img" src="/testimonials/sasha.png" alt="Sasha"/><div class="comunidad-hint">Toca para leer completo</div></div>
+            </div>
+          </div>
+          <button class="comunidad-arrow comunidad-next" onclick="thanksSlide(1)">&#8250;</button>
+        </div>
+        <div class="comunidad-dots" id="thanksComunidadDots"></div>
+      </div>
+    </div>
+
+    <!-- Modal para ver imágenes completas -->
+    <div class="comunidad-modal" id="thanksModal">
+      <button class="comunidad-modal-nav" onclick="thanksModalNav(-1)">&#8249;</button>
+      <div class="comunidad-modal-track" id="thanksModalTrack"></div>
+      <button class="comunidad-modal-nav" onclick="thanksModalNav(1)">&#8250;</button>
+      <button class="comunidad-modal-close" onclick="thanksModalClose()">✕</button>
+    </div>
+
+    <div style="text-align:center;padding:2rem 0 1rem">
+      <p style="font-size:0.82rem;color:var(--subtle)">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
+    </div>
+
   </div>
 
 </div><!-- /shell -->
@@ -947,13 +1001,72 @@
       show('page-low');
     } else if (track === 'high') {
       document.getElementById('highNombre').textContent = answers.nombre.split(' ')[0];
+      document.getElementById('thanksNombre').textContent = answers.nombre.split(' ')[0];
       show('page-high');
     }
   }
 
+  // ── Carrusel página de gracias ──
+  const THANKS_IMGS = [
+    '/testimonials/rebe.png', '/testimonials/bren.png', '/testimonials/dani.png',
+    '/testimonials/diego.png', '/testimonials/fer.png', '/testimonials/kike.png',
+    '/testimonials/lili.png', '/testimonials/luis.png', '/testimonials/majo.png',
+    '/testimonials/mariana.png', '/testimonials/poncho.png', '/testimonials/sasha.png'
+  ];
+  let thanksIdx = 0;
+  let thanksModalIdx = 0;
+
+  function initThanksCarousel() {
+    const dots = document.getElementById('thanksComunidadDots');
+    if (!dots || dots.children.length) return;
+    THANKS_IMGS.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => thanksGoTo(i);
+      dots.appendChild(d);
+    });
+  }
+
+  function thanksGoTo(n) {
+    thanksIdx = n;
+    document.getElementById('thanksComunidadTrack').style.transform = `translateX(-${n * 100}%)`;
+    document.querySelectorAll('#thanksComunidadDots .comunidad-dot').forEach((d, i) => d.classList.toggle('active', i === n));
+  }
+
+  function thanksSlide(dir) {
+    thanksGoTo((thanksIdx + dir + THANKS_IMGS.length) % THANKS_IMGS.length);
+  }
+
+  function thanksModal(idx) {
+    thanksModalIdx = idx;
+    const modal = document.getElementById('thanksModal');
+    const track = document.getElementById('thanksModalTrack');
+    track.innerHTML = `<img src="${THANKS_IMGS[idx]}" alt="Testimonio"/>`;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function thanksModalNav(dir) {
+    thanksModalIdx = (thanksModalIdx + dir + THANKS_IMGS.length) % THANKS_IMGS.length;
+    document.getElementById('thanksModalTrack').innerHTML = `<img src="${THANKS_IMGS[thanksModalIdx]}" alt="Testimonio"/>`;
+  }
+
+  function thanksModalClose() {
+    document.getElementById('thanksModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('thanksModal').classList.contains('active')) return;
+    if (e.key === 'Escape') thanksModalClose();
+    if (e.key === 'ArrowLeft') thanksModalNav(-1);
+    if (e.key === 'ArrowRight') thanksModalNav(1);
+  });
+
   function show(id) {
     document.querySelectorAll('.result-page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    if (id === 'page-thanks') initThanksCarousel();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
