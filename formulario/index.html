@@ -670,13 +670,14 @@
 
     <h2 class="result-title">Listo, <span id="lowNombre"></span></h2>
 
-    <p class="result-body">Con base en tus respuestas, el mejor siguiente paso para ti es unirte a nuestro <strong>webinar gratuito</strong> donde vas a conocer el programa a fondo y ver casos de éxito de personas que estaban exactamente en tu misma situación.</p>
+    <p class="result-body" style="color:var(--white)">Con base en tus respuestas, el mejor siguiente paso para ti es unirte a nuestro <strong>webinar gratuito</strong> donde vas a conocer el programa a fondo y ver casos de éxito de personas que estaban exactamente en tu misma situación.</p>
 
-    <div class="webinar-date-pill">Mié. 21 de mayo &nbsp;·&nbsp; 6:00 pm CDMX</div>
+    <div class="webinar-date-pill">Miércoles &nbsp;·&nbsp; 6:00 pm hora CDMX</div>
 
-    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Agrega la sesión a tu calendario para no olvidarla.</p>
+    <p style="font-size:0.92rem;color:var(--white);font-weight:600;margin-bottom:0.35rem">⬇️ Agrégalo a tu calendario ahora</p>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Para que no se te olvide y recibas un recordatorio antes del evento.</p>
 
-    <div class="cal-section-label">Agregar a mi calendario</div>
+    <div class="cal-section-label">Elige tu calendario</div>
 
     <!-- Google Calendar -->
     <a id="gcalLink" href="#" target="_blank" class="cal-btn">
@@ -960,20 +961,35 @@
   }
 
   // ── Calendar links ──
-  // Webinar: Mié 21 mayo 2025, 18:00 CDMX (UTC-5 = 23:00 UTC)
-  const WEBINAR_START = '20250521T230000Z';
-  const WEBINAR_END   = '20250521T240000Z';
-  const WEBINAR_TITLE = 'Webinar NEWAV%C7%BE %E2%80%94 Trabaja remoto. Gana en d%C3%B3lares.';
-  const WEBINAR_DESC  = 'Link de acceso: https://us06web.zoom.us/j/89474292348';
-  const WEBINAR_LOC   = 'Zoom (online)';
+  // Calcula el próximo miércoles a las 18:00 CDMX (UTC-5)
+  function nextWednesday() {
+    const now = new Date();
+    const day = now.getDay(); // 0=dom, 3=mié
+    const daysUntilWed = (3 - day + 7) % 7 || 7;
+    const wed = new Date(now);
+    wed.setDate(now.getDate() + daysUntilWed);
+    wed.setHours(23, 0, 0, 0); // 18:00 CDMX = 23:00 UTC
+    return wed;
+  }
+
+  function toISOBasic(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
 
   function buildCalendarLinks() {
+    const start = nextWednesday();
+    const end   = new Date(start.getTime() + 60 * 60 * 1000); // +1 hora
+    const startStr = toISOBasic(start);
+    const endStr   = toISOBasic(end);
+    const title = 'Webinar NEWAVƎ — Trabaja remoto. Gana en dólares.';
+    const desc  = 'Link de acceso: https://us06web.zoom.us/j/89474292348';
+
     // Google Calendar
     const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE`
-      + `&text=${WEBINAR_TITLE}`
-      + `&dates=${WEBINAR_START}/${WEBINAR_END}`
-      + `&details=${encodeURIComponent(WEBINAR_DESC)}`
-      + `&location=${encodeURIComponent(WEBINAR_LOC)}`;
+      + `&text=${encodeURIComponent(title)}`
+      + `&dates=${startStr}/${endStr}`
+      + `&details=${encodeURIComponent(desc)}`
+      + `&location=${encodeURIComponent('Zoom (online)')}`;
     document.getElementById('gcalLink').href = gcal;
 
     // ICS file
@@ -982,11 +998,11 @@
       'VERSION:2.0',
       'PRODID:-//NEWAVE//Webinar//ES',
       'BEGIN:VEVENT',
-      `DTSTART:${WEBINAR_START}`,
-      `DTEND:${WEBINAR_END}`,
-      `SUMMARY:Webinar NEWAVƎ — Trabaja remoto. Gana en dólares.`,
-      `DESCRIPTION:Link de acceso: https://us06web.zoom.us/j/89474292348`,
-      `LOCATION:Zoom (online)`,
+      `DTSTART:${startStr}`,
+      `DTEND:${endStr}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${desc}`,
+      'LOCATION:Zoom (online)',
       'STATUS:CONFIRMED',
       'END:VEVENT',
       'END:VCALENDAR'
