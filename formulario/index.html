@@ -847,16 +847,6 @@
       </div>
     </section>
 
-    <!-- Modal — idéntico a la landing -->
-    <div class="comunidad-modal" id="thanksModal">
-      <button class="comunidad-modal-close" onclick="thanksModalClose()">✕</button>
-      <button class="comunidad-modal-nav comunidad-modal-prev" onclick="thanksModalNav(-1)">&#8249;</button>
-      <div class="comunidad-modal-track" id="thanksModalTrack">
-        <img id="thanksModalImg" src="" alt="" />
-      </div>
-      <button class="comunidad-modal-nav comunidad-modal-next" onclick="thanksModalNav(1)">&#8250;</button>
-    </div>
-
     <div style="text-align:center;padding:2rem 0 1rem">
       <p style="font-size:0.82rem;color:var(--subtle)">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
     </div>
@@ -864,6 +854,16 @@
   </div>
 
 </div><!-- /shell -->
+
+<!-- Modal fuera del shell, igual que en la landing -->
+<div class="comunidad-modal" id="thanksModal">
+  <button class="comunidad-modal-close" onclick="thanksModalClose()">✕</button>
+  <button class="comunidad-modal-nav comunidad-modal-prev" onclick="thanksModalNav(-1)">&#8249;</button>
+  <div class="comunidad-modal-track" id="thanksModalTrack">
+    <img id="thanksModalImg" src="" alt="" />
+  </div>
+  <button class="comunidad-modal-nav comunidad-modal-next" onclick="thanksModalNav(1)">&#8250;</button>
+</div>
 
 <script>
   // ── State ──
