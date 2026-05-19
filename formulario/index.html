@@ -290,7 +290,8 @@
 
     /* ── Result pages ── */
     .result-page { display: none; }
-    .result-page.active { display: block; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .result-page.active { display: flex; flex-direction: column; align-items: center; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    #page-disqualified.active, #page-low.active, #page-high.active { display: block; }
 
     .result-icon {
       width: 52px;
@@ -748,7 +749,7 @@
   </div>
 
   <!-- ── RESULTADO: High Ticket — Gracias ── -->
-  <div class="result-page" id="page-thanks">
+  <div class="result-page" id="page-thanks" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:520px;margin:0 auto">
 
     <!-- Header -->
     <div class="card" style="max-width:520px;width:100%;text-align:center;margin-bottom:2rem">
@@ -762,36 +763,36 @@
     </div>
 
     <!-- Videos de casos de éxito -->
-    <div style="width:100%;max-width:520px;margin-bottom:2rem">
+    <div style="width:100%;max-width:400px;margin:0 auto 2rem">
       <p style="font-family:'DM Mono','Courier New',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--orange);text-transform:uppercase;text-align:center;margin-bottom:0.75rem">Casos de éxito</p>
-      <h3 style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:1.5rem;line-height:1.2">Lo que han logrado nuestros miembros</h3>
+      <h3 style="font-size:1.35rem;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:1.5rem;line-height:1.2">Lo que han logrado nuestros miembros</h3>
 
-      <div style="display:flex;flex-direction:column;gap:1.25rem">
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
 
-        <!-- Video 1 — Short vertical -->
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden;max-width:320px;margin:0 auto">
+        <!-- Video 1 -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
           <div style="position:relative;padding-top:177.78%">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://www.youtube.com/embed/PWZ8c1eiw64?rel=0"
-              title="Caso de éxito 1" allowfullscreen loading="lazy"></iframe>
+              src="https://www.youtube.com/embed/PWZ8c1eiw64?rel=0&playsinline=1"
+              title="Caso de éxito 1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
           </div>
         </div>
 
-        <!-- Video 2 — Short vertical -->
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden;max-width:320px;margin:0 auto">
+        <!-- Video 2 -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
           <div style="position:relative;padding-top:177.78%">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://www.youtube.com/embed/gae6NtdWPe8?rel=0"
-              title="Caso de éxito 2" allowfullscreen loading="lazy"></iframe>
+              src="https://www.youtube.com/embed/gae6NtdWPe8?rel=0&playsinline=1"
+              title="Caso de éxito 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
           </div>
         </div>
 
-        <!-- Video 3 — Short vertical -->
-        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden;max-width:320px;margin:0 auto">
+        <!-- Video 3 -->
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-top:3px solid var(--orange);border-radius:var(--r-sm);overflow:hidden">
           <div style="position:relative;padding-top:177.78%">
             <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://www.youtube.com/embed/rGbm2CoAi_Y?rel=0"
-              title="Caso de éxito 3" allowfullscreen loading="lazy"></iframe>
+              src="https://www.youtube.com/embed/rGbm2CoAi_Y?rel=0&playsinline=1"
+              title="Caso de éxito 3" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
           </div>
         </div>
 
