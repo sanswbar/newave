@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEWAVƎ — Formulario de Contacto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:           #080a0d;
+      --bg-2:         #12161b;
+      --bg-3:         #1a1f26;
+      --white:        #ffffff;
+      --muted:        #e8e7e7;
+      --subtle:       rgba(232, 231, 231, 0.6);
+      --orange:       #FC7342;
+      --orange-h:     #d95b28;
+      --border:       rgba(183, 182, 182, 0.12);
+      --border-focus: rgba(252, 115, 66, 0.5);
+      --r:            18px;
+      --r-sm:         10px;
+      --sans:         'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+      display: inline-block;
+    }
+    .logo span { color: var(--orange); }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
+    .progress-label {
+      font-size: 0.78rem;
+      color: var(--subtle);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 99px;
+      transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2.5rem 2rem;
+    }
+
+    /* ── Steps ── */
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-sub {
+      font-size: 0.9rem;
+      color: var(--subtle);
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+    }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"] {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: var(--border-focus);
+    }
+    input::placeholder { color: rgba(232,231,231,0.3); }
+    input.error { border-color: #e05555 !important; }
+
+    .field-error {
+      font-size: 0.75rem;
+      color: #e05555;
+      margin-top: 0.3rem;
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    textarea {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      resize: vertical;
+      min-height: 110px;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: var(--border-focus); }
+    textarea::placeholder { color: rgba(232,231,231,0.3); }
+    textarea.error { border-color: #e05555 !important; }
+
+    /* ── Option cards (multiple choice) ── */
+    .options { display: flex; flex-direction: column; gap: 0.65rem; }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .opt:hover { border-color: rgba(252,115,66,0.35); }
+    .opt.selected {
+      border-color: var(--orange);
+      background: rgba(252,115,66,0.08);
+    }
+
+    .opt-radio {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .opt.selected .opt-radio {
+      border-color: var(--orange);
+    }
+    .opt-radio::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .opt.selected .opt-radio::after { opacity: 1; }
+
+    .opt-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .opt.selected .opt-text { color: var(--white); }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: var(--orange);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--r-sm);
+      padding: 0.85rem 1.5rem;
+      cursor: pointer;
+      margin-top: 1.75rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover {
+      background: var(--orange-h);
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: var(--subtle);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--white); }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.75rem;
+    }
+
+    /* ── Result pages ── */
+    .result-page { display: none; }
+    .result-page.active { display: block; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    .result-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(252,115,66,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .result-icon svg { width: 26px; height: 26px; }
+
+    .result-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .result-body {
+      font-size: 0.95rem;
+      color: var(--subtle);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── Webinar / Low ticket ── */
+    .confirm-check {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.12);
+      border: 2px solid rgba(34, 197, 94, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .confirm-check svg { width: 30px; height: 30px; }
+
+    .webinar-date-pill {
+      background: rgba(252, 115, 66, 0.1);
+      border: 1px solid rgba(252, 115, 66, 0.3);
+      border-radius: 99px;
+      padding: 0.65rem 1.25rem;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--orange);
+      font-family: 'DM Mono', 'Courier New', monospace;
+      letter-spacing: 0.02em;
+      margin: 1.5rem 0;
+    }
+
+    .cal-section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--subtle);
+      text-align: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .cal-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 1rem 1.1rem;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 0.65rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .cal-btn:hover {
+      border-color: rgba(252,115,66,0.4);
+      background: rgba(252,115,66,0.05);
+    }
+    .cal-btn-icon {
+      font-size: 1.15rem;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+    .cal-btn-arrow {
+      margin-left: auto;
+      color: var(--subtle);
+      font-size: 1rem;
+    }
+
+    .btn-webinar {
+      display: block;
+      width: 100%;
+      background: var(--orange);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--r-sm);
+      padding: 0.85rem 1.5rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-webinar:hover {
+      background: var(--orange-h);
+      transform: translateY(-1px);
+    }
+
+    /* ── Calendly embed ── */
+    .calendly-wrap {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      min-height: 680px;
+    }
+    .calendly-inline-widget {
+      min-width: 100%;
+      height: 680px;
+      border: none;
+    }
+
+    /* ── Disqualified ── */
+    .disq-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(224,85,85,0.15);
+      color: #e05555;
+      border-radius: 99px;
+      padding: 0.2rem 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 560px) {
+      .card { padding: 1.75rem 1.25rem; }
+      .step-title { font-size: 1.25rem; }
+      .result-title { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell" id="app">
+
+  <a href="https://www.newaveacademy.com" class="logo">NEWAV<span>Ǝ</span></a>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">Paso 1 de 6</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="mainCard">
+
+    <!-- ── Paso 1: Datos personales ── -->
+    <div class="step active" id="step-1">
+      <div class="step-eyebrow">Paso 1 de 6</div>
+      <h2 class="step-title">Cuéntanos sobre ti</h2>
+      <p class="step-sub">Necesitamos algunos datos básicos para poder ayudarte mejor.</p>
+
+      <div class="field">
+        <label for="nombre">Nombre completo *</label>
+        <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="name" />
+        <div class="field-error" id="err-nombre">Por favor ingresa tu nombre.</div>
+      </div>
+      <div class="field">
+        <label for="correo">Correo electrónico *</label>
+        <input type="email" id="correo" placeholder="tu@correo.com" autocomplete="email" />
+        <div class="field-error" id="err-correo">Por favor ingresa un correo válido.</div>
+      </div>
+      <div class="field">
+        <label for="whatsapp">WhatsApp *</label>
+        <input type="tel" id="whatsapp" placeholder="+1 555 000 0000" autocomplete="tel" />
+        <div class="field-error" id="err-whatsapp">Por favor ingresa tu número de WhatsApp.</div>
+      </div>
+      <div class="field">
+        <label for="linkedin">Perfil de LinkedIn *</label>
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" />
+        <div class="field-error" id="err-linkedin">Por favor ingresa tu URL de LinkedIn.</div>
+      </div>
+
+      <button class="btn-primary" onclick="nextStep(1)">Continuar →</button>
+    </div>
+
+    <!-- ── Paso 2: Nivel de inglés ── -->
+    <div class="step" id="step-2">
+      <div class="step-eyebrow">Paso 2 de 6</div>
+      <h2 class="step-title">¿Cuál es tu nivel de inglés?</h2>
+      <p class="step-sub">El inglés es clave para trabajar con empresas internacionales.</p>
+
+      <div class="options" id="opts-ingles">
+        <div class="opt" data-val="Basico" onclick="selectOpt('ingles', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Básico</div>
+        </div>
+        <div class="opt" data-val="Intermedio" onclick="selectOpt('ingles', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Intermedio</div>
+        </div>
+        <div class="opt" data-val="Avanzado" onclick="selectOpt('ingles', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Avanzado</div>
+        </div>
+        <div class="opt" data-val="Nativo o Bilingue" onclick="selectOpt('ingles', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Nativo o Bilingüe</div>
+        </div>
+      </div>
+      <div class="field-error" id="err-ingles" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep(2)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(2)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── Paso 3: Trabajo actual ── -->
+    <div class="step" id="step-3">
+      <div class="step-eyebrow">Paso 3 de 6</div>
+      <h2 class="step-title">¿En qué empresa trabajas y qué puesto tienes?</h2>
+      <p class="step-sub">Cuéntanos sobre tu situación profesional actual.</p>
+
+      <div class="field">
+        <label for="trabajo">Empresa y puesto actual *</label>
+        <textarea id="trabajo" placeholder="Ej: Trabajo en Accenture como desarrollador backend. Llevo 2 años en el puesto..."></textarea>
+        <div class="field-error" id="err-trabajo">Por favor cuéntanos sobre tu trabajo actual.</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep(3)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(3)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── Paso 4: Razón del cambio ── -->
+    <div class="step" id="step-4">
+      <div class="step-eyebrow">Paso 4 de 6</div>
+      <h2 class="step-title">¿Por qué quieres hacer un cambio en tu vida profesional?</h2>
+      <p class="step-sub">Cuéntanos cuál es tu motivación principal. Sé honesto/a.</p>
+
+      <div class="field">
+        <label for="razon">Tu razón principal *</label>
+        <textarea id="razon" placeholder="Ej: Quiero ganar en dólares y tener la libertad de trabajar desde cualquier lugar..."></textarea>
+        <div class="field-error" id="err-razon">Por favor cuéntanos tu motivación.</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep(4)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(4)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── Paso 5: Nivel de compromiso ── -->
+    <div class="step" id="step-5">
+      <div class="step-eyebrow">Paso 5 de 6</div>
+      <h2 class="step-title">¿Cuál es tu nivel de compromiso en este momento?</h2>
+      <p class="step-sub">Las expectativas son la base de una relación a largo plazo. Trabajamos con profesionales comprometidos que están listos para tomar acción hacia sus objetivos.</p>
+
+      <div class="options" id="opts-compromiso">
+        <div class="opt" data-val="Listo para tomar accion" onclick="selectOpt('compromiso', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Estoy listo/a para tomar acción e invertir en un programa que sí me ayude a lograr mis objetivos profesionales.</div>
+        </div>
+        <div class="opt" data-val="Interesado en conocer" onclick="selectOpt('compromiso', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Estoy interesado/a en saber del programa para tener claridad y, si es lo que busco, tomar acción.</div>
+        </div>
+        <div class="opt" data-val="Buscando, no listo aun" onclick="selectOpt('compromiso', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Actualmente estoy en un periodo de búsqueda y no estoy listo/a para tomar acción, pero me gustaría saber lo que hacen para tenerlo en cuenta en un futuro.</div>
+        </div>
+      </div>
+      <div class="field-error" id="err-compromiso" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep(5)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(5)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── Paso 6: Inversión ── -->
+    <div class="step" id="step-6">
+      <div class="step-eyebrow">Paso 6 de 6</div>
+      <h2 class="step-title">Una última pregunta, sé honesto/a</h2>
+      <p class="step-sub">En caso de que confirmemos en la llamada que podemos ayudarte y que este es el momento adecuado, se requerirá una inversión. ¿Cuál de estas opciones describe mejor tu situación actual?</p>
+
+      <div class="options" id="opts-inversion">
+        <div class="opt" data-val="No puede invertir" data-track="disqualified" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">No puedo invertir en mí en este momento.</div>
+        </div>
+        <div class="opt" data-val="199-250 dolares" data-track="low" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Tengo entre $199 y $250 dólares. <span style="color:var(--subtle);font-size:0.82rem">(Programa sin acompañamiento)</span></div>
+        </div>
+        <div class="opt" data-val="1000-2000 dolares" data-track="high" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Tengo entre $1,000 y $2,000 dólares. <span style="color:var(--subtle);font-size:0.82rem">(Acompañamiento y seguimiento hasta que consigas trabajo)</span></div>
+        </div>
+        <div class="opt" data-val="4000-8000 dolares" data-track="high" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">Tengo entre $4,000 y $8,000 dólares. <span style="color:var(--subtle);font-size:0.82rem">(Acompañamiento 1 a 1, estrategia personalizada y acceso prioritario a vacantes)</span></div>
+        </div>
+      </div>
+      <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Enviar →</button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- ── RESULTADO: Descalificado ── -->
+  <div class="card result-page" id="page-disqualified">
+    <div class="disq-badge">Lo sentimos</div>
+    <h2 class="result-title">En este momento no podemos ayudarte</h2>
+    <p class="result-body">Para que nuestro programa tenga el impacto que mereces, es necesario que exista una inversión de tu parte. Sin ese compromiso, no podríamos garantizarte los resultados que buscas.<br><br>Cuando estés listo/a para dar el siguiente paso, estaremos aquí.</p>
+    <div class="divider"></div>
+    <p style="font-size:0.85rem;color:var(--subtle)">Mientras tanto, síguenos en Instagram para ver casos de éxito y contenido gratuito.</p>
+    <a href="https://www.instagram.com/newaveacademy" target="_blank" class="btn-webinar" style="margin-top:1rem;background:var(--bg-3);border:1px solid var(--border)">@newaveacademy en Instagram</a>
+  </div>
+
+  <!-- ── RESULTADO: Low Ticket — Webinar ── -->
+  <div class="card result-page" id="page-low" style="text-align:center">
+    <div class="confirm-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <h2 class="result-title">Listo, te esperamos</h2>
+    <p class="result-body" style="margin-bottom:0">Agrega la sesión a tu calendario<br>y te enviaremos un recordatorio antes del webinar.</p>
+
+    <div class="webinar-date-pill">Mié. 21 de mayo &nbsp;·&nbsp; 6:00 pm CDMX</div>
+
+    <div class="cal-section-label">Agregar a mi calendario</div>
+
+    <!-- Google Calendar -->
+    <a id="gcalLink" href="#" target="_blank" class="cal-btn">
+      <span class="cal-btn-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </span>
+      Google Calendar
+      <span class="cal-btn-arrow">↗</span>
+    </a>
+
+    <!-- Apple / Outlook .ics -->
+    <a id="icsLink" href="#" download="webinar-newave.ics" class="cal-btn">
+      <span class="cal-btn-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </span>
+      Apple / Outlook (.ics)
+      <span class="cal-btn-arrow">↓</span>
+    </a>
+
+    <div class="divider"></div>
+    <p style="font-size:0.82rem;color:var(--subtle)">¿Ya tienes el evento? Únete directamente el día del webinar.</p>
+    <a href="https://us06web.zoom.us/j/89474292348" target="_blank" class="btn-webinar" style="margin-top:0.75rem">Unirme al webinar →</a>
+  </div>
+
+  <!-- ── RESULTADO: High Ticket — Calendly ── -->
+  <div class="card result-page" id="page-high" style="max-width:680px">
+    <div class="result-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </div>
+    <h2 class="result-title">¡Excelente, <span id="highNombre"></span>!</h2>
+    <p class="result-body">Recibimos tu información. El siguiente paso es agendar una llamada con nuestro equipo para conocerte mejor y explicarte cómo podemos ayudarte a conseguir tu trabajo remoto.</p>
+
+    <div class="calendly-wrap">
+      <div class="calendly-inline-widget" data-url="https://calendly.com/hello-nwave/discovery-call?hide_gdpr_banner=1&background_color=12161b&text_color=ffffff&primary_color=FC7342" style="min-width:100%;height:700px;"></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    </div>
+
+    <div class="divider"></div>
+    <p style="font-size:0.82rem;color:var(--subtle);text-align:center">¿Preguntas? Escríbenos por WhatsApp.</p>
+  </div>
+
+  <!-- ── RESULTADO: High Ticket — Gracias (post-Calendly) ── -->
+  <div class="card result-page" id="page-thanks" style="max-width:680px">
+    <div class="result-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+    <h2 class="result-title">Llamada agendada. ¡Nos vemos pronto!</h2>
+    <p class="result-body">Mientras esperas, mira lo que han logrado los miembros de nuestra comunidad.</p>
+
+    <div class="divider"></div>
+    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1.25rem">Casos de éxito 🏆</h3>
+
+    <!-- Testimonios en video — reemplaza los src con tus URLs reales -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem" id="testimonials-video">
+
+      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden">
+        <div style="position:relative;padding-top:56.25%">
+          <iframe
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+            src="VIDEO_1_URL_AQUI"
+            title="Testimonio 1"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div style="padding:0.85rem 1rem">
+          <p style="font-size:0.88rem;font-weight:600">Nombre del miembro</p>
+          <p style="font-size:0.8rem;color:var(--subtle)">Consiguió trabajo remoto en X empresa — +$XXX/mes</p>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden">
+        <div style="position:relative;padding-top:56.25%">
+          <iframe
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+            src="VIDEO_2_URL_AQUI"
+            title="Testimonio 2"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div style="padding:0.85rem 1rem">
+          <p style="font-size:0.88rem;font-weight:600">Nombre del miembro</p>
+          <p style="font-size:0.8rem;color:var(--subtle)">Consiguió trabajo remoto en X empresa — +$XXX/mes</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Screenshots de resultados -->
+    <div class="divider"></div>
+    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1.25rem">Resultados de la comunidad 📸</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem" id="screenshots">
+      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
+        Screenshot 1
+      </div>
+      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
+        Screenshot 2
+      </div>
+      <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:0.78rem">
+        Screenshot 3
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p style="font-size:0.82rem;color:var(--subtle);text-align:center">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+  // ── State ──
+  const answers = {
+    nombre: '', correo: '', whatsapp: '', linkedin: '',
+    ingles: '', trabajo: '', razon: '', compromiso: '', inversion: '',
+    track: '' // 'disqualified' | 'low' | 'high'
+  };
+
+  const TOTAL_STEPS = 6;
+
+  // ── Google Apps Script URL ──
+  // Pega aquí la URL de tu Google Apps Script desplegado:
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5e11js0uCMFswJx7vRojZMV6dUB_9gML8B5TarLie5K1Ue7ZfILKVqfuVMiS2Fx-iA/exec';
+
+  // ── Progress ──
+  function updateProgress(step) {
+    const pct = Math.round(((step - 1) / TOTAL_STEPS) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `Paso ${step} de ${TOTAL_STEPS}`;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  // ── Option select ──
+  function selectOpt(group, el) {
+    document.querySelectorAll(`#opts-${group} .opt`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[group] = el.dataset.val;
+    if (el.dataset.track) answers.track = el.dataset.track;
+    document.getElementById(`err-${group}`).classList.remove('show');
+  }
+
+  // ── Validation ──
+  function validateStep(step) {
+    let ok = true;
+
+    const setErr = (id, show) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('show', show);
+    };
+    const setInputErr = (id, show) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('error', show);
+    };
+
+    if (step === 1) {
+      const n = document.getElementById('nombre').value.trim();
+      const e = document.getElementById('correo').value.trim();
+      const w = document.getElementById('whatsapp').value.trim();
+      const l = document.getElementById('linkedin').value.trim();
+
+      if (!n) { setErr('err-nombre', true); setInputErr('nombre', true); ok = false; }
+      else     { setErr('err-nombre', false); setInputErr('nombre', false); answers.nombre = n; }
+
+      if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { setErr('err-correo', true); setInputErr('correo', true); ok = false; }
+      else { setErr('err-correo', false); setInputErr('correo', false); answers.correo = e; }
+
+      if (!w) { setErr('err-whatsapp', true); setInputErr('whatsapp', true); ok = false; }
+      else    { setErr('err-whatsapp', false); setInputErr('whatsapp', false); answers.whatsapp = w; }
+
+      if (!l) { setErr('err-linkedin', true); setInputErr('linkedin', true); ok = false; }
+      else    { setErr('err-linkedin', false); setInputErr('linkedin', false); answers.linkedin = l; }
+    }
+
+    if (step === 2) {
+      if (!answers.ingles) { setErr('err-ingles', true); ok = false; }
+    }
+
+    if (step === 3) {
+      const t = document.getElementById('trabajo').value.trim();
+      if (!t) { setErr('err-trabajo', true); document.getElementById('trabajo').classList.add('error'); ok = false; }
+      else    { setErr('err-trabajo', false); document.getElementById('trabajo').classList.remove('error'); answers.trabajo = t; }
+    }
+
+    if (step === 4) {
+      const r = document.getElementById('razon').value.trim();
+      if (!r) { setErr('err-razon', true); document.getElementById('razon').classList.add('error'); ok = false; }
+      else    { setErr('err-razon', false); document.getElementById('razon').classList.remove('error'); answers.razon = r; }
+    }
+
+    if (step === 5) {
+      if (!answers.compromiso) { setErr('err-compromiso', true); ok = false; }
+    }
+
+    if (step === 6) {
+      if (!answers.inversion) { setErr('err-inversion', true); ok = false; }
+    }
+
+    return ok;
+  }
+
+  // ── Navigate ──
+  let currentStep = 1;
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(`step-${n}`);
+    if (el) el.classList.add('active');
+    currentStep = n;
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    if (from < TOTAL_STEPS) showStep(from + 1);
+  }
+
+  function prevStep(from) {
+    if (from > 1) showStep(from - 1);
+  }
+
+  // ── Submit ──
+  function submitForm() {
+    if (!validateStep(6)) return;
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    sendToSheets();
+    showResult();
+  }
+
+  function sendToSheets() {
+    if (APPS_SCRIPT_URL === 'TU_APPS_SCRIPT_URL_AQUI') return;
+
+    const params = new URLSearchParams({
+      nombre:     answers.nombre,
+      correo:     answers.correo,
+      whatsapp:   answers.whatsapp,
+      linkedin:   answers.linkedin,
+      ingles:     answers.ingles,
+      trabajo:    answers.trabajo,
+      razon:      answers.razon,
+      compromiso: answers.compromiso,
+      inversion:  answers.inversion,
+      track:      answers.track
+    });
+
+    // JSONP — mismo patrón que el webinar actual
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = APPS_SCRIPT_URL + '?' + params.toString();
+    document.body.appendChild(iframe);
+    setTimeout(() => iframe.remove(), 5000);
+  }
+
+  function showResult() {
+    // Ocultar formulario y progress
+    document.getElementById('mainCard').style.display = 'none';
+    document.getElementById('progressWrap').style.display = 'none';
+
+    const track = answers.track;
+
+    if (track === 'disqualified') {
+      show('page-disqualified');
+    } else if (track === 'low') {
+      document.getElementById('lowNombre').textContent = answers.nombre.split(' ')[0];
+      show('page-low');
+    } else if (track === 'high') {
+      document.getElementById('highNombre').textContent = answers.nombre.split(' ')[0];
+      show('page-high');
+    }
+  }
+
+  function show(id) {
+    document.querySelectorAll('.result-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Calendar links ──
+  // Webinar: Mié 21 mayo 2025, 18:00 CDMX (UTC-5 = 23:00 UTC)
+  const WEBINAR_START = '20250521T230000Z';
+  const WEBINAR_END   = '20250521T240000Z';
+  const WEBINAR_TITLE = 'Webinar NEWAV%C7%BE %E2%80%94 Trabaja remoto. Gana en d%C3%B3lares.';
+  const WEBINAR_DESC  = 'Link de acceso: https://us06web.zoom.us/j/89474292348';
+  const WEBINAR_LOC   = 'Zoom (online)';
+
+  function buildCalendarLinks() {
+    // Google Calendar
+    const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE`
+      + `&text=${WEBINAR_TITLE}`
+      + `&dates=${WEBINAR_START}/${WEBINAR_END}`
+      + `&details=${encodeURIComponent(WEBINAR_DESC)}`
+      + `&location=${encodeURIComponent(WEBINAR_LOC)}`;
+    document.getElementById('gcalLink').href = gcal;
+
+    // ICS file
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//NEWAVE//Webinar//ES',
+      'BEGIN:VEVENT',
+      `DTSTART:${WEBINAR_START}`,
+      `DTEND:${WEBINAR_END}`,
+      `SUMMARY:Webinar NEWAVƎ — Trabaja remoto. Gana en dólares.`,
+      `DESCRIPTION:Link de acceso: https://us06web.zoom.us/j/89474292348`,
+      `LOCATION:Zoom (online)`,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    document.getElementById('icsLink').href = URL.createObjectURL(blob);
+  }
+
+  // Init
+  updateProgress(1);
+  buildCalendarLinks();
+</script>
+</body>
+</html>
