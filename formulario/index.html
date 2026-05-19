@@ -1122,6 +1122,15 @@
     document.getElementById('icsLink').href = URL.createObjectURL(blob);
   }
 
+  // ── Detectar cuando Calendly confirma el agendamiento ──
+  window.addEventListener('message', function(e) {
+    if (e.data.event && e.data.event === 'calendly.event_scheduled') {
+      document.getElementById('page-high').classList.remove('active');
+      show('page-thanks');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
   // Init
   updateProgress(1);
   buildCalendarLinks();
