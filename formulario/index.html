@@ -44,6 +44,8 @@
       align-items: center;
       justify-content: center;
       padding: 2rem 1.25rem 4rem;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     /* ── Logo ── */
@@ -291,7 +293,8 @@
     /* ── Result pages ── */
     .result-page { display: none; }
     .result-page.active { display: block; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-    #page-thanks.active { display: flex; flex-direction: column; align-items: center; }
+    #page-thanks { width: 100%; }
+    #page-thanks.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
     .result-icon {
       width: 52px;
@@ -451,8 +454,8 @@
     .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
 
     /* ── Page thanks ── */
-    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; align-self: stretch; }
-    .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; align-self: stretch; }
+    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; }
+    .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; box-sizing: border-box; }
     .thanks-videos-tag { font-family: 'DM Mono','Courier New',monospace; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; text-align: center; margin-bottom: 0.75rem; }
     .thanks-videos-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; margin-bottom: 1.25rem; line-height: 1.2; }
     .thanks-videos-list { display: flex; flex-direction: column; gap: 1.25rem; max-width: 260px; margin: 0 auto; }
@@ -525,11 +528,13 @@
       .calendly-inline-widget { height: 900px !important; }
 
       /* ── Page thanks ── */
-      .thanks-header-card { max-width: 100% !important; padding: 1.25rem 1rem !important; }
-      .thanks-videos-wrap { padding: 0 0.5rem; }
-      .thanks-videos-list { max-width: 100% !important; }
-      .thanks-videos-title { font-size: 1rem !important; }
-      #page-high { max-width: 100% !important; }
+      .shell { padding-left: 0; padding-right: 0; }
+      #page-thanks { overflow-x: hidden; }
+      .thanks-header-card { max-width: 100%; border-radius: 0; border-left: none; border-right: none; padding: 1.5rem 1.25rem; }
+      .thanks-videos-wrap { max-width: 100%; padding: 0 1.25rem; }
+      .thanks-videos-list { max-width: min(240px, 65vw); }
+      .thanks-videos-title { font-size: 1rem; }
+      #page-high { max-width: 100%; border-radius: 0; border-left: none; border-right: none; }
     }
   </style>
 </head>
