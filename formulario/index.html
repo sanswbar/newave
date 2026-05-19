@@ -122,7 +122,7 @@
 
     .step-sub {
       font-size: 0.9rem;
-      color: var(--subtle);
+      color: var(--muted);
       margin-bottom: 1.75rem;
       line-height: 1.5;
     }
@@ -134,7 +134,7 @@
       display: block;
       font-size: 0.82rem;
       font-weight: 500;
-      color: var(--muted);
+      color: var(--white);
       margin-bottom: 0.4rem;
     }
 
@@ -234,7 +234,7 @@
 
     .opt-text {
       font-size: 0.9rem;
-      color: var(--muted);
+      color: var(--white);
       line-height: 1.45;
     }
     .opt.selected .opt-text { color: var(--white); }
@@ -512,6 +512,10 @@
         <label for="whatsapp">WhatsApp *</label>
         <input type="tel" id="whatsapp" placeholder="+1 555 000 0000" autocomplete="tel" />
         <div class="field-error" id="err-whatsapp">Por favor ingresa tu número de WhatsApp.</div>
+      </div>
+      <div class="field">
+        <label for="linkedin">Perfil de LinkedIn <span style="color:var(--subtle);font-weight:400">(opcional)</span></label>
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" />
       </div>
       <button class="btn-primary" onclick="nextStep(1)">Continuar →</button>
     </div>
@@ -911,6 +915,7 @@
       nombre:     answers.nombre,
       correo:     answers.correo,
       whatsapp:   answers.whatsapp,
+      linkedin:   document.getElementById('linkedin').value.trim(),
       ingles:     answers.ingles,
       trabajo:    answers.trabajo,
       razon:      answers.razon,
