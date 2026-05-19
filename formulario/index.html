@@ -445,6 +445,11 @@
       margin: 1.5rem 0;
     }
 
+    /* ── Mono tag (igual que landing) ── */
+    .mono-tag { font-family: 'DM Mono','Courier New',monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block; margin-bottom: 0.5rem; }
+    .mono-tag.dark { color: var(--orange); }
+    .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
+
     /* ── Comunidad carrusel (thanks page) ── */
     .comunidad-section {
       background: var(--bg-2);
@@ -794,37 +799,36 @@
       </div>
     </div>
 
-    <!-- Carrusel comunidad — idéntico a la landing -->
-    <div class="comunidad-section" style="width:100%;border-radius:var(--r)">
+    <!-- Carrusel comunidad -->
+    <section class="comunidad-section" style="width:100%">
       <div class="comunidad-inner">
-        <span style="font-family:'DM Mono','Courier New',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.5rem">Nuestra comunidad</span>
-        <h2 style="font-size:clamp(1.3rem,3vw,1.9rem);font-weight:800;letter-spacing:-0.03em;color:var(--white);line-height:1.15;margin:0.5rem 0 1.5rem">Esto es lo que está viviendo la gente dentro de nuestro programa.</h2>
-
+        <span class="mono-tag dark">Nuestra comunidad</span>
+        <h2>Esto es lo que está viviendo la gente dentro de nuestro programa.</h2>
         <div class="comunidad-carousel">
           <button class="comunidad-arrow comunidad-prev" onclick="thanksSlide(-1)">&#8249;</button>
           <div class="comunidad-track-wrap">
             <div class="comunidad-track" id="thanksComunidadTrack">
-              <div class="comunidad-slide" onclick="thanksModal(0)"><img class="comunidad-img" src="/testimonials/rebe.png" alt="Rebe"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(1)"><img class="comunidad-img" src="/testimonials/bren.png" alt="Bren"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(2)"><img class="comunidad-img" src="/testimonials/dani.png" alt="Dani"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(3)"><img class="comunidad-img" src="/testimonials/diego.png" alt="Diego"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(4)"><img class="comunidad-img" src="/testimonials/fer.png" alt="Fer"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(5)"><img class="comunidad-img" src="/testimonials/kike.png" alt="Kike"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(6)"><img class="comunidad-img" src="/testimonials/lili.png" alt="Lili"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(7)"><img class="comunidad-img" src="/testimonials/luis.png" alt="Luis"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(8)"><img class="comunidad-img" src="/testimonials/majo.png" alt="Majo"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(9)"><img class="comunidad-img" src="/testimonials/mariana.png" alt="Mariana"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(10)"><img class="comunidad-img" src="/testimonials/poncho.png" alt="Poncho"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal(11)"><img class="comunidad-img" src="/testimonials/sasha.png" alt="Sasha"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/rebe.png')"><img src="/testimonials/rebe.png" alt="Rebe" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/mariana.png')"><img src="/testimonials/mariana.png" alt="Mariana" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/sasha.png')"><img src="/testimonials/sasha.png" alt="Sasha" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/poncho.png')"><img src="/testimonials/poncho.png" alt="Poncho" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/diego.png')"><img src="/testimonials/diego.png" alt="Diego" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/kike.png')"><img src="/testimonials/kike.png" alt="Kike" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/dani.png')"><img src="/testimonials/dani.png" alt="Dani" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/luis.png')"><img src="/testimonials/luis.png" alt="Luis" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/lili.png')"><img src="/testimonials/lili.png" alt="Lili" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/fer.png')"><img src="/testimonials/fer.png" alt="Fer" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/majo.png')"><img src="/testimonials/majo.png" alt="Majo" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="thanksModal('testimonials/bren.png')"><img src="/testimonials/bren.png" alt="Bren" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
             </div>
           </div>
           <button class="comunidad-arrow comunidad-next" onclick="thanksSlide(1)">&#8250;</button>
         </div>
         <div class="comunidad-dots" id="thanksComunidadDots"></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Modal para ver imágenes completas — idéntico a la landing -->
+    <!-- Modal — idéntico a la landing -->
     <div class="comunidad-modal" id="thanksModal">
       <button class="comunidad-modal-close" onclick="thanksModalClose()">✕</button>
       <button class="comunidad-modal-nav comunidad-modal-prev" onclick="thanksModalNav(-1)">&#8249;</button>
@@ -1004,48 +1008,57 @@
     }
   }
 
-  // ── Carrusel página de gracias ──
-  const THANKS_IMGS = [
-    '/testimonials/rebe.png', '/testimonials/bren.png', '/testimonials/dani.png',
-    '/testimonials/diego.png', '/testimonials/fer.png', '/testimonials/kike.png',
-    '/testimonials/lili.png', '/testimonials/luis.png', '/testimonials/majo.png',
-    '/testimonials/mariana.png', '/testimonials/poncho.png', '/testimonials/sasha.png'
-  ];
-  let thanksIdx = 0;
-  let thanksModalIdx = 0;
+  // ── Carrusel página de gracias — mismo patrón que la landing ──
+  var thanksIdx = 0;
+  var thanksSlides = [];
+  var thanksModalIdx = 0;
 
   function initThanksCarousel() {
     const dots = document.getElementById('thanksComunidadDots');
     if (!dots || dots.children.length) return;
-    THANKS_IMGS.forEach((_, i) => {
+    const slideEls = document.querySelectorAll('#thanksComunidadTrack .comunidad-slide');
+    thanksSlides = Array.from(slideEls).map(el => ({
+      src: el.querySelector('img').src,
+      alt: el.querySelector('img').alt
+    }));
+    thanksSlides.forEach((_, i) => {
       const d = document.createElement('button');
       d.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
-      d.onclick = () => thanksGoTo(i);
+      d.setAttribute('data-i', i);
+      d.onclick = function() { thanksGoTo(parseInt(this.getAttribute('data-i'))); };
       dots.appendChild(d);
     });
   }
 
   function thanksGoTo(n) {
     thanksIdx = n;
-    document.getElementById('thanksComunidadTrack').style.transform = `translateX(-${n * 100}%)`;
-    document.querySelectorAll('#thanksComunidadDots .comunidad-dot').forEach((d, i) => d.classList.toggle('active', i === n));
+    document.getElementById('thanksComunidadTrack').style.transform = 'translateX(-' + (100 * n) + '%)';
+    document.querySelectorAll('#thanksComunidadDots .comunidad-dot').forEach(function(d, i) {
+      d.classList.toggle('active', i === n);
+    });
   }
 
   function thanksSlide(dir) {
-    thanksGoTo((thanksIdx + dir + THANKS_IMGS.length) % THANKS_IMGS.length);
+    thanksGoTo((thanksIdx + dir + thanksSlides.length) % thanksSlides.length);
   }
 
-  function thanksModal(idx) {
-    thanksModalIdx = idx;
-    document.getElementById('thanksModalImg').src = THANKS_IMGS[idx];
-    document.getElementById('thanksModalImg').alt = 'Testimonio';
+  function thanksModal(src) {
+    if (!thanksSlides.length) {
+      const slideEls = document.querySelectorAll('#thanksComunidadTrack .comunidad-slide');
+      thanksSlides = Array.from(slideEls).map(el => ({ src: el.querySelector('img').src, alt: el.querySelector('img').alt }));
+    }
+    thanksModalIdx = thanksSlides.findIndex(s => s.src.endsWith(src.split('/').pop()));
+    if (thanksModalIdx < 0) thanksModalIdx = 0;
+    document.getElementById('thanksModalImg').src = thanksSlides[thanksModalIdx].src;
+    document.getElementById('thanksModalImg').alt = thanksSlides[thanksModalIdx].alt;
     document.getElementById('thanksModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function thanksModalNav(dir) {
-    thanksModalIdx = (thanksModalIdx + dir + THANKS_IMGS.length) % THANKS_IMGS.length;
-    document.getElementById('thanksModalImg').src = THANKS_IMGS[thanksModalIdx];
+    thanksModalIdx = (thanksModalIdx + dir + thanksSlides.length) % thanksSlides.length;
+    document.getElementById('thanksModalImg').src = thanksSlides[thanksModalIdx].src;
+    document.getElementById('thanksModalImg').alt = thanksSlides[thanksModalIdx].alt;
   }
 
   function thanksModalClose() {
@@ -1053,29 +1066,26 @@
     document.body.style.overflow = '';
   }
 
-  // Keyboard
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', function(e) {
     if (!document.getElementById('thanksModal').classList.contains('active')) return;
     if (e.key === 'Escape') thanksModalClose();
     if (e.key === 'ArrowLeft') thanksModalNav(-1);
     if (e.key === 'ArrowRight') thanksModalNav(1);
   });
 
-  // Swipe táctil en el modal
   (function() {
-    const track = document.getElementById('thanksModalTrack');
-    const modal = document.getElementById('thanksModal');
-    let startX = 0, startY = 0;
-    track.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+    var track = document.getElementById('thanksModalTrack');
+    var modal = document.getElementById('thanksModal');
+    var startX = 0, startY = 0;
+    track.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
     }, { passive: true });
-    track.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - startX;
-      const dy = e.changedTouches[0].clientY - startY;
+    track.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) thanksModalNav(dx < 0 ? 1 : -1);
     }, { passive: true });
-    modal.addEventListener('click', e => { if (e.target === modal) thanksModalClose(); });
+    modal.addEventListener('click', function(e) { if (e.target === modal) thanksModalClose(); });
   })();
 
   function show(id) {
