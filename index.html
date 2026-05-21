@@ -105,7 +105,7 @@
       <img src="images/logo.svg" alt="NEWAVƎ" class="logo-img" />
     </a>
     <div class="nav-right">
-      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="nav-cta" data-cta="nav">Únete</a>
+      <a href="https://www.newaveacademy.com/formulario/" target="_blank" rel="noopener" class="nav-cta" data-cta="nav">Aplica al programa</a>
     </div>
   </nav>
 
@@ -337,7 +337,7 @@
       </div>
 
       <div class="modulos-cta" data-animate>
-        <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-ver-planes" data-cta="programa">Ver planes y unirme</a>
+        <a href="https://www.newaveacademy.com/formulario/" target="_blank" rel="noopener" class="btn-ver-planes" data-cta="programa">Aplica al programa</a>
         <p class="modulos-precio">Desde <strong>$99 USD / año</strong> <span class="modulos-precio-sub">Sin compromiso de renovación</span></p>
         <p class="inv-cta-note">Te llevamos a Skool, nuestra plataforma privada, para elegir tu plan.</p>
       </div>
@@ -727,10 +727,10 @@
   <!-- CTA -->
   <section class="cta-section" id="contact">
     <div class="cta-inner">
-      <h2>¿Quieres resultados diferentes?<br>Aplica diferente.</h2>
-      <p>Únete a la comunidad NEWAVE y accede al curso, las herramientas y la mentoría que te llevan al trabajo remoto que buscas.</p>
-      <a href="https://www.skool.com/newave/plans" target="_blank" rel="noopener" class="btn-primary btn-large" data-cta="cta-final">Únete hoy</a>
-      <span class="cta-note">Alojado en Skool: cursos, comunidad y sesiones en vivo en un solo lugar.</span>
+      <h2>Queremos conocerte mejor.</h2>
+      <p>Este programa no es para todos. Llena el formulario y cuéntanos sobre ti para saber si es el fit correcto.</p>
+      <a href="https://www.newaveacademy.com/formulario/" target="_blank" rel="noopener" class="btn-primary btn-large" data-cta="cta-final">¿Es este programa para ti? Aplica aquí</a>
+      <span class="cta-note">Revisamos cada aplicación personalmente.</span>
     </div>
   </section>
 
@@ -869,7 +869,7 @@
 
     /* CTA TRACKING — GA4 + Meta Pixel con nombre de botón */
     document.addEventListener('click', function(e) {
-      var link = e.target.closest('a[href="https://www.skool.com/newave/plans"]');
+      var link = e.target.closest('a[href="https://www.newaveacademy.com/formulario/"]');
       if (!link) return;
       var ctaName = link.getAttribute('data-cta') || 'unknown';
 
@@ -877,7 +877,7 @@
         /* GA4: registra qué botón se tocó para análisis interno */
         gtag('event', 'cta_click', {
           'cta_location': ctaName,
-          'destination_url': 'https://www.skool.com/newave/plans'
+          'destination_url': 'https://www.newaveacademy.com/formulario/'
         });
       }
 
