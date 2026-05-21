@@ -1376,8 +1376,8 @@ a   { text-decoration: none; color: inherit; }
   color: var(--brand-black); margin-bottom: 2rem; text-align: center;
 }
 .autoridad-p {
-  font-size: 0.975rem; color: rgba(20,24,30,0.65); line-height: 1.8;
-  margin-bottom: 1.25rem; text-align: center;
+  font-size: 1.1rem; color: rgba(20,24,30,0.7); line-height: 1.85;
+  margin-bottom: 1.75rem; text-align: center;
 }
 .autoridad-list {
   list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
