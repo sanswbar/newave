@@ -595,15 +595,15 @@ a   { text-decoration: none; color: inherit; }
 .btn-ver-planes {
   display: inline-block;
   margin-top: 1.5rem;
-  padding: 1rem 2.75rem;
+  padding: 1.25rem 3.5rem;
   background: var(--orange);
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   border-radius: 12px;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(252,115,66,0.4);
+  box-shadow: 0 6px 28px rgba(252,115,66,0.5);
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 .btn-ver-planes:hover {
