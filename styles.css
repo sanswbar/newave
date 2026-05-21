@@ -1376,11 +1376,11 @@ a   { text-decoration: none; color: inherit; }
   color: var(--brand-black); margin-bottom: 2rem; text-align: center;
 }
 .autoridad-p {
-  font-size: 1.25rem; color: var(--brand-black); line-height: 1.7;
-  margin-bottom: 1rem; text-align: center; max-width: 620px; margin-left: auto; margin-right: auto;
+  font-size: 1.15rem; color: var(--brand-black); line-height: 1.75;
+  margin-bottom: 1.25rem; text-align: center; max-width: 780px; margin-left: auto; margin-right: auto;
 }
 .autoridad-p-intro {
-  font-size: 0.95rem; max-width: 800px; white-space: nowrap;
+  font-size: 1.15rem; max-width: 780px; white-space: nowrap;
 }
 .autoridad-list {
   list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
