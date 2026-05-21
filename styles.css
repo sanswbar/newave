@@ -1379,9 +1379,6 @@ a   { text-decoration: none; color: inherit; }
   font-size: 1.15rem; color: var(--brand-black); line-height: 1.75;
   margin-bottom: 1.25rem; text-align: center; max-width: 780px; margin-left: auto; margin-right: auto;
 }
-.autoridad-p-intro {
-  font-size: 1.15rem; max-width: 780px; white-space: nowrap;
-}
 .autoridad-list {
   list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
   margin-bottom: 1.75rem; align-items: center;
