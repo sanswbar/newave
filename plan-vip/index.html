@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WNMFCN55');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan VIP — NEWAVE Academy</title>
+  <meta name="description" content="El programa más completo de NEWAVE Academy. Acompañamiento personalizado, vacantes exclusivas y 3 meses de estrategia para conseguir trabajo remoto." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../images/NEWAVEISO.png" />
+  <link rel="stylesheet" href="../styles.css?v=72" />
+  <style>
+    /* ── HERO ── */
+    .vip-hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem clamp(1.25rem, 5vw, 3rem) 5rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(252,115,66,0.13) 0%, transparent 70%), var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .vip-hero::before {
+      content: 'NEWAVƎ';
+      position: absolute;
+      font-size: clamp(6rem, 18vw, 16rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      user-select: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+    .vip-hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--white);
+      margin: 1rem 0 1.5rem;
+      max-width: 720px;
+    }
+    .vip-hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .vip-hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .vip-hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ── BENEFICIOS ── */
+    .vip-section {
+      padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+      max-width: var(--max-wide);
+      margin: 0 auto;
+    }
+    .section-label {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* Benefit cards */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .benefit-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .benefit-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .benefit-card:hover::before { transform: scaleX(1); }
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .benefit-week {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+    .benefit-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+      text-align: left;
+    }
+    .benefit-card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.65;
+      text-align: left;
+    }
+
+    /* Timeline card (3 meses) */
+    .benefit-card.featured {
+      border-color: rgba(252, 115, 66, 0.3);
+      background: linear-gradient(135deg, var(--bg-3) 0%, rgba(252,115,66,0.06) 100%);
+      grid-column: 1 / -1;
+    }
+    .benefit-card.featured::before { transform: scaleX(1); }
+    .timeline {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .timeline-item {
+      flex: 1;
+      min-width: 180px;
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--r-sm);
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+    }
+    .timeline-item strong {
+      display: block;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.35rem;
+    }
+    .timeline-item p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    /* ── VIDEOS ── */
+    .videos-section {
+      background: var(--bg-2);
+      padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+    }
+    .videos-inner {
+      max-width: var(--max-wide);
+      margin: 0 auto;
+    }
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .video-card {
+      border-radius: var(--r);
+      overflow: hidden;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--orange);
+    }
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .video-name {
+      padding: 1rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      text-align: left;
+    }
+
+    /* ── TESTIMONIOS ESCRITOS ── */
+    .testimonios-section {
+      padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+      max-width: var(--max-wide);
+      margin: 0 auto;
+    }
+    .tcards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    /* ── COMUNIDAD ── */
+    .comunidad-section {
+      background: var(--bg-2);
+      padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+    }
+    .comunidad-inner {
+      max-width: var(--max-wide);
+      margin: 0 auto;
+    }
+    .comunidad-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .casos-img-card {
+      border-radius: var(--r);
+      border: 1px solid rgba(20,24,30,0.09);
+      border-top: 3px solid var(--orange);
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      background: #fff;
+    }
+    .casos-img-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+    }
+    .casos-img-card img { width: 100%; height: auto; display: block; }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      padding: var(--section) clamp(1.25rem, 5vw, 3rem);
+      text-align: center;
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(252,115,66,0.12) 0%, transparent 70%), var(--bg);
+      border-top: 1px solid rgba(252,115,66,0.15);
+    }
+    .cta-final h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .cta-final h2 em { font-style: normal; color: var(--orange); }
+    .cta-final p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* ── MODAL ── */
+    .casos-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.8);
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+    .casos-modal.active { display: flex; }
+    .casos-modal-inner {
+      position: relative;
+      max-width: 680px; width: 100%;
+      max-height: 90vh;
+      border-radius: 16px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .casos-modal-inner img { width: 100%; display: block; border-radius: 16px; }
+    .casos-modal-close {
+      position: sticky; top: 0.75rem; left: 100%;
+      margin: 0.75rem 0.75rem 0 0;
+      float: right;
+      background: rgba(0,0,0,0.55); color: #fff;
+      border: none; border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr; }
+      .tcards-grid { grid-template-columns: 1fr; }
+      .comunidad-grid { grid-template-columns: 1fr 1fr; }
+      .benefit-card.featured { grid-column: 1; }
+      .timeline { flex-direction: column; }
+      .vip-hero-ctas { flex-direction: column; align-items: center; }
+    }
+    @media (max-width: 480px) {
+      .comunidad-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNMFCN55" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="logo">
+      <img src="../images/logo.svg" alt="NEWAVƎ" class="logo-img" />
+    </a>
+    <div class="nav-right">
+      <a href="/formulario/" class="nav-cta">Aplica al programa</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="vip-hero">
+    <span class="mono-tag" data-animate>PLAN VIP</span>
+    <h1 data-animate data-delay="1">Tu camino acelerado hacia una <em>carrera tech internacional</em></h1>
+    <p data-animate data-delay="2">El programa más completo de NEWAVE Academy. Acompañamiento personalizado en cada paso para que consigas trabajo remoto — más rápido y con la estrategia correcta.</p>
+    <div class="vip-hero-ctas" data-animate data-delay="3">
+      <a href="/formulario/" class="btn-primary btn-large">Quiero entrar al Plan VIP</a>
+      <a href="#beneficios" class="btn-ghost">Ver qué incluye →</a>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="vip-section" id="beneficios">
+    <span class="section-label" data-animate>Qué incluye</span>
+    <h2 class="section-title" data-animate data-delay="1">Todo lo que necesitas,<br>desde el día 1.</h2>
+    <p class="section-sub" data-animate data-delay="2">Un sistema completo diseñado para llevarte de donde estás hoy a una oferta de trabajo en tecnología.</p>
+
+    <div class="benefits-grid">
+
+      <div class="benefit-card" data-animate>
+        <span class="benefit-icon">💬</span>
+        <div class="benefit-week">Desde el día 1</div>
+        <h3>Acceso a comunidad por WhatsApp</h3>
+        <p>Entra a un grupo privado con otros miembros del programa y el equipo NEWAVE. Soporte, recursos y red de contactos en tiempo real.</p>
+      </div>
+
+      <div class="benefit-card" data-animate data-delay="1">
+        <span class="benefit-icon">🎯</span>
+        <div class="benefit-week">Desde el día 1</div>
+        <h3>Vacantes personalizadas para ti</h3>
+        <p>Desde que arrancas, recibes oportunidades de trabajo remoto seleccionadas específicamente para tu perfil, experiencia e industria.</p>
+      </div>
+
+      <div class="benefit-card" data-animate data-delay="2">
+        <span class="benefit-icon">🚀</span>
+        <div class="benefit-week">Semana 1</div>
+        <h3>Sesión de onboarding 1:1</h3>
+        <p>Arrancamos juntos. Definimos tu estrategia, mapeamos tu perfil y trazamos el camino exacto que vas a seguir durante el programa.</p>
+      </div>
+
+      <div class="benefit-card" data-animate data-delay="3">
+        <span class="benefit-icon">🎓</span>
+        <div class="benefit-week">Semanas 2 y 3</div>
+        <h3>2 sesiones de preparación</h3>
+        <p>Trabajamos tu posicionamiento, CV, LinkedIn y pitch profesional para que llegues listo a cualquier proceso de selección internacional.</p>
+      </div>
+
+      <div class="benefit-card featured" data-animate>
+        <span class="benefit-icon">📈</span>
+        <div class="benefit-week">3 meses completos</div>
+        <h3>Seguimiento en estrategia — mes a mes</h3>
+        <p>No te dejamos solo después del onboarding. Te acompañamos activamente durante todo el proceso con sesiones recurrentes de estrategia.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>Semanas 1 y 2</strong>
+            <p>2 sesiones por semana para arrancar con todo el momentum.</p>
+          </div>
+          <div class="timeline-item">
+            <strong>Mes 2 en adelante</strong>
+            <p>1 sesión por semana para ajustar estrategia y mantener el ritmo.</p>
+          </div>
+          <div class="timeline-item">
+            <strong>3 meses de cobertura</strong>
+            <p>Seguimiento continuo hasta que consigas tu oferta.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIDEOS DE TESTIMONIOS -->
+  <section class="videos-section">
+    <div class="videos-inner">
+      <span class="section-label" data-animate>En sus propias palabras</span>
+      <h2 class="section-title" data-animate data-delay="1">Escúchalos a ellos.</h2>
+      <p class="section-sub" data-animate data-delay="2">Personas reales que pasaron por el programa y hoy trabajan remoto para empresas internacionales.</p>
+      <div class="videos-grid">
+
+        <div class="video-card" data-animate>
+          <div class="video-wrapper">
+            <iframe
+              src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              title="Pamela — Plan VIP NEWAVE"
+              loading="lazy">
+            </iframe>
+          </div>
+          <div class="video-name">Pamela Gallegos · Onboarding Specialist @ Pulse Protocol</div>
+        </div>
+
+        <div class="video-card" data-animate data-delay="1">
+          <div class="video-wrapper">
+            <iframe
+              src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              title="Fernando — Plan VIP NEWAVE"
+              loading="lazy">
+            </iframe>
+          </div>
+          <div class="video-name">Fernando · NEWAVE Alumni</div>
+        </div>
+
+        <div class="video-card" data-animate data-delay="2">
+          <div class="video-wrapper">
+            <iframe
+              src="https://player.vimeo.com/video/1193762000?badge=0&autopause=0&player_id=0&app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              title="Diana — Plan VIP NEWAVE"
+              loading="lazy">
+            </iframe>
+          </div>
+          <div class="video-name">Diana Pedroza · Key Account Manager @ CarbonSpaceTech</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS ESCRITOS -->
+  <section class="testimonios-section">
+    <span class="section-label" data-animate>Casos de éxito</span>
+    <h2 class="section-title" data-animate data-delay="1">+500 personas que ya<br>trabajan remoto.</h2>
+    <p class="section-sub" data-animate data-delay="2">Desde México, Colombia, Argentina, España y más. Perfiles no técnicos con trabajo remoto en empresas globales, pagado en dólares.</p>
+
+    <div class="tcards-grid">
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate>
+        <div class="tcard-quote">"</div>
+        <p>"Antes trabajaba en la planta de Pepsico: turnos presenciales de 12 horas, sin flexibilidad. Tres años después, hice 4x mi sueldo en Zappi, una empresa de Londres."</p>
+        <div class="tcard-author">
+          <img src="../images/maria.jpg" loading="lazy" width="42" height="42" alt="María Castañeda" class="avatar-photo" />
+          <div><strong>María Castañeda</strong><span>Account Director @ Zappi</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="1">
+        <div class="tcard-quote">"</div>
+        <p>"Soy abogada y trabajé años en el mundo corporativo. Conseguí mi primer trabajo como Customer Success Manager en una empresa de legal tech. Mi experiencia legal, pero con la libertad que siempre quise."</p>
+        <div class="tcard-author">
+          <img src="../images/valeria.jpg" loading="lazy" width="42" height="42" alt="Valeria de la Torre" class="avatar-photo" />
+          <div><strong>Valeria de la Torre</strong><span>Customer Success Lead @ SimplyAgree</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="2">
+        <div class="tcard-quote">"</div>
+        <p>"Hoy vivo en España con mi novio, los dos trabajamos remoto y ganamos en dólares. Pudimos tener carrera y vida juntos."</p>
+        <div class="tcard-author">
+          <img src="../images/pamela.jpg" loading="lazy" width="42" height="42" alt="Pamela Gallegos" class="avatar-photo" />
+          <div><strong>Pamela Gallegos</strong><span>Onboarding Specialist @ Pulse Protocol</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="3">
+        <div class="tcard-quote">"</div>
+        <p>"Después del programa conseguí dos trabajos remotos diferentes. Lo que aprendí no fue solo para un trabajo, fue una habilidad que puedo usar una y otra vez."</p>
+        <div class="tcard-author">
+          <img src="../images/ximena.jpg" loading="lazy" width="42" height="42" alt="Ximena Tendilla" class="avatar-photo" />
+          <div><strong>Ximena Tendilla</strong><span>Customer Success Manager @ Mendel</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate>
+        <div class="tcard-quote">"</div>
+        <p>"Trabajaba en DHL haciendo lo mismo todos los días. Hoy gano más de $5,000 USD al mes con prestaciones que en México parecen de otro planeta."</p>
+        <div class="tcard-author">
+          <img src="../images/ruben.jpg" loading="lazy" width="42" height="42" alt="Rubén López" class="avatar-photo" />
+          <div><strong>Rubén López</strong><span>Project Manager @ BairesDev</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="1">
+        <div class="tcard-quote">"</div>
+        <p>"Trabajo en Stripe y me promovieron a Renewals. Este año viví meses en Chicago para correr el maratón, trabajando desde allá. El mundo es tu oficina."</p>
+        <div class="tcard-author">
+          <img src="../images/juanpablo.jpg" loading="lazy" width="42" height="42" alt="Juan Pablo Martínez" class="avatar-photo" />
+          <div><strong>Juan Pablo Martínez</strong><span>Operations Associate @ Stripe</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="2">
+        <div class="tcard-quote">"</div>
+        <p>"Todavía estaba en la universidad cuando conseguí un internship remoto en una startup internacional. Empecé ganando más que muchos compañeros con trabajos presenciales."</p>
+        <div class="tcard-author">
+          <img src="../images/diego.png" loading="lazy" width="42" height="42" alt="Diego García" class="avatar-photo" />
+          <div><strong>Diego García</strong><span>Data &amp; Insights @ FXP</span></div>
+        </div>
+      </div>
+
+      <div class="tcard" style="background:var(--bg-3);" data-animate data-delay="3">
+        <div class="tcard-quote">"</div>
+        <p>"Tenía un trabajo tradicional en Aguascalientes. Hoy gano en dólares, tengo seguro internacional, presupuesto para mi home office, y viajes pagados."</p>
+        <div class="tcard-author">
+          <img src="../images/diana.jpg" loading="lazy" width="42" height="42" alt="Diana Pedroza" class="avatar-photo" />
+          <div><strong>Diana Pedroza</strong><span>Key Account Manager @ CarbonSpaceTech</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMUNIDAD -->
+  <section class="comunidad-section">
+    <div class="comunidad-inner">
+      <span class="section-label" data-animate>Directo de la comunidad</span>
+      <h2 class="section-title" data-animate data-delay="1">Lo que dicen ellos mismos.</h2>
+      <div class="comunidad-grid">
+        <div class="casos-img-card" onclick="openModal('../testimonials/poncho.png')" data-animate>
+          <img src="../testimonials/poncho.png" alt="Alfonso Villa" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/mariana.png')" data-animate data-delay="1">
+          <img src="../testimonials/mariana.png" alt="Mariana Díaz" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/sasha.png')" data-animate data-delay="2">
+          <img src="../testimonials/sasha.png" alt="Sasha Samano" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/luis.png')" data-animate data-delay="3">
+          <img src="../testimonials/luis.png" alt="Luis Aguilar" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/dani.png')" data-animate>
+          <img src="../testimonials/dani.png" alt="Dani" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/diego.png')" data-animate data-delay="1">
+          <img src="../testimonials/diego.png" alt="Diego" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/kike.png')" data-animate data-delay="2">
+          <img src="../testimonials/kike.png" alt="Kike" loading="lazy" />
+        </div>
+        <div class="casos-img-card" onclick="openModal('../testimonials/rebe.png')" data-animate data-delay="3">
+          <img src="../testimonials/rebe.png" alt="Rebe" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <span class="section-label" data-animate>Da el siguiente paso</span>
+    <h2 data-animate data-delay="1">¿Listo para ser el <em>siguiente</em>?</h2>
+    <p data-animate data-delay="2">El Plan VIP tiene cupo limitado. Aplica hoy y agenda tu llamada de evaluación sin costo.</p>
+    <a href="/formulario/" class="btn-primary btn-large" data-animate data-delay="3">Aplica al Plan VIP</a>
+  </section>
+
+  <!-- MODAL -->
+  <div class="casos-modal" id="casosModal" onclick="closeModal()">
+    <div class="casos-modal-inner" onclick="event.stopPropagation()">
+      <button class="casos-modal-close" onclick="closeModal()">✕</button>
+      <img id="casosModalImg" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+    // Modal
+    function openModal(src) {
+      document.getElementById('casosModalImg').src = src;
+      document.getElementById('casosModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('casosModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
