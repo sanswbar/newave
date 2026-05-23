@@ -983,6 +983,8 @@ a   { text-decoration: none; color: inherit; }
   margin-bottom: 0.75rem; color: var(--white);
   padding-bottom: 0.75rem;
   border-bottom: 1px solid rgba(255,255,255,0.08);
+  min-height: 3.2rem;
+  display: flex; align-items: flex-end;
 }
 .modulo-body p {
   font-size: 0.875rem; color: var(--muted); line-height: 1.7; text-align: left;
