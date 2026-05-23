@@ -954,7 +954,7 @@ a   { text-decoration: none; color: inherit; }
 .modulo-thumb-extra {
   background: linear-gradient(160deg, rgba(252,115,66,0.18) 0%, #0d0a05 55%);
   align-items: flex-start; justify-content: flex-end;
-  padding-left: 0.85rem;
+  padding: 0.6rem 0.85rem;
 }
 .modulo-thumb-extra::before {
   background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(252,115,66,0.22) 0%, transparent 70%);
@@ -966,7 +966,7 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: -0.01em;
 }
 .modulo-badge {
-  position: absolute; top: 0.5rem; left: 0.5rem;
+  position: absolute; top: 0.5rem; right: 0.6rem;
   font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.08em;
   text-transform: uppercase;
   background: rgba(252,115,66,0.15);
