@@ -720,10 +720,10 @@ a   { text-decoration: none; color: inherit; }
   .modulos-sub { font-size: 0.95rem; margin-bottom: 2rem; text-align: center; }
   .modulos-grid { grid-template-columns: 1fr; gap: 0.85rem; margin-bottom: 2rem; }
   .modulo-thumb { height: 100px; }
-  .modulo-num { font-size: 2.75rem; }
-  .modulo-body { padding: 1.1rem 1.1rem 1.35rem; text-align: center; }
-  .modulo-body h3 { font-size: 1rem; text-align: center; }
-  .modulo-body p { font-size: 0.875rem; text-align: center; }
+  .modulo-num { font-size: 1.5rem; }
+  .modulo-body { padding: 1.1rem 1.1rem 1.35rem; }
+  .modulo-body h3 { font-size: 1rem; }
+  .modulo-body p { font-size: 0.875rem; }
   .modulo-extra-title { font-size: 1.1rem; }
   .modulos-cta { padding: 0; }
   .inv-cta-note { text-align: center; }
@@ -929,9 +929,10 @@ a   { text-decoration: none; color: inherit; }
   background: linear-gradient(135deg, #1a1f26 0%, #0d1117 100%);
   height: 120px;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  align-items: flex-start; justify-content: flex-end;
   position: relative;
   border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem;
 }
 .modulo-thumb::before {
   content: '';
@@ -939,17 +940,20 @@ a   { text-decoration: none; color: inherit; }
   background: radial-gradient(ellipse 80% 60% at 50% 120%, rgba(252,115,66,0.18) 0%, transparent 70%);
 }
 .modulo-label {
-  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em;
-  color: rgba(252,115,66,0.7); text-transform: uppercase;
-  position: relative; z-index: 1;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em;
+  color: var(--orange); text-transform: uppercase;
+  position: absolute; top: 0.7rem; left: 0.85rem;
+  z-index: 1; white-space: nowrap;
 }
 .modulo-num {
-  font-size: 3.5rem; font-weight: 800; line-height: 1;
-  color: var(--white); letter-spacing: -0.04em;
+  font-size: 1.75rem; font-weight: 800; line-height: 1;
+  color: rgba(255,255,255,0.15); letter-spacing: -0.04em;
   position: relative; z-index: 1;
+  align-self: flex-end; margin-left: auto;
 }
 .modulo-thumb-extra {
-  background: linear-gradient(135deg, #1a1208 0%, #0d0a05 100%);
+  background: linear-gradient(160deg, rgba(252,115,66,0.18) 0%, #0d0a05 55%);
+  align-items: center; justify-content: center;
 }
 .modulo-thumb-extra::before {
   background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(252,115,66,0.22) 0%, transparent 70%);
@@ -961,13 +965,13 @@ a   { text-decoration: none; color: inherit; }
   letter-spacing: -0.02em;
 }
 .modulo-badge {
-  position: absolute; top: 0.6rem; right: 0.75rem;
-  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+  position: absolute; top: 0.6rem; left: 0.75rem;
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.8);
-  padding: 0.2rem 0.55rem; border-radius: 20px; z-index: 2;
+  background: rgba(252,115,66,0.15);
+  border: 1px solid rgba(252,115,66,0.3);
+  color: rgba(252,115,66,0.85);
+  padding: 0.18rem 0.5rem; border-radius: 20px; z-index: 2;
 }
 .modulo-body {
   padding: 1.25rem 1.35rem 1.5rem;
@@ -996,7 +1000,7 @@ a   { text-decoration: none; color: inherit; }
   .modulos-grid { grid-template-columns: 1fr; gap: 1rem; }
   .modulos-sub { font-size: 0.95rem; margin-bottom: 2.5rem; }
   .modulo-thumb { height: 100px; }
-  .modulo-num { font-size: 2.75rem; }
+  .modulo-num { font-size: 1.5rem; }
 }
 
 /* ── LIGHT VARIANTS: módulos, video, logras ── */
