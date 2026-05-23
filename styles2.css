@@ -953,25 +953,27 @@ a   { text-decoration: none; color: inherit; }
 }
 .modulo-thumb-extra {
   background: linear-gradient(160deg, rgba(252,115,66,0.18) 0%, #0d0a05 55%);
-  align-items: center; justify-content: center;
+  align-items: flex-start; justify-content: flex-end;
+  padding-left: 0.85rem;
 }
 .modulo-thumb-extra::before {
   background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(252,115,66,0.22) 0%, transparent 70%);
 }
 .modulo-extra-title {
-  font-size: 1.25rem; font-weight: 800; color: var(--white);
-  text-align: center; line-height: 1.2;
+  font-size: 0.95rem; font-weight: 800; color: var(--white);
+  text-align: left; line-height: 1.2;
   position: relative; z-index: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .modulo-badge {
-  position: absolute; top: 0.6rem; left: 0.75rem;
-  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+  position: absolute; top: 0.5rem; left: 0.5rem;
+  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.08em;
   text-transform: uppercase;
   background: rgba(252,115,66,0.15);
   border: 1px solid rgba(252,115,66,0.3);
   color: rgba(252,115,66,0.85);
-  padding: 0.18rem 0.5rem; border-radius: 20px; z-index: 2;
+  padding: 0.15rem 0.4rem; border-radius: 20px; z-index: 2;
+  white-space: nowrap;
 }
 .modulo-body {
   padding: 1.25rem 1.35rem 1.5rem;
