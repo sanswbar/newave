@@ -1244,8 +1244,19 @@
     const end   = new Date(start.getTime() + 60 * 60 * 1000); // +1 hora
     const startStr = toISOBasic(start);
     const endStr   = toISOBasic(end);
-    const title = 'Webinar NEWAVƎ — Trabaja remoto. Gana en dólares.';
-    const desc  = 'Link de acceso: https://us06web.zoom.us/j/89474292348';
+    const title = 'Webinar NEWAVE — Como conseguir tu trabajo remoto.';
+    const desc  = [
+      'Tu camino hacia trabajos remotos en empresas internacionales.',
+      '',
+      'En este webinar veremos:',
+      '• El estado actual del mercado laboral remoto',
+      '• Donde encontrar trabajos remotos y el tipo de empresas (bolsas de trabajo)',
+      '• Nuevas posiciones abiertas y para quien aplican estos trabajos',
+      '• Quiénes somos y nuestros casos de éxito',
+      '• Estrategias para destacar ante reclutadores gringos',
+      '',
+      'Link de Zoom: https://us06web.zoom.us/j/89474292348'
+    ].join('\n');
 
     // Google Calendar
     const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE`
@@ -1260,6 +1271,7 @@
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
       'PRODID:-//NEWAVE//Webinar//ES',
+      'METHOD:PUBLISH',
       'BEGIN:VEVENT',
       `DTSTART:${startStr}`,
       `DTEND:${endStr}`,
