@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/css/intlTelInput.css" />
   <style>
     :root {
       --bg:           #080a0d;
@@ -492,6 +493,53 @@
     .comunidad-modal-close { position: fixed; top: 1rem; right: 1rem; background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px); }
     .comunidad-modal-nav { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 50%; width: 48px; height: 48px; flex-shrink: 0; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; }
     .comunidad-modal-nav:hover { background: var(--orange); border-color: var(--orange); }
+    /* ── intl-tel-input overrides ── */
+    .iti { width: 100%; }
+    .iti__tel-input {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem 0.75rem 3.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .iti__tel-input:focus { border-color: var(--border-focus); }
+    .iti__tel-input::placeholder { color: rgba(232,231,231,0.3); }
+    .iti__tel-input.error { border-color: #e05555 !important; }
+    .iti__flag-container { background: transparent; }
+    .iti__selected-dial-code { color: var(--white); font-size: 0.85rem; }
+    .iti__country-list {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--white);
+      max-height: 220px;
+    }
+    .iti__country:hover, .iti__country.iti__highlight { background: rgba(252,115,66,0.12); }
+    .iti__country-name, .iti__dial-code { color: var(--white); }
+    .iti__search-input {
+      background: var(--bg-3);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      padding: 0.5rem 0.75rem;
+      width: 100%;
+      outline: none;
+    }
+    .iti__search-input::placeholder { color: rgba(232,231,231,0.4); }
+    .iti__flag-box { background: transparent; }
+    .iti__divider { border-bottom: 1px solid var(--border); }
+    .iti__selected-country { background: transparent !important; gap: 4px; }
+    .iti__selected-country:hover { background: rgba(252,115,66,0.08) !important; }
+    .iti__arrow { border-top-color: var(--subtle); }
+    .iti__arrow--up { border-bottom-color: var(--subtle); }
+
     /* ── Mobile ── */
     @media (max-width: 600px) {
       html, body { overflow-x: hidden; max-width: 100vw; }
@@ -579,8 +627,8 @@
       </div>
       <div class="field">
         <label for="whatsapp">WhatsApp *</label>
-        <input type="tel" id="whatsapp" placeholder="+1 555 000 0000" autocomplete="tel" />
-        <div class="field-error" id="err-whatsapp">Por favor ingresa tu número de WhatsApp.</div>
+        <input type="tel" id="whatsapp" placeholder="55 1234 5678" autocomplete="tel" />
+        <div class="field-error" id="err-whatsapp">Por favor ingresa tu número de WhatsApp con lada.</div>
       </div>
       <div class="field">
         <label for="linkedin">Perfil de LinkedIn <span style="color:var(--subtle);font-weight:400">(opcional)</span></label>
@@ -894,7 +942,20 @@
   <button class="comunidad-modal-nav comunidad-modal-next" onclick="thanksModalNav(1)">&#8250;</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/intlTelInput.min.js"></script>
 <script>
+  // ── intl-tel-input init ──
+  let itiInstance;
+  document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('whatsapp');
+    itiInstance = window.intlTelInput(input, {
+      initialCountry: 'mx',
+      preferredCountries: ['mx', 'co', 'ar', 'us', 'es', 've', 'pe', 'cl', 'ec', 'bo'],
+      separateDialCode: true,
+      utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/utils.js',
+    });
+  });
+
   // ── State ──
   const answers = {
     nombre: '', correo: '', whatsapp: '', linkedin: '',
@@ -949,8 +1010,10 @@
       if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { setErr('err-correo', true); setInputErr('correo', true); ok = false; }
       else { setErr('err-correo', false); setInputErr('correo', false); answers.correo = e; }
 
-      if (!w) { setErr('err-whatsapp', true); setInputErr('whatsapp', true); ok = false; }
-      else    { setErr('err-whatsapp', false); setInputErr('whatsapp', false); answers.whatsapp = w; }
+      const wFull = itiInstance ? itiInstance.getNumber() : w;
+      const wValid = itiInstance ? itiInstance.isValidNumber() : !!w;
+      if (!wValid) { setErr('err-whatsapp', true); setInputErr('whatsapp', true); ok = false; }
+      else         { setErr('err-whatsapp', false); setInputErr('whatsapp', false); answers.whatsapp = wFull; }
     }
 
     if (step === 2) {
