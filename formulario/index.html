@@ -1096,25 +1096,7 @@
 
   // ── Lista de espera agosto ──
   function reservarLugar() {
-    const params = new URLSearchParams({
-      nombre:     answers.nombre,
-      correo:     answers.correo,
-      whatsapp:   answers.whatsapp,
-      linkedin:   document.getElementById('linkedin').value.trim(),
-      ingles:     answers.ingles,
-      trabajo:    answers.trabajo,
-      razon:      answers.razon,
-      compromiso: answers.compromiso,
-      inversion:  answers.inversion,
-      track:      'lista-espera-agosto'
-    });
-    if (APPS_SCRIPT_URL !== 'TU_APPS_SCRIPT_URL_AQUI') {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = APPS_SCRIPT_URL + '?' + params.toString();
-      document.body.appendChild(iframe);
-      setTimeout(() => iframe.remove(), 5000);
-    }
+    // El usuario ya quedó registrado como 'high' al hacer submit — solo mostramos confirmación
     document.getElementById('waitlist-form').style.display = 'none';
     document.getElementById('waitlist-confirm').style.display = 'block';
   }
