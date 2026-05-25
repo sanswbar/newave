@@ -838,8 +838,25 @@
     </div>
     <h2 class="result-title">Se llenaron los cupos, <span id="highNombre"></span></h2>
     <p class="result-body">Los cupos del Plan Personalizado están llenos por ahora. Nuestro siguiente curso empieza el <strong>3 de agosto</strong>.</p>
-    <p class="result-body" style="margin-top:1rem;">Tenemos un programa que incluye toda la metodología — sin el componente de personalización — al que puedes entrar hoy. Y si en algún momento quisieras pasarte al Plan Personalizado, te abonamos lo que pagaste y te damos <strong>USD 500 de descuento</strong>.</p>
-    <a href="https://www.skool.com/newav" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:1.5rem;padding:0.85rem 2rem;background:#FC7342;color:#fff;font-weight:700;font-size:1rem;border-radius:999px;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Quiero entrar al programa →</a>
+
+    <!-- Opción 1: programa regular -->
+    <div style="margin-top:1.5rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:16px;background:rgba(255,255,255,0.03);">
+      <p style="margin:0 0 0.5rem;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FC7342;">Opción 1 — Entra hoy</p>
+      <p class="result-body" style="margin:0 0 1rem;">Tenemos un programa que incluye toda la metodología — sin el componente de personalización. Y si en algún momento quisieras pasarte al Plan Personalizado, te abonamos lo pagado y te damos <strong>USD 500 de descuento</strong>.</p>
+      <a href="https://www.skool.com/newav" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:0.75rem 1.75rem;background:#FC7342;color:#fff;font-weight:700;font-size:0.95rem;border-radius:999px;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Quiero entrar al programa →</a>
+    </div>
+
+    <!-- Opción 2: apartar lugar agosto -->
+    <div style="margin-top:1rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:16px;background:rgba(255,255,255,0.03);">
+      <p style="margin:0 0 0.5rem;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);">Opción 2 — Apartar lugar para agosto</p>
+      <p class="result-body" style="margin:0 0 1rem;">Si prefieres esperar al Plan Personalizado del 3 de agosto, dejamos tus datos apartados.</p>
+      <div id="waitlist-form">
+        <button onclick="reservarLugar()" style="display:inline-block;padding:0.75rem 1.75rem;background:transparent;color:#fff;font-weight:700;font-size:0.95rem;border-radius:999px;border:1.5px solid rgba(255,255,255,0.35);cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#FC7342'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Apartar mi lugar para el 3 de agosto</button>
+      </div>
+      <div id="waitlist-confirm" style="display:none;color:#22c55e;font-weight:600;font-size:0.95rem;margin-top:0.5rem;">
+        ✓ Listo, tu lugar está apartado. Te contactaremos antes del 3 de agosto.
+      </div>
+    </div>
 
     <!-- CUPOS DISPONIBLES: descomentar el bloque de abajo y borrar todo lo de arriba (desde result-icon hasta el enlace) para volver a mostrar Calendly
     <div class="result-icon">
@@ -1075,6 +1092,31 @@
 
   function prevStep(from) {
     if (from > 1) showStep(from - 1);
+  }
+
+  // ── Lista de espera agosto ──
+  function reservarLugar() {
+    const params = new URLSearchParams({
+      nombre:     answers.nombre,
+      correo:     answers.correo,
+      whatsapp:   answers.whatsapp,
+      linkedin:   document.getElementById('linkedin').value.trim(),
+      ingles:     answers.ingles,
+      trabajo:    answers.trabajo,
+      razon:      answers.razon,
+      compromiso: answers.compromiso,
+      inversion:  answers.inversion,
+      track:      'lista-espera-agosto'
+    });
+    if (APPS_SCRIPT_URL !== 'TU_APPS_SCRIPT_URL_AQUI') {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = APPS_SCRIPT_URL + '?' + params.toString();
+      document.body.appendChild(iframe);
+      setTimeout(() => iframe.remove(), 5000);
+    }
+    document.getElementById('waitlist-form').style.display = 'none';
+    document.getElementById('waitlist-confirm').style.display = 'block';
   }
 
   // ── Submit ──
