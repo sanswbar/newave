@@ -589,6 +589,7 @@ a   { text-decoration: none; color: inherit; }
 .cta-section h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: var(--white); }
 .cta-section p { font-size: 1.05rem; color: rgba(232,231,231,0.75); max-width: 480px; line-height: 1.75; }
 .cta-note { font-family: var(--mono); font-size: 0.68rem; color: var(--subtle); letter-spacing: 0.06em; }
+.cta-question { font-size: 1.1rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
 
 /* ── VER PLANES ── */
 .how-cta { text-align: center; margin-top: 2.5rem; }
