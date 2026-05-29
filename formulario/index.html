@@ -788,12 +788,11 @@
       </svg>
     </div>
 
-    <h2 class="result-title">Revisamos tus respuestas, <span id="lowNombre"></span></h2>
+    <h2 class="result-title">Gracias por llenar el formulario, <span id="lowNombre"></span></h2>
 
-    <!-- Comunidad Skool -->
-    <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">En base a tu perfil, la mejor opción para ti es entrar a nuestro programa, es la forma más directa de conseguir un trabajo remoto y empezar a ganar en dólares. Puedes ver casos de éxito de personas como tú justo abajo.</p>
+    <p id="lowMsg" style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem"></p>
 
-    <a href="https://www.skool.com/newave" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0">Unirme al programa →</a>
+    <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0">Ver cómo funciona →</a>
 
     <!-- Videos de casos de éxito -->
     <div class="thanks-videos-wrap" style="text-align:left;margin-top:2rem">
@@ -850,8 +849,9 @@
         <line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
     </div>
-    <h2 class="result-title">Se llenaron los cupos, <span id="highNombre"></span></h2>
-    <p class="result-body">Los cupos del Plan Personalizado están llenos por ahora. Nuestro siguiente curso empieza el <strong>3 de agosto</strong>.</p>
+    <h2 class="result-title">Gracias por llenar el formulario, <span id="highNombre"></span></h2>
+    <p id="highMsg" class="result-body"></p>
+    <p class="result-body" style="margin-top:0.5rem">Los cupos del Plan Personalizado están llenos por ahora. Nuestro siguiente curso empieza el <strong>3 de agosto</strong>.</p>
 
     <!-- Opción: apartar lugar agosto -->
     <div style="margin-top:1rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:16px;background:rgba(255,255,255,0.03);">
@@ -1207,11 +1207,23 @@
     if (track === 'disqualified') {
       show('page-disqualified');
     } else if (track === 'low') {
-      document.getElementById('lowNombre').textContent = answers.nombre.split(' ')[0];
+      const lowNombre = answers.nombre.split(' ')[0];
+      document.getElementById('lowNombre').textContent = lowNombre;
+      const inglesLow = (answers.ingles || '').toLowerCase();
+      const esBasicoLow = inglesLow.includes('bás') || inglesLow.includes('basi');
+      document.getElementById('lowMsg').textContent = esBasicoLow
+        ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
+        : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
       show('page-low');
     } else if (track === 'high') {
-      document.getElementById('highNombre').textContent = answers.nombre.split(' ')[0];
-      document.getElementById('thanksNombre').textContent = answers.nombre.split(' ')[0];
+      const highNombre = answers.nombre.split(' ')[0];
+      document.getElementById('highNombre').textContent = highNombre;
+      document.getElementById('thanksNombre').textContent = highNombre;
+      const inglesHigh = (answers.ingles || '').toLowerCase();
+      const esBasicoHigh = inglesHigh.includes('bás') || inglesHigh.includes('basi');
+      document.getElementById('highMsg').textContent = esBasicoHigh
+        ? 'Con tu perfil, tienes todo para conseguir un trabajo remoto. Hemos ayudado a muchas personas en tu misma situación y sabemos que podemos ayudarte a ti también.'
+        : 'Con tu nivel de inglés ' + answers.ingles.toLowerCase() + ' y tu perfil, tienes todo para conseguir un trabajo remoto. Hemos ayudado a muchas personas en tu misma situación y sabemos que podemos ayudarte a ti también.';
       show('page-high');
     }
   }
