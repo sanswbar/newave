@@ -127,6 +127,32 @@ a   { text-decoration: none; color: inherit; }
 }
 .nav-cta:hover { background: var(--orange-h); transform: translateY(-1px); }
 
+/* ── NAV DROPDOWN ── */
+.nav-dropdown { position: relative; }
+.nav-dropdown-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.75);
+  padding: 0.45rem 0.75rem; border-radius: 20px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.nav-dropdown-btn:hover { color: #fff; }
+.nav-dropdown-menu {
+  display: none;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: #12161b; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; min-width: 200px;
+  padding: 0.4rem 0; z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.nav-dropdown:hover .nav-dropdown-menu { display: block; }
+.nav-dropdown-item {
+  display: block; padding: 0.65rem 1.1rem;
+  font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.75);
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
 /* ── BUTTONS ── */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center;
