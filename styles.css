@@ -126,6 +126,8 @@ a   { text-decoration: none; color: inherit; }
   transition: background 0.2s, transform 0.15s;
 }
 .nav-cta:hover { background: var(--orange-h); transform: translateY(-1px); }
+.nav-cta-secondary { background: transparent; border: 1.5px solid rgba(252,115,66,0.5); color: #FC7342; }
+.nav-cta-secondary:hover { background: rgba(252,115,66,0.08); border-color: #FC7342; }
 
 
 /* ── BUTTONS ── */
