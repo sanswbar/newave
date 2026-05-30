@@ -179,6 +179,8 @@ a   { text-decoration: none; color: inherit; }
 .btn-primary:hover { background: rgba(245,245,247,0.88); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.12); }
 .btn-large { font-size: 1.1rem; padding: 1.05rem 2.75rem; box-shadow: 0 0 40px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3); }
 
+.hero-cta-mobile { display: none; }
+
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center;
   background: transparent; color: var(--orange);
@@ -725,6 +727,10 @@ a   { text-decoration: none; color: inherit; }
   /* Global section headings */
   h2 { font-size: clamp(1.15rem, 5.5vw, 1.5rem) !important; }
   .section-label, .mono-tag { font-size: 0.6rem !important; }
+
+  /* Hero CTAs: swap desktop for mobile versions */
+  .hero-cta-desktop { display: none !important; }
+  .hero-cta-mobile { display: inline-flex !important; }
 
   /* Nav */
   .nav { padding: 0 1rem; height: 54px; }
