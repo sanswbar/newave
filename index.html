@@ -104,22 +104,6 @@
     <a href="/" class="logo">
       <img src="images/logo.svg" alt="NEWAVƎ" class="logo-img" />
     </a>
-    <div class="nav-right">
-      <!-- Desktop: dos botones -->
-      <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener" class="nav-cta nav-cta-secondary nav-desktop-only">La Academia</a>
-      <a href="https://www.newaveacademy.com/plan-personalizado/" class="nav-cta nav-desktop-only" data-cta="nav">Programa Personalizado</a>
-      <!-- Mobile: dropdown Programas -->
-      <div class="nav-dropdown nav-mobile-only" id="navDropdown">
-        <button class="nav-cta nav-dropdown-btn" onclick="navDropdownToggle(event)">
-          Programas
-          <svg class="nav-dropdown-chevron" width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M4 6.5L9 11.5L14 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="nav-dropdown-menu" id="navDropdownMenu">
-          <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener" class="nav-dropdown-item">La Academia</a>
-          <a href="https://www.newaveacademy.com/plan-personalizado/" class="nav-dropdown-item" data-cta="nav">Plan Personalizado</a>
-        </div>
-      </div>
-    </div>
   </nav>
 
   <!-- HERO -->
@@ -131,6 +115,7 @@
       <p class="hero-sub" data-animate data-delay="2">Programa para conseguir trabajo remoto con empresas internacionales.</p>
       <div class="hero-actions" data-animate data-delay="3">
         <a href="#programa" class="btn-primary">Conoce nuestro programa</a>
+        <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener" class="btn-secondary">Ir a la Academia →</a>
       </div>
       <div class="hero-proof" data-animate data-delay="4">
         <span class="proof-dot"></span>
@@ -941,15 +926,5 @@
     })();
   </script>
 
-  <script>
-    function navDropdownToggle(e) {
-      e.stopPropagation();
-      document.getElementById('navDropdown').classList.toggle('open');
-    }
-    document.addEventListener('click', function(e) {
-      var dd = document.getElementById('navDropdown');
-      if (dd && !dd.contains(e.target)) dd.classList.remove('open');
-    });
-  </script>
 </body>
 </html>
