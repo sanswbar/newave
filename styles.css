@@ -683,7 +683,7 @@ a   { text-decoration: none; color: inherit; }
   .hero-sub { font-size: 1.05rem; color: rgba(232,231,231,0.85); margin-bottom: 2rem; text-align: center; }
   .hero-eyebrow { font-size: 0.65rem; }
   .hero-actions { flex-direction: column; gap: 0.75rem; align-items: center; width: 100%; margin-bottom: 1.75rem; }
-  .hero-actions .btn-primary { padding: 0.8rem 1.75rem; font-size: 0.95rem; border-radius: 980px; }
+  .hero-actions .btn-primary { padding: 0.6rem 1.4rem; font-size: 0.82rem; border-radius: 980px; }
   .hero-proof { justify-content: center; font-size: 0.72rem; text-align: center; }
   .hero-corner-isotipo { display: none; }
   .hero-partner { gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; justify-content: center; max-width: 100%; }
