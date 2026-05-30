@@ -159,6 +159,58 @@
     </div>
   </section>
 
+  <!-- MOBILE ONLY: CTAs rápidos + acordeones -->
+  <section class="mobile-quick" id="mobileQuick">
+    <div class="mobile-quick-ctas">
+      <a href="https://www.newaveacademy.com/formulario/" target="_blank" rel="noopener" class="mobile-quick-btn mobile-quick-btn-primary">Encuentra tu programa →</a>
+      <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener" class="mobile-quick-btn mobile-quick-btn-secondary">Ver La Academia →</a>
+    </div>
+
+    <!-- Acordeón: Conoce el programa -->
+    <div class="mobile-accordion" id="maccPrograma">
+      <button class="mobile-accordion-btn" onclick="maccToggle('programa')">
+        <span>Conoce el programa</span>
+        <svg class="macc-chevron" id="macc-chevron-programa" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6.5L9 11.5L14 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mobile-accordion-body" id="macc-body-programa">
+        <div class="macc-modulos">
+          <div class="macc-modulo"><span class="macc-num">01</span><div><strong>El mercado laboral remoto internacional</strong><p>Estructura, dinámica y criterios de contratación de empresas en USA, Canadá y Europa.</p></div></div>
+          <div class="macc-modulo"><span class="macc-num">02</span><div><strong>Posicionamiento profesional para mercados globales</strong><p>CV, LinkedIn y Cover Letter alineados a estándares internacionales.</p></div></div>
+          <div class="macc-modulo"><span class="macc-num">03</span><div><strong>Encontrar vacantes remotas con sueldo en dólares</strong><p>Bolsas de trabajo y canales especializados en contratación remota internacional.</p></div></div>
+          <div class="macc-modulo"><span class="macc-num">04</span><div><strong>Estrategia de aplicación y seguimiento</strong><p>Sistema de tracking y protocolos de follow up con recruiters internacionales.</p></div></div>
+          <div class="macc-modulo"><span class="macc-num">05</span><div><strong>Proceso de entrevistas internacionales</strong><p>Preparación para screening, entrevistas técnicas, behavioral y culturales.</p></div></div>
+          <div class="macc-modulo"><span class="macc-num">06</span><div><strong>Negociación salarial en dólares</strong><p>Benchmarks salariales y técnicas de negociación con empresas internacionales.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acordeón: Casos de éxito -->
+    <div class="mobile-accordion" id="maccCasos">
+      <button class="mobile-accordion-btn" onclick="maccToggle('casos')">
+        <span>Casos de éxito</span>
+        <svg class="macc-chevron" id="macc-chevron-casos" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6.5L9 11.5L14 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mobile-accordion-body" id="macc-body-casos">
+        <div class="macc-casos-grid">
+          <img src="/testimonials/rebe.png" alt="Rebe" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/mariana.png" alt="Mariana" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/sasha.png" alt="Sasha" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/poncho.png" alt="Poncho" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/diego.png" alt="Diego" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/kike.png" alt="Kike" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/dani.png" alt="Dani" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+          <img src="/testimonials/luis.png" alt="Luis" class="macc-caso-img" onclick="maccModalOpen(this.src)"/>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal casos mobile -->
+  <div id="maccModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;">
+    <button onclick="maccModalClose()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;">✕</button>
+    <img id="maccModalImg" src="" style="max-width:92vw;max-height:85vh;border-radius:12px;"/>
+  </div>
+
   <!-- AUTORIDAD + WHY NEWAVE — justo debajo del hero -->
   <section class="autoridad-section why-section theme-light">
     <div class="autoridad-inner">
@@ -927,6 +979,29 @@
         });
       }, { passive: true });
     })();
+  </script>
+
+  <script>
+    function maccToggle(id) {
+      var body = document.getElementById('macc-body-' + id);
+      var chevron = document.getElementById('macc-chevron-' + id);
+      var isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      chevron.classList.toggle('open', !isOpen);
+    }
+    function maccModalOpen(src) {
+      var modal = document.getElementById('maccModal');
+      document.getElementById('maccModalImg').src = src;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function maccModalClose() {
+      document.getElementById('maccModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    document.getElementById('maccModal').addEventListener('click', function(e) {
+      if (e.target === this) maccModalClose();
+    });
   </script>
 </body>
 </html>

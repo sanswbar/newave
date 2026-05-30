@@ -1897,3 +1897,144 @@ a.autoridad-stat-pill:hover {
   .quotes-card p { font-size: 0.9rem; }
   .quotes-carousel { gap: 0.4rem; }
 }
+
+/* ── MOBILE-ONLY QUICK SECTION ──────────────────────────────── */
+.mobile-quick { display: none; }
+
+@media (max-width: 768px) {
+  /* Hide heavy desktop sections on mobile */
+  .autoridad-section,
+  .parati-section,
+  .modulos-section,
+  .quotes-section,
+  .video-section,
+  .comunidad-section { display: none !important; }
+
+  /* Show mobile section */
+  .mobile-quick {
+    display: block;
+    padding: 1.5rem 1rem 2.5rem;
+    background: var(--bg);
+  }
+
+  /* CTA buttons row */
+  .mobile-quick-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .mobile-quick-btn {
+    display: block;
+    text-align: center;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .mobile-quick-btn:active { transform: scale(0.97); }
+  .mobile-quick-btn-primary {
+    background: var(--orange);
+    color: #fff;
+  }
+  .mobile-quick-btn-secondary {
+    background: transparent;
+    border: 1.5px solid rgba(252,115,66,0.5);
+    color: var(--orange);
+  }
+
+  /* Accordion wrapper */
+  .mobile-accordion {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+
+  /* Accordion trigger button */
+  .mobile-accordion-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+  }
+  .macc-chevron {
+    color: var(--orange);
+    flex-shrink: 0;
+    transition: transform 0.25s;
+  }
+  .macc-chevron.open { transform: rotate(180deg); }
+
+  /* Accordion body */
+  .mobile-accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .mobile-accordion-body.open { max-height: 2000px; }
+
+  /* Modules list */
+  .macc-modulos {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 0.9rem 1rem;
+  }
+  .macc-modulo {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .macc-modulo:first-child { border-top: none; }
+  .macc-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    min-width: 24px;
+    margin-top: 2px;
+  }
+  .macc-modulo strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #fff;
+    margin-bottom: 0.2rem;
+    line-height: 1.3;
+  }
+  .macc-modulo p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  /* Cases grid */
+  .macc-casos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem 0.9rem 1rem;
+  }
+  .macc-caso-img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .macc-caso-img:active { opacity: 0.75; }
+}
+/* ── END MOBILE-ONLY ────────────────────────────────────────── */
