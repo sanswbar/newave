@@ -1252,12 +1252,15 @@
       track:      answers.track
     });
 
-    // JSONP — mismo patrón que el webinar actual
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = APPS_SCRIPT_URL + '?' + params.toString();
-    document.body.appendChild(iframe);
-    setTimeout(() => iframe.remove(), 5000);
+    fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' })
+      .catch(() => {
+        // fallback iframe si fetch falla
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = APPS_SCRIPT_URL + '?' + params.toString();
+        document.body.appendChild(iframe);
+        setTimeout(() => iframe.remove(), 5000);
+      });
   }
 
   function showResult() {
