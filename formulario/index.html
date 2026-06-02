@@ -850,6 +850,11 @@
 
     <p id="lowMsg" style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem"></p>
 
+    <div id="lowPlanBox" style="margin-bottom:1.25rem;padding:1rem 1.25rem;border:1.5px solid rgba(252,115,66,0.4);border-radius:14px;background:rgba(252,115,66,0.06);">
+      <p style="margin:0 0 0.25rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">Plan recomendado para ti</p>
+      <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
+    </div>
+
     <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0">Ver cómo funciona →</a>
 
     <!-- Videos de casos de éxito -->
@@ -1264,11 +1269,20 @@
     } else {
       const nombre = answers.nombre.split(' ')[0];
       document.getElementById('lowNombre').textContent = nombre;
+
       const ingles = (answers.ingles || '').toLowerCase();
       const esBasico = ingles.includes('bás') || ingles.includes('basi');
       document.getElementById('lowMsg').textContent = esBasico
         ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
         : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
+
+      const planMap = {
+        '50-150 usd':  'Plan Standard',
+        '150-200 usd': 'Plan Premium',
+        '200-300 usd': 'Plan VIP',
+      };
+      document.getElementById('lowPlanNombre').textContent = planMap[answers.inversion] || '';
+
       show('page-low');
     }
   }
