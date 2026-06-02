@@ -254,6 +254,31 @@
     }
     .opt.selected .opt-text { color: var(--white); }
 
+    .opt-features {
+      list-style: none;
+      margin: 0.5rem 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .opt-features li {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.35rem;
+      line-height: 1.4;
+    }
+    .opt-features li::before {
+      content: '✓';
+      color: var(--orange);
+      font-size: 0.72rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .opt.selected .opt-features li { color: rgba(255,255,255,0.75); }
+
     /* ── Buttons ── */
     .btn-primary {
       display: block;
@@ -758,15 +783,39 @@
         </div>
         <div class="opt" data-val="50-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
-          <div class="opt-text">Tengo entre $50 y $150 USD<br><span style="font-size:0.82rem;opacity:0.8">Programa completo para conseguir trabajos remotos</span></div>
+          <div class="opt-text">
+            Tengo entre $50 y $150 USD
+            <ul class="opt-features">
+              <li>Acceso al curso completo</li>
+              <li>Plantillas de CV, Cover Letter y LinkedIn</li>
+              <li>Comunidad activa NEWAVE</li>
+              <li>Bolsas de trabajo 100% remotas</li>
+            </ul>
+          </div>
         </div>
         <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
-          <div class="opt-text">Tengo entre $150 y $200 USD<br><span style="font-size:0.82rem;opacity:0.8">Programa completo con revisión de documentos y acompañamiento semanal</span></div>
+          <div class="opt-text">
+            Tengo entre $150 y $200 USD
+            <ul class="opt-features">
+              <li>Todo lo del plan anterior</li>
+              <li>Revisión personalizada de CV, Cover Letter y LinkedIn</li>
+              <li>Estrategia de aplicación y negociación de sueldo</li>
+              <li>Sesiones semanales de Q&A en vivo</li>
+            </ul>
+          </div>
         </div>
         <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
-          <div class="opt-text">Tengo entre $200 y $300 USD<br><span style="font-size:0.82rem;opacity:0.8">Programa completo con revisión de documentos, sesión 1:1, acompañamiento semanal y curso de IA aplicada</span></div>
+          <div class="opt-text">
+            Tengo entre $200 y $300 USD
+            <ul class="opt-features">
+              <li>Todo lo del plan anterior</li>
+              <li>Sesión 1:1 para perfeccionar tu estrategia</li>
+              <li>Vacantes exclusivas solo para miembros VIP</li>
+              <li>Curso de IA aplicada a tu carrera</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
