@@ -849,8 +849,8 @@
 
   </div>
 
-  <!-- ── RESULTADO: High Ticket — Calendly ── -->
-  <div class="card result-page" id="page-high" style="max-width:680px">
+  <!-- page-high eliminado: todos los planes van a page-low (Skool) -->
+  <div class="card result-page" id="page-high" style="display:none!important">
     <div class="result-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
@@ -946,8 +946,8 @@
 
   </div>
 
-  <!-- ── RESULTADO: High Ticket — Gracias ── -->
-  <div class="result-page" id="page-thanks">
+  <!-- page-thanks eliminado -->
+  <div class="result-page" id="page-thanks" style="display:none!important">
 
     <!-- Header -->
     <div class="card thanks-header-card">
@@ -1207,33 +1207,20 @@
   }
 
   function showResult() {
-    // Ocultar formulario y progress
     document.getElementById('mainCard').style.display = 'none';
     document.getElementById('progressWrap').style.display = 'none';
 
-    const track = answers.track;
-
-    if (track === 'disqualified') {
+    if (answers.track === 'disqualified') {
       show('page-disqualified');
-    } else if (track === 'low') {
-      const lowNombre = answers.nombre.split(' ')[0];
-      document.getElementById('lowNombre').textContent = lowNombre;
-      const inglesLow = (answers.ingles || '').toLowerCase();
-      const esBasicoLow = inglesLow.includes('bás') || inglesLow.includes('basi');
-      document.getElementById('lowMsg').textContent = esBasicoLow
+    } else {
+      const nombre = answers.nombre.split(' ')[0];
+      document.getElementById('lowNombre').textContent = nombre;
+      const ingles = (answers.ingles || '').toLowerCase();
+      const esBasico = ingles.includes('bás') || ingles.includes('basi');
+      document.getElementById('lowMsg').textContent = esBasico
         ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
         : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
       show('page-low');
-    } else if (track === 'high') {
-      const highNombre = answers.nombre.split(' ')[0];
-      document.getElementById('highNombre').textContent = highNombre;
-      document.getElementById('thanksNombre').textContent = highNombre;
-      const inglesHigh = (answers.ingles || '').toLowerCase();
-      const esBasicoHigh = inglesHigh.includes('bás') || inglesHigh.includes('basi');
-      document.getElementById('highMsg').textContent = esBasicoHigh
-        ? 'Con tu perfil, tienes todo para conseguir un trabajo remoto. Hemos ayudado a muchas personas en tu misma situación y sabemos que podemos ayudarte a ti también.'
-        : 'Con tu nivel de inglés ' + answers.ingles.toLowerCase() + ' y tu perfil, tienes todo para conseguir un trabajo remoto. Hemos ayudado a muchas personas en tu misma situación y sabemos que podemos ayudarte a ti también.';
-      show('page-high');
     }
   }
 
