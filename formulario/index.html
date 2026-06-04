@@ -855,6 +855,8 @@
       <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
     </div>
 
+    <p id="lowExploreMsg" style="display:none;font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem">Puedes conocer más sobre nuestro programa y comunidad en <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" style="color:#FC7342;text-decoration:underline;">skool.com/newave</a>. Cuando estés listo/a, el siguiente paso es tuyo.</p>
+
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
 
     <!-- Videos de casos de éxito -->
@@ -1300,8 +1302,19 @@
       const plan = planMap[answers.inversion] || { nombre: '' };
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
       const btn = document.getElementById('lowPlanBtn');
-      btn.textContent = 'Unirme ahora';
-      btn.href = 'https://www.skool.com/newave/plans';
+      const listo = answers.compromiso === 'Listo para tomar accion';
+
+      if (listo) {
+        document.getElementById('lowExploreMsg').style.display = 'none';
+        btn.textContent = 'Unirme ahora';
+        btn.href = 'https://www.skool.com/newave/plans';
+        btn.style.display = 'block';
+      } else {
+        document.getElementById('lowExploreMsg').style.display = 'block';
+        btn.textContent = 'Conocer el programa';
+        btn.href = 'https://www.skool.com/newave/about';
+        btn.style.display = 'block';
+      }
 
       show('page-low');
     }
