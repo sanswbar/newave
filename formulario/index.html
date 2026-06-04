@@ -1288,11 +1288,15 @@
       const nombre = answers.nombre.split(' ')[0];
       document.getElementById('lowNombre').textContent = nombre;
 
+      const listo = answers.compromiso === 'Listo para tomar accion';
       const ingles = (answers.ingles || '').toLowerCase();
       const esBasico = ingles.includes('bás') || ingles.includes('basi');
-      document.getElementById('lowMsg').textContent = esBasico
-        ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
-        : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
+      document.getElementById('lowMsg').style.display = listo ? 'block' : 'none';
+      if (listo) {
+        document.getElementById('lowMsg').textContent = esBasico
+          ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
+          : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
+      }
 
       const planMap = {
         '50-150 usd':  { nombre: 'Plan Standard' },
@@ -1302,7 +1306,6 @@
       const plan = planMap[answers.inversion] || { nombre: '' };
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
       const btn = document.getElementById('lowPlanBtn');
-      const listo = answers.compromiso === 'Listo para tomar accion';
 
       if (listo) {
         document.getElementById('lowExploreMsg').style.display = 'none';
