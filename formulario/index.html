@@ -1313,19 +1313,18 @@
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
       const btn = document.getElementById('lowPlanBtn');
 
+      document.getElementById('lowTrialMsg').style.display = 'block';
+
       if (listo) {
         document.getElementById('lowExploreMsg').style.display = 'none';
-        document.getElementById('lowTrialMsg').style.display = 'block';
         btn.textContent = 'Unirme ahora';
         btn.href = 'https://www.skool.com/newave/plans';
-        btn.style.display = 'block';
       } else {
         document.getElementById('lowExploreMsg').style.display = 'block';
-        document.getElementById('lowTrialMsg').style.display = 'none';
         btn.textContent = 'Conocer el programa';
         btn.href = 'https://www.skool.com/newave/about';
-        btn.style.display = 'block';
       }
+      btn.style.display = 'block';
 
       show('page-low');
     }
