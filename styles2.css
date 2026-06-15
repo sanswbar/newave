@@ -157,14 +157,14 @@ a   { text-decoration: none; color: inherit; }
 
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center;
-  background: transparent; color: var(--orange);
-  font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;
+  background: transparent; color: rgba(255,255,255,0.6);
+  font-weight: 600; font-size: 1rem; letter-spacing: -0.01em;
   padding: 0.9rem 2.2rem; border-radius: 980px;
-  border: 1.5px solid rgba(252,115,66,0.5);
+  border: none;
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  transition: color 0.2s;
 }
-.btn-secondary:hover { background: rgba(252,115,66,0.1); border-color: var(--orange); transform: translateY(-1px); }
+.btn-secondary:hover { color: #fff; }
 
 .btn-casos {
   display: inline-flex; align-items: center; gap: 0.5rem;
