@@ -1598,19 +1598,6 @@
   updateProgress(1);
   buildCalendarLinks();
 
-  // Debug mode: ?debug=low o ?debug=high
-  (function() {
-    var param = new URLSearchParams(window.location.search).get('debug');
-    if (!param) return;
-    answers = { nombre: 'Demo', ingles: 'avanzado', puesto: 'Developer', experiencia: '3 años', disponibilidad: 'Full-time' };
-    if (param === 'high') {
-      answers.track = 'high';
-      showResult('high');
-    } else {
-      answers.track = 'low';
-      showResult('low');
-    }
-  })();
 </script>
 
 <script>
