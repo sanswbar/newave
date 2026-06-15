@@ -139,6 +139,33 @@ a   { text-decoration: none; color: inherit; }
 .btn-primary:hover { background: rgba(245,245,247,0.88); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.12); }
 .btn-large { font-size: 1.1rem; padding: 1.05rem 2.75rem; box-shadow: 0 0 40px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3); }
 
+@keyframes pulse-orange {
+  0%   { box-shadow: 0 0 0 0 rgba(252,115,66,0.55); }
+  70%  { box-shadow: 0 0 0 12px rgba(252,115,66,0); }
+  100% { box-shadow: 0 0 0 0 rgba(252,115,66,0); }
+}
+.btn-orange {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--orange); color: #fff;
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;
+  padding: 0.9rem 2.2rem; border-radius: 980px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  animation: pulse-orange 2s ease-out infinite;
+}
+.btn-orange:hover { background: var(--orange-h); transform: translateY(-1px); animation: none; box-shadow: 0 4px 24px rgba(252,115,66,0.5); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--orange);
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;
+  padding: 0.9rem 2.2rem; border-radius: 980px;
+  border: 1.5px solid rgba(252,115,66,0.5);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.btn-secondary:hover { background: rgba(252,115,66,0.1); border-color: var(--orange); transform: translateY(-1px); }
+
 .btn-casos {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: transparent;
@@ -678,8 +705,10 @@ a   { text-decoration: none; color: inherit; }
   .hero h1 { font-size: clamp(2.2rem, 10vw, 3rem); letter-spacing: -0.045em; line-height: 1.06; margin-bottom: 1rem; }
   .hero-sub { font-size: 1.05rem; color: rgba(232,231,231,0.85); margin-bottom: 2rem; text-align: center; }
   .hero-eyebrow { font-size: 0.65rem; }
-  .hero-actions { flex-direction: column; gap: 0.75rem; align-items: center; width: 100%; margin-bottom: 1.75rem; }
-  .hero-actions .btn-primary { padding: 0.8rem 1.75rem; font-size: 0.95rem; border-radius: 980px; }
+  .hero-actions { flex-direction: column; gap: 0.75rem; align-items: stretch; width: 100%; max-width: 320px; margin: 0 auto 1.75rem; }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-orange,
+  .hero-actions .btn-secondary { padding: 0.7rem 1.25rem; font-size: 0.88rem; border-radius: 980px; width: 100%; text-align: center; }
   .hero-proof { justify-content: center; font-size: 0.72rem; text-align: center; }
   .hero-corner-isotipo { display: none; }
   .hero-partner { gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; justify-content: center; max-width: 100%; }
