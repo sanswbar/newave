@@ -860,7 +860,25 @@
 
     <div id="lowTrialMsg" style="display:none;text-align:center;margin-bottom:0.75rem">
       <p style="margin:0;font-size:1rem;font-weight:700;color:var(--white)">Prueba el programa por 7 días gratis</p>
-      <p style="margin:0.2rem 0 0;font-size:0.72rem;color:#FC7342;letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono)">*Oferta por tiempo limitado*</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.5rem">
+        <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-family:var(--mono)">La oferta vence en</span>
+        <div style="display:flex;gap:0.3rem;align-items:center">
+          <div style="background:#FC7342;border-radius:6px;padding:0.2rem 0.45rem;text-align:center">
+            <span id="cdHours" style="font-size:1rem;font-weight:800;color:#fff;font-family:var(--mono);letter-spacing:0.04em">00</span>
+            <span style="display:block;font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.06em">hrs</span>
+          </div>
+          <span style="color:#FC7342;font-weight:800;font-size:1rem">:</span>
+          <div style="background:#FC7342;border-radius:6px;padding:0.2rem 0.45rem;text-align:center">
+            <span id="cdMins" style="font-size:1rem;font-weight:800;color:#fff;font-family:var(--mono);letter-spacing:0.04em">00</span>
+            <span style="display:block;font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.06em">min</span>
+          </div>
+          <span style="color:#FC7342;font-weight:800;font-size:1rem">:</span>
+          <div style="background:#FC7342;border-radius:6px;padding:0.2rem 0.45rem;text-align:center">
+            <span id="cdSecs" style="font-size:1rem;font-weight:800;color:#fff;font-family:var(--mono);letter-spacing:0.04em">00</span>
+            <span style="display:block;font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.06em">seg</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
@@ -1579,6 +1597,29 @@
   // Init
   updateProgress(1);
   buildCalendarLinks();
+</script>
+
+<script>
+  (function() {
+    function updateCountdown() {
+      var now = new Date();
+      var midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0);
+      var diff = Math.floor((midnight - now) / 1000);
+      var h = Math.floor(diff / 3600);
+      var m = Math.floor((diff % 3600) / 60);
+      var s = diff % 60;
+      var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+      var elH = document.getElementById('cdHours');
+      var elM = document.getElementById('cdMins');
+      var elS = document.getElementById('cdSecs');
+      if (elH) elH.textContent = pad(h);
+      if (elM) elM.textContent = pad(m);
+      if (elS) elS.textContent = pad(s);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
 </script>
 </body>
 </html>
