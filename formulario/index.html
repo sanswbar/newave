@@ -944,6 +944,12 @@
       <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
     </div>
 
+    <!-- Bloque perfil personalizado -->
+    <div id="lowPerfilBox" style="display:none;margin-bottom:1.25rem;padding:1rem 1.25rem;border:1.5px solid rgba(252,115,66,0.6);border-radius:14px;background:rgba(252,115,66,0.08);text-align:left">
+      <p style="margin:0 0 0.35rem;font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FC7342;font-family:var(--mono)">Tu perfil tiene alta demanda</p>
+      <p id="lowPerfilMsg" style="margin:0;font-size:0.95rem;font-weight:600;color:var(--white);line-height:1.5"></p>
+    </div>
+
     <p id="lowMsg" style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem"></p>
 
     <p id="lowExploreMsg" style="display:none;font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem">Puedes conocer más sobre nuestro programa y comunidad en <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" style="color:#FC7342;text-decoration:underline;">skool.com/newave</a>. Te esperamos cuando estés listo/a para trabajar remoto y ganar en dólares. 😉</p>
@@ -1419,7 +1425,26 @@
 
       const listo = answers.compromiso === 'Listo para tomar accion';
       const ingles = (answers.ingles || '').toLowerCase();
-      const esBasico = ingles.includes('bás') || ingles.includes('basi');
+      const esBasico = ingles.includes('basi') || ingles.includes('básico') || ingles.includes('intermedio');
+      const inglesAvanzado = !esBasico && (ingles.includes('avanzado') || ingles.includes('nativo') || ingles.includes('biling'));
+
+      // Bloque de perfil personalizado
+      const areaData = {
+        'Tecnología / Desarrollo':   { frase: 'Tu experiencia en tecnología',          sueldo: '$4,200 USD/mes' },
+        'Marketing / Ventas':        { frase: 'Tu experiencia en roles comerciales',    sueldo: '$3,800 USD/mes' },
+        'Diseño / Creatividad':      { frase: 'Tu perfil creativo',                     sueldo: '$3,600 USD/mes' },
+        'Finanzas / Administración': { frase: 'Tu experiencia en finanzas',             sueldo: '$4,200 USD/mes' },
+        'Recursos Humanos':          { frase: 'Tu experiencia en gestión de talento',   sueldo: '$3,700 USD/mes' },
+      };
+      const areaVal = answers.area === 'otra-area'
+        ? (document.getElementById('area-otro').value.trim() || 'Otro')
+        : answers.area;
+      const areaInfo = areaData[areaVal] || { frase: 'Tu perfil profesional', sueldo: '$3,500 USD/mes' };
+      const inglesStr = inglesAvanzado ? ' y tu inglés avanzado' : '';
+      const perfilMsg = areaInfo.frase + inglesStr + ' son exactamente el perfil que buscan las empresas remotas. Estamos viendo roles en esta área que arrancan en ' + areaInfo.sueldo + '.';
+      document.getElementById('lowPerfilMsg').textContent = perfilMsg;
+      document.getElementById('lowPerfilBox').style.display = 'block';
+
       document.getElementById('lowMsg').style.display = listo ? 'block' : 'none';
       if (listo) {
         document.getElementById('lowMsg').textContent = esBasico
