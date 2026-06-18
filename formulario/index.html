@@ -1554,8 +1554,10 @@
     });
     lowModalIdx = lowSlideList.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
     if (lowModalIdx < 0) lowModalIdx = 0;
-    document.getElementById('thanksModalImg').src = lowSlideList[lowModalIdx].src;
-    document.getElementById('thanksModalImg').alt = lowSlideList[lowModalIdx].alt;
+    thanksSlideList = lowSlideList;
+    thanksModalIdx = lowModalIdx;
+    document.getElementById('thanksModalImg').src = thanksSlideList[thanksModalIdx].src;
+    document.getElementById('thanksModalImg').alt = thanksSlideList[thanksModalIdx].alt;
     document.getElementById('thanksModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -1587,8 +1589,10 @@
     });
     highModalIdx = highSlideList.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
     if (highModalIdx < 0) highModalIdx = 0;
-    document.getElementById('thanksModalImg').src = highSlideList[highModalIdx].src;
-    document.getElementById('thanksModalImg').alt = highSlideList[highModalIdx].alt;
+    thanksSlideList = highSlideList;
+    thanksModalIdx = highModalIdx;
+    document.getElementById('thanksModalImg').src = thanksSlideList[thanksModalIdx].src;
+    document.getElementById('thanksModalImg').alt = thanksSlideList[thanksModalIdx].alt;
     document.getElementById('thanksModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
