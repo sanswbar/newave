@@ -889,6 +889,8 @@
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
 
+    <p id="lowCardNote" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.4);text-align:center;margin-top:0.6rem">🔒 Skool requiere tarjeta de crédito para activar el trial. Sin cargos por 7 días. Cancela cuando quieras.</p>
+
     <!-- Videos de casos de éxito -->
     <div class="thanks-videos-wrap" style="text-align:left;margin-top:2rem">
       <p class="thanks-videos-tag">Casos de éxito</p>
@@ -1341,10 +1343,12 @@
 
       if (listo) {
         document.getElementById('lowExploreMsg').style.display = 'none';
+        document.getElementById('lowCardNote').style.display = 'block';
         btn.textContent = 'Unirme ahora';
         btn.href = 'https://www.skool.com/newave/plans';
       } else {
         document.getElementById('lowExploreMsg').style.display = 'block';
+        document.getElementById('lowCardNote').style.display = 'none';
         btn.textContent = 'Conocer el programa';
         btn.href = 'https://www.skool.com/newave/about';
       }
