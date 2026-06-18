@@ -1447,12 +1447,7 @@
       document.getElementById('lowPerfilMsg').textContent = perfilMsg;
       document.getElementById('lowPerfilBox').style.display = 'block';
 
-      document.getElementById('lowMsg').style.display = listo ? 'block' : 'none';
-      if (listo) {
-        document.getElementById('lowMsg').textContent = esBasico
-          ? 'En base a tu perfil, creemos que este programa puede ayudarte a conseguir un trabajo remoto. El inglés es una herramienta importante en el camino y dentro del programa también te ayudamos a desarrollarlo.'
-          : 'En base a tu perfil y tu nivel de inglés ' + answers.ingles.toLowerCase() + ', creemos que este programa es ideal para ayudarte a conseguir un trabajo remoto. Hemos tenido muchos casos similares al tuyo.';
-      }
+      document.getElementById('lowMsg').style.display = 'none';
 
       const planMap = {
         '50-150 usd':  { nombre: 'Plan Standard' },
