@@ -1346,11 +1346,17 @@
         document.getElementById('lowCardNote').style.display = 'block';
         btn.textContent = 'Unirme ahora';
         btn.href = 'https://www.skool.com/newave/plans';
+        btn.addEventListener('click', function() {
+          if (window.clarity) clarity('event', 'click_unirme_ahora');
+        }, { once: true });
       } else {
         document.getElementById('lowExploreMsg').style.display = 'block';
         document.getElementById('lowCardNote').style.display = 'none';
         btn.textContent = 'Conocer el programa';
         btn.href = 'https://www.skool.com/newave/about';
+        btn.addEventListener('click', function() {
+          if (window.clarity) clarity('event', 'click_conocer_programa');
+        }, { once: true });
       }
       btn.style.display = 'block';
 
