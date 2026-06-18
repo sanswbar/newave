@@ -1637,107 +1637,10 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── Calendar links ──
-  // Calcula el próximo miércoles a las 18:00 CDMX (UTC-5)
-  function nextWednesday() {
-    const now = new Date();
-    const day = now.getDay(); // 0=dom, 3=mié
-    const daysUntilWed = (3 - day + 7) % 7 || 7;
-    const wed = new Date(now);
-    wed.setDate(now.getDate() + daysUntilWed);
-    wed.setHours(23, 0, 0, 0); // 18:00 CDMX = 23:00 UTC
-    return wed;
-  }
-
-  function toISOBasic(date) {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  }
-
-  function buildCalendarLinks() {
-    const start = nextWednesday();
-    const end   = new Date(start.getTime() + 60 * 60 * 1000); // +1 hora
-    const startStr = toISOBasic(start);
-    const endStr   = toISOBasic(end);
-    const title = 'Webinar NEWAVE — Como conseguir tu trabajo remoto.';
-    const desc  = [
-      'Tu camino hacia trabajos remotos en empresas internacionales.',
-      '',
-      'En este webinar veremos:',
-      '• El estado actual del mercado laboral remoto',
-      '• Donde encontrar trabajos remotos y el tipo de empresas (bolsas de trabajo)',
-      '• Nuevas posiciones abiertas y para quien aplican estos trabajos',
-      '• Quiénes somos y nuestros casos de éxito',
-      '• Estrategias para destacar ante reclutadores gringos',
-      '',
-      'Link de Zoom: https://us06web.zoom.us/j/89474292348'
-    ].join('\n');
-
-    // Google Calendar
-    const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE`
-      + `&text=${encodeURIComponent(title)}`
-      + `&dates=${startStr}/${endStr}`
-      + `&details=${encodeURIComponent(desc)}`
-      + `&location=${encodeURIComponent('Zoom (online)')}`;
-    document.getElementById('gcalLink').href = gcal;
-
-    // ICS file
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//NEWAVE//Webinar//ES',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      `DTSTART:${startStr}`,
-      `DTEND:${endStr}`,
-      `SUMMARY:${title}`,
-      `DESCRIPTION:${desc}`,
-      'LOCATION:Zoom (online)',
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const icsUrl = URL.createObjectURL(blob);
-    document.getElementById('icsLink').href = icsUrl;
-  }
-
-  // ── Detectar cuando Calendly confirma el agendamiento ──
-  window.addEventListener('message', function(e) {
-    if (e.data && e.data.event === 'calendly.event_scheduled') {
-      document.getElementById('page-high').classList.remove('active');
-      show('page-thanks');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  });
-
   // Init
   updateProgress(1);
-  buildCalendarLinks();
 
 </script>
 
-<script>
-  (function() {
-    function updateCountdown() {
-      var now = new Date();
-      var midnight = new Date(now);
-      midnight.setHours(24, 0, 0, 0);
-      var diff = Math.floor((midnight - now) / 1000);
-      var h = Math.floor(diff / 3600);
-      var m = Math.floor((diff % 3600) / 60);
-      var s = diff % 60;
-      var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
-      var elH = document.getElementById('cdHours');
-      var elM = document.getElementById('cdMins');
-      var elS = document.getElementById('cdSecs');
-      if (elH) elH.textContent = pad(h);
-      if (elM) elM.textContent = pad(m);
-      if (elS) elS.textContent = pad(s);
-    }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  })();
-</script>
 </body>
 </html>
