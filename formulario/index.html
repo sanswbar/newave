@@ -957,7 +957,6 @@
 
     <p id="lowMsg" style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem"></p>
 
-    <p id="lowExploreMsg" style="display:none;font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem">Puedes conocer más sobre nuestro programa y comunidad en <a href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" style="color:#FC7342;text-decoration:underline;">skool.com/newave</a>. Te esperamos cuando estés listo/a para trabajar remoto y ganar en dólares. 😉</p>
 
     <div id="lowTrialMsg" style="display:none;text-align:center;margin-bottom:0.75rem">
       <p style="margin:0 0 0.25rem;font-size:1rem;font-weight:700;color:var(--white)">Prueba el programa por 7 días gratis</p>
@@ -1446,7 +1445,6 @@
       document.getElementById('lowTrialMsg').style.display = 'block';
 
       if (listo) {
-        document.getElementById('lowExploreMsg').style.display = 'none';
         document.getElementById('lowCardNote').style.display = 'block';
         btn.textContent = 'Unirme ahora';
         btn.href = 'https://www.skool.com/newave/plans';
@@ -1454,7 +1452,6 @@
           if (window.clarity) clarity('event', 'click_unirme_ahora');
         }, { once: true });
       } else {
-        document.getElementById('lowExploreMsg').style.display = 'block';
         document.getElementById('lowCardNote').style.display = 'none';
         btn.textContent = 'Conocer el programa';
         btn.href = 'https://www.skool.com/newave/about';
