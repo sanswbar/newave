@@ -784,8 +784,7 @@
         <div class="opt" data-val="50-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Quiero acceder al programa y trabajar a mi ritmo
-            <span style="display:block;font-size:0.78rem;color:rgba(255,255,255,0.5);margin:0.2rem 0 0.5rem">Inversión: $50 - $150 USD</span>
+            Tengo entre $50 y $150 USD
             <ul class="opt-features">
               <li>Acceso al curso completo</li>
               <li>Plantillas de CV, Cover Letter y LinkedIn</li>
@@ -797,8 +796,7 @@
         <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Quiero el programa con revisión personalizada y acompañamiento
-            <span style="display:block;font-size:0.78rem;color:rgba(255,255,255,0.5);margin:0.2rem 0 0.5rem">Inversión: $150 - $200 USD</span>
+            Tengo entre $150 y $200 USD
             <ul class="opt-features">
               <li>Todo lo del plan anterior</li>
               <li>Revisión personalizada de CV, Cover Letter y LinkedIn</li>
@@ -810,8 +808,7 @@
         <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Quiero el programa completo con máximo acompañamiento y AI
-            <span style="display:block;font-size:0.78rem;color:rgba(255,255,255,0.5);margin:0.2rem 0 0.5rem">Inversión: $200 - $300 USD</span>
+            Tengo entre $200 y $300 USD
             <ul class="opt-features">
               <li>Todo lo del plan anterior +</li>
               <li>Módulo con vacantes remotas exclusivas para tu perfil cada semana</li>
@@ -863,24 +860,32 @@
       <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
     </div>
 
-    <!-- Bloque perfil personalizado -->
-    <div id="lowPerfilBox" style="display:none;margin-bottom:1.25rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:14px;background:rgba(255,255,255,0.04);text-align:left">
-      <p id="lowPerfilMsg" style="margin:0 0 0.75rem;font-size:0.95rem;font-weight:600;color:var(--white);line-height:1.5"></p>
-      <p style="margin:0 0 0.5rem;font-size:0.88rem;color:rgba(255,255,255,0.7);line-height:1.5">Los casos que ves abajo son perfiles similares al tuyo.</p>
-      <p style="margin:0;font-size:0.88rem;color:rgba(255,255,255,0.7);line-height:1.5">Recuerda: La única diferencia entre donde estás y donde quieres estar es la decisión que tomas hoy.</p>
-    </div>
+    <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
-    <p id="lowMsg" style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem"></p>
-
-
-    <div id="lowTrialMsg" style="display:none;text-align:center;margin-bottom:0.75rem">
+    <div style="text-align:center;margin-bottom:1rem">
       <p style="margin:0 0 0.25rem;font-size:1rem;font-weight:700;color:var(--white)">Prueba el programa por 7 días gratis</p>
-      <p style="margin:0 0 0.85rem;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#FC7342;font-family:var(--mono)">⏱ Oferta por tiempo limitado</p>
+      <div style="background:#0f1317;border:1px solid rgba(252,115,66,0.3);border-radius:14px;padding:1rem 1.25rem;display:inline-block;min-width:260px;margin:0.5rem 0">
+        <p style="margin:0 0 0.65rem;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)">⏱ La oferta vence en</p>
+        <div style="display:flex;gap:0.5rem;align-items:flex-end;justify-content:center">
+          <div style="text-align:center">
+            <span id="cdHours" style="font-size:2rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.02em">00</span>
+            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.2rem">hrs</span>
+          </div>
+          <span style="font-size:1.75rem;font-weight:800;color:#FC7342;line-height:1.1;padding-bottom:0.35rem">:</span>
+          <div style="text-align:center">
+            <span id="cdMins" style="font-size:2rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.02em">00</span>
+            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.2rem">min</span>
+          </div>
+          <span style="font-size:1.75rem;font-weight:800;color:#FC7342;line-height:1.1;padding-bottom:0.35rem">:</span>
+          <div style="text-align:center">
+            <span id="cdSecs" style="font-size:2rem;font-weight:800;color:#FC7342;line-height:1;letter-spacing:-0.02em">00</span>
+            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(252,115,66,0.5);margin-top:0.2rem">seg</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
-
-    <p id="lowCardNote" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.4);text-align:center;margin-top:0.6rem">🔒 Skool requiere tarjeta de crédito para activar el trial. Sin cargos por 7 días. Cancela cuando quieras.</p>
 
     <!-- Videos de casos de éxito -->
     <div class="thanks-videos-wrap" style="text-align:left;margin-top:2rem">
@@ -1313,48 +1318,22 @@
       document.getElementById('lowNombre').textContent = nombre;
 
       const listo = answers.compromiso === 'Listo para tomar accion';
-      const ingles = (answers.ingles || '').toLowerCase();
-      const esBasico = ingles.includes('basi') || ingles.includes('básico') || ingles.includes('intermedio');
-      const inglesAvanzado = !esBasico && (ingles.includes('avanzado') || ingles.includes('nativo') || ingles.includes('biling'));
-
-      // Bloque de perfil personalizado
-      const areaData = {
-        'Tecnología / Desarrollo':   { frase: 'Tu experiencia en tecnología',        area: 'tecnología'        },
-        'Marketing / Ventas':        { frase: 'Tu experiencia en roles comerciales',  area: 'marketing y ventas' },
-        'Diseño / Creatividad':      { frase: 'Tu perfil creativo',                   area: 'diseño'            },
-        'Finanzas / Administración': { frase: 'Tu experiencia en finanzas',           area: 'finanzas'          },
-        'Recursos Humanos':          { frase: 'Tu experiencia en gestión de talento', area: 'recursos humanos'  },
-      };
-      const areaVal = answers.area === 'otra-area'
-        ? (document.getElementById('area-otro').value.trim() || 'Otro')
-        : answers.area;
-      const areaInfo = areaData[areaVal] || { area: areaVal.toLowerCase() };
       const planMap = {
         '50-150 usd':  { nombre: 'Plan Standard' },
         '150-200 usd': { nombre: 'Plan Premium'  },
         '200-300 usd': { nombre: 'Plan VIP'      },
       };
       const plan = planMap[answers.inversion] || { nombre: '' };
-      const inglesStr = inglesAvanzado ? ' y nivel de inglés avanzado' : '';
-      const perfilMsg = 'En base a tu experiencia en ' + areaInfo.area + inglesStr + ', el plan que mejor se acomoda para ti es el ' + plan.nombre + '.';
-      document.getElementById('lowPerfilMsg').textContent = perfilMsg;
-      document.getElementById('lowPerfilBox').style.display = 'block';
-
-      document.getElementById('lowMsg').style.display = 'none';
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
+
       const btn = document.getElementById('lowPlanBtn');
-
-      document.getElementById('lowTrialMsg').style.display = 'block';
-
       if (listo) {
-        document.getElementById('lowCardNote').style.display = 'block';
         btn.textContent = 'Unirme ahora';
         btn.href = 'https://www.skool.com/newave/plans';
         btn.addEventListener('click', function() {
           if (window.clarity) clarity('event', 'click_unirme_ahora');
         }, { once: true });
       } else {
-        document.getElementById('lowCardNote').style.display = 'none';
         btn.textContent = 'Conocer el programa';
         btn.href = 'https://www.skool.com/newave/about';
         btn.addEventListener('click', function() {
@@ -1546,6 +1525,29 @@
   // Init
   updateProgress(1);
 
+</script>
+
+<script>
+  (function() {
+    function updateCountdown() {
+      var now = new Date();
+      var midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0);
+      var diff = Math.floor((midnight - now) / 1000);
+      var h = Math.floor(diff / 3600);
+      var m = Math.floor((diff % 3600) / 60);
+      var s = diff % 60;
+      var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+      var elH = document.getElementById('cdHours');
+      var elM = document.getElementById('cdMins');
+      var elS = document.getElementById('cdSecs');
+      if (elH) elH.textContent = pad(h);
+      if (elM) elM.textContent = pad(m);
+      if (elS) elS.textContent = pad(s);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
 </script>
 
 </body>
