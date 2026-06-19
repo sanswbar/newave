@@ -894,7 +894,7 @@ a   { text-decoration: none; color: inherit; }
   to   { transform: translateX(-50%); }
 }
 .company-logo {
-  height: 22px;
+  height: 66px;
   width: auto;
   flex-shrink: 0;
   filter: grayscale(1) brightness(2) opacity(0.5);

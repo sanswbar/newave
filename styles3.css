@@ -870,7 +870,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .companies-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.85rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--subtle);
@@ -894,10 +894,12 @@ a   { text-decoration: none; color: inherit; }
   to   { transform: translateX(-50%); }
 }
 .company-logo {
-  height: 22px;
+  height: 40px;
+  max-width: 140px;
   width: auto;
+  object-fit: contain;
   flex-shrink: 0;
-  filter: grayscale(1) brightness(2) opacity(0.5);
+  filter: grayscale(1) brightness(10) opacity(0.9);
   transition: filter 0.25s;
   display: block;
 }
