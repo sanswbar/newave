@@ -635,7 +635,7 @@
   <!-- Progress -->
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
-      <span id="progressText">Paso 1 de 7</span>
+      <span id="progressText">Paso 1 de 6</span>
       <span id="progressPct">0%</span>
     </div>
     <div class="progress-bar">
@@ -648,7 +648,7 @@
 
     <!-- ── Paso 1: Datos personales ── -->
     <div class="step active" id="step-1">
-      <div class="step-eyebrow">Paso 1 de 7</div>
+      <div class="step-eyebrow">Paso 1 de 6</div>
       <h2 class="step-title">Cuéntanos sobre ti</h2>
       <p class="step-sub">Necesitamos algunos datos básicos para poder ayudarte mejor.</p>
 
@@ -676,7 +676,7 @@
 
     <!-- ── Paso 2: Nivel de inglés ── -->
     <div class="step" id="step-2">
-      <div class="step-eyebrow">Paso 2 de 7</div>
+      <div class="step-eyebrow">Paso 2 de 6</div>
       <h2 class="step-title">¿Cuál es tu nivel de inglés?</h2>
       <p class="step-sub">El inglés es clave para trabajar con empresas internacionales.</p>
 
@@ -706,31 +706,17 @@
       </div>
     </div>
 
-    <!-- ── Paso 3: Experiencia laboral ── -->
+    <!-- ── Paso 3: Trabajo actual ── -->
     <div class="step" id="step-3">
-      <div class="step-eyebrow">Paso 3 de 7</div>
-      <h2 class="step-title">¿Cuántos años de experiencia laboral tienes?</h2>
-      <p class="step-sub">Esto nos ayuda a entender tu punto de partida y recomendarte el camino ideal.</p>
+      <div class="step-eyebrow">Paso 3 de 6</div>
+      <h2 class="step-title">¿En qué empresa trabajas y qué puesto tienes?</h2>
+      <p class="step-sub">Cuéntanos sobre tu situación profesional actual.</p>
 
-      <div class="options" id="opts-experiencia">
-        <div class="opt" data-val="Menos de 1 año de experiencia" onclick="selectOpt('experiencia', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Menos de 1 año</div>
-        </div>
-        <div class="opt" data-val="1-3 años de experiencia" onclick="selectOpt('experiencia', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">1 a 3 años</div>
-        </div>
-        <div class="opt" data-val="3-7 años de experiencia" onclick="selectOpt('experiencia', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">3 a 7 años</div>
-        </div>
-        <div class="opt" data-val="Más de 7 años de experiencia" onclick="selectOpt('experiencia', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Más de 7 años</div>
-        </div>
+      <div class="field">
+        <label for="trabajo">Empresa y puesto actual *</label>
+        <textarea id="trabajo" placeholder="Ej: Trabajo en Accenture como desarrollador backend. Llevo 2 años en el puesto..."></textarea>
+        <div class="field-error" id="err-trabajo">Por favor cuéntanos sobre tu trabajo actual.</div>
       </div>
-      <div class="field-error" id="err-experiencia">Por favor selecciona una opción.</div>
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(3)">← Atrás</button>
@@ -738,45 +724,17 @@
       </div>
     </div>
 
-    <!-- ── Paso 4: Área de trabajo ── -->
+    <!-- ── Paso 4: Razón del cambio ── -->
     <div class="step" id="step-4">
-      <div class="step-eyebrow">Paso 4 de 7</div>
-      <h2 class="step-title">¿En qué área trabajas actualmente?</h2>
-      <p class="step-sub">Selecciona la que mejor describe tu perfil profesional.</p>
+      <div class="step-eyebrow">Paso 4 de 6</div>
+      <h2 class="step-title">¿Por qué quieres hacer un cambio en tu vida profesional?</h2>
+      <p class="step-sub">Cuéntanos cuál es tu motivación principal. Sé honesto/a.</p>
 
-      <div class="options" id="opts-area">
-        <div class="opt" data-val="Tecnología / Desarrollo" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='none'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Tecnología / Desarrollo</div>
-        </div>
-        <div class="opt" data-val="Marketing / Ventas" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='none'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Marketing / Ventas</div>
-        </div>
-        <div class="opt" data-val="Diseño / Creatividad" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='none'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Diseño / Creatividad</div>
-        </div>
-        <div class="opt" data-val="Finanzas / Administración" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='none'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Finanzas / Administración</div>
-        </div>
-        <div class="opt" data-val="Recursos Humanos" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='none'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Recursos Humanos</div>
-        </div>
-        <div class="opt" data-val="otra-area" onclick="selectOpt('area', this); document.getElementById('area-otro-wrap').style.display='block'">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Otro</div>
-        </div>
+      <div class="field">
+        <label for="razon">Tu razón principal *</label>
+        <textarea id="razon" placeholder="Ej: Quiero ganar en dólares y tener la libertad de trabajar desde cualquier lugar..."></textarea>
+        <div class="field-error" id="err-razon">Por favor cuéntanos tu motivación.</div>
       </div>
-      <div class="field-error" id="err-area">Por favor selecciona una opción.</div>
-      <div id="area-otro-wrap" style="display:none;margin-top:0.75rem">
-        <input type="text" id="area-otro" placeholder="¿En qué área trabajas?" style="width:100%;box-sizing:border-box" />
-      </div>
-
-      <!-- Campo hidden para enviar 'trabajo' al backend con los datos de pasos 3 y 4 combinados -->
-      <input type="hidden" id="trabajo" value="" />
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(4)">← Atrás</button>
@@ -784,51 +742,9 @@
       </div>
     </div>
 
-    <!-- ── Paso 5: Razón del cambio ── -->
+    <!-- ── Paso 5: Nivel de compromiso ── -->
     <div class="step" id="step-5">
-      <div class="step-eyebrow">Paso 5 de 7</div>
-      <h2 class="step-title">¿Por qué quieres dar el salto al trabajo remoto?</h2>
-      <p class="step-sub">Sé honesto/a — esto nos ayuda a entender tu motivación real y cómo podemos ayudarte mejor.</p>
-
-      <div class="options" id="opts-razon">
-        <div class="opt" data-val="Quiero ganar más en dólares" onclick="selectOpt('razon', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Quiero ganar más dinero y cobrar en dólares</div>
-        </div>
-        <div class="opt" data-val="Quiero libertad y flexibilidad" onclick="selectOpt('razon', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Quiero tener más libertad y trabajar desde donde quiera</div>
-        </div>
-        <div class="opt" data-val="Mi trabajo actual no tiene crecimiento" onclick="selectOpt('razon', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Mi trabajo actual no tiene crecimiento ni futuro</div>
-        </div>
-        <div class="opt" data-val="Quiero trabajar con empresas internacionales" onclick="selectOpt('razon', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Quiero trabajar para empresas internacionales y crecer globalmente</div>
-        </div>
-        <div class="opt" data-val="Estoy desempleado y quiero empezar de nuevo" onclick="selectOpt('razon', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">Estoy desempleado/a y quiero reorientar mi carrera</div>
-        </div>
-      </div>
-      <div class="field-error" id="err-razon">Por favor selecciona una opción.</div>
-
-      <!-- Textarea original — comentada para referencia futura -->
-      <!-- <div class="field">
-        <label for="razon-texto">Tu razón principal</label>
-        <textarea id="razon-texto" placeholder="Ej: Quiero ganar en dólares y tener la libertad de trabajar desde cualquier lugar..."></textarea>
-      </div> -->
-
-      <div class="nav-row">
-        <button class="btn-back" onclick="prevStep(5)">← Atrás</button>
-        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(5)">Continuar →</button>
-      </div>
-    </div>
-
-    <!-- ── Paso 6: Nivel de compromiso ── -->
-    <div class="step" id="step-6">
-      <div class="step-eyebrow">Paso 6 de 7</div>
+      <div class="step-eyebrow">Paso 5 de 6</div>
       <h2 class="step-title">¿Cuál es tu nivel de compromiso en este momento?</h2>
       <p class="step-sub">Las expectativas son la base de una relación a largo plazo. Trabajamos con profesionales comprometidos que están listos para tomar acción hacia sus objetivos.</p>
 
@@ -849,14 +765,14 @@
       <div class="field-error" id="err-compromiso" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
 
       <div class="nav-row">
-        <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
-        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(6)">Continuar →</button>
+        <button class="btn-back" onclick="prevStep(5)">← Atrás</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" onclick="nextStep(5)">Continuar →</button>
       </div>
     </div>
 
-    <!-- ── Paso 7: Inversión ── -->
-    <div class="step" id="step-7">
-      <div class="step-eyebrow">Paso 7 de 7</div>
+    <!-- ── Paso 6: Inversión ── -->
+    <div class="step" id="step-6">
+      <div class="step-eyebrow">Paso 6 de 6</div>
       <h2 class="step-title">Una última pregunta, sé honesto/a</h2>
       <p class="step-sub">Nuestro programa requiere una inversión. Queremos trabajar con personas listas para apostarle a su carrera. Lee con atención las siguientes opciones y selecciona la que mejor describe tu situación actual.</p>
 
@@ -909,7 +825,7 @@
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
 
       <div class="nav-row">
-        <button class="btn-back" onclick="prevStep(7)">← Atrás</button>
+        <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
         <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Enviar →</button>
       </div>
     </div>
@@ -940,7 +856,7 @@
       </svg>
     </div>
 
-    <h2 class="result-title">Gracias por llenar el formulario, <span id="lowNombre"></span></h2>
+    <h2 class="result-title">Bienvenido/a a NEWAVE, <span id="lowNombre"></span></h2>
 
     <div id="lowPlanBox" style="margin-bottom:1.25rem;padding:1rem 1.25rem;border:1.5px solid rgba(252,115,66,0.4);border-radius:14px;background:rgba(252,115,66,0.06);">
       <p style="margin:0 0 0.25rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">Plan recomendado para ti</p>
@@ -1225,7 +1141,7 @@
     track: '' // 'disqualified' | 'low' | 'high'
   };
 
-  const TOTAL_STEPS = 7;
+  const TOTAL_STEPS = 6;
 
   // ── Google Apps Script URL ──
   // Pega aquí la URL de tu Google Apps Script desplegado:
@@ -1283,35 +1199,23 @@
     }
 
     if (step === 3) {
-      if (!answers.experiencia) { setErr('err-experiencia', true); ok = false; }
-      else setErr('err-experiencia', false);
+      const t = document.getElementById('trabajo').value.trim();
+      if (!t) { setErr('err-trabajo', true); document.getElementById('trabajo').classList.add('error'); ok = false; }
+      else    { setErr('err-trabajo', false); document.getElementById('trabajo').classList.remove('error'); answers.trabajo = t; }
     }
 
     if (step === 4) {
-      if (!answers.area) { setErr('err-area', true); ok = false; }
-      else {
-        setErr('err-area', false);
-        let areaVal = answers.area;
-        if (areaVal === 'otra-area') {
-          const otraTxt = document.getElementById('area-otro').value.trim();
-          areaVal = otraTxt || 'Otra';
-        }
-        answers.trabajo = answers.experiencia + ' | ' + areaVal;
-        document.getElementById('trabajo').value = answers.trabajo;
-      }
+      const r = document.getElementById('razon').value.trim();
+      if (!r) { setErr('err-razon', true); document.getElementById('razon').classList.add('error'); ok = false; }
+      else    { setErr('err-razon', false); document.getElementById('razon').classList.remove('error'); answers.razon = r; }
     }
 
     if (step === 5) {
-      if (!answers.razon) { setErr('err-razon', true); ok = false; }
-      else setErr('err-razon', false);
-    }
-
-    if (step === 6) {
       if (!answers.compromiso) { setErr('err-compromiso', true); ok = false; }
       else setErr('err-compromiso', false);
     }
 
-    if (step === 7) {
+    if (step === 6) {
       if (!answers.inversion) { setErr('err-inversion', true); ok = false; }
     }
 
@@ -1348,7 +1252,7 @@
 
   // ── Submit ──
   function submitForm() {
-    if (!validateStep(7)) return;
+    if (!validateStep(6)) return;
 
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
