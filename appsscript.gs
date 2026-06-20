@@ -1,4 +1,4 @@
-// Newave Nuevo Formulario — Google Apps Script
+ // Newave Nuevo Formulario — Google Apps Script
 
 const SHEET_ID   = '10J5chMWPrFFzIYEkjc36HMDJ1H-_q5Q2IsE7srnv1MA';
 const SHEET_NAME = 'Registros';
@@ -38,14 +38,11 @@ function doGet(e) {
     ];
     sheet.appendRow(row);
 
-    // Send Email 1 immediately
-    if (correo) {
-      sendEmail1(nombre, correo);
-    }
+    // Schedule Email 1 for 2 minutes later
+    const lastRow = sheet.getLastRow();
+    scheduleEmail1delayed(nombre, correo, lastRow);
 
     // Schedule Email 2 for 24 hours later
-    // Store the row number so the trigger can find it
-    const lastRow = sheet.getLastRow();
     scheduleEmail2(nombre, correo, lastRow);
 
     return ContentService
@@ -58,22 +55,62 @@ function doGet(e) {
   }
 }
 
-// ─── EMAIL 1 — Immediate ───────────────────────────────────────────────────
+// ─── EMAIL 1 — 2 minute delay ─────────────────────────────────────────────
+
+function scheduleEmail1delayed(nombre, correo, rowNumber) {
+  const props = PropertiesService.getScriptProperties();
+  const key   = 'email1_' + rowNumber;
+  const data  = JSON.stringify({ nombre: nombre, correo: correo, row: rowNumber });
+  props.setProperty(key, data);
+
+  ScriptApp.newTrigger('sendPendingEmail1')
+    .timeBased()
+    .after(2 * 60 * 1000) // 2 minutes in ms
+    .create();
+}
+
+function sendPendingEmail1() {
+  const props = PropertiesService.getScriptProperties();
+  const allProps = props.getProperties();
+
+  for (const key in allProps) {
+    if (!key.startsWith('email1_')) continue;
+
+    const data   = JSON.parse(allProps[key]);
+    const nombre = data.nombre;
+    const correo = data.correo;
+
+    if (correo) {
+      sendEmail1(nombre, correo);
+    }
+
+    props.deleteProperty(key);
+  }
+
+  const triggers = ScriptApp.getProjectTriggers();
+  for (const trigger of triggers) {
+    if (trigger.getHandlerFunction() === 'sendPendingEmail1') {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  }
+}
 
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
 
   const subject = 'Tu acceso gratuito a Newave Academy';
 
+  const utmUrl1 = SKOOL_URL + '?utm_source=email&utm_medium=registro&utm_campaign=email1';
+
   const html = `
-<div style="font-family:Georgia,serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
   <p>Hola ${firstName},</p>
   <p>Soy Santiago, cofundador de Newave Academy.</p>
   <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto.</p>
   <p>No sé qué te frenó para unirte al programa, pero realmente queremos ayudarte. Por eso te invitamos a probar Newave gratis durante 7 días.</p>
   <p>Sin compromiso.</p>
   <p>Dentro tendrás acceso al curso completo, plantillas de CV, Cover Letter y LinkedIn, nuestra comunidad privada, herramientas de AI y una bolsa de trabajo con vacantes 100% remotas.</p>
-  <p>Entra aquí: <a href="${SKOOL_URL}" style="color:#FC7342;">${SKOOL_URL}</a></p>
+  <p><a href="${utmUrl1}" style="color:#FC7342;">Entra aquí → Newave Academy</a></p>
   <p>Si después de una semana sientes que no es para ti, no pagas.</p>
   <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, ganar en dólares y tener más libertad, este es tu mejor camino.</p>
   <p>Nos vemos dentro.</p>
@@ -145,14 +182,17 @@ function sendEmail2(nombre, correo) {
 
   const subject = '¿Todavía quieres trabajar remoto?';
 
+  const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
+  const utmTestimonios = TESTIMONIOS_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
+
   const html = `
-<div style="font-family:Georgia,serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
   <p>Hola ${firstName},</p>
   <p>Ayer llenaste el formulario. No quiero que se te pase.</p>
   <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
   <p style="border-left:3px solid #FC7342;padding-left:16px;color:#333333;font-style:italic;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br><br>— Rebeca Cruz, consiguió oferta en Stripe</p>
-  <p>Si quieres ver más historias: <a href="${TESTIMONIOS_URL}" style="color:#FC7342;">${TESTIMONIOS_URL}</a></p>
-  <p>7 días gratis.<br><a href="${SKOOL_URL}" style="color:#FC7342;">${SKOOL_URL}</a></p>
+  <p>Si quieres ver más historias: <a href="${utmTestimonios}" style="color:#FC7342;">Historias de egresados</a></p>
+  <p>7 días gratis.<br><a href="${utmUrl2}" style="color:#FC7342;">Entra aquí → Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p style="margin-top:32px;">Santiago<br>Co-Founder<br>NEWAVE</p>
 </div>`;
