@@ -180,7 +180,7 @@ function sendPendingEmail2() {
 function sendEmail2(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
 
-  const subject = '¿Todavía quieres trabajar remoto?';
+  const subject = 'Te estamos esperando';
 
   const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
   const utmTestimonios = TESTIMONIOS_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
