@@ -98,7 +98,7 @@ function sendPendingEmail1() {
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
 
-  const subject = 'Tu acceso gratuito a Newave Academy';
+  const subject = 'Prueba Newave Academy 7 días gratis';
 
   const utmUrl1 = SKOOL_URL + '?utm_source=email&utm_medium=registro&utm_campaign=email1';
 
