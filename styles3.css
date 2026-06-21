@@ -436,6 +436,7 @@ a   { text-decoration: none; color: inherit; }
 /* Desktop grid / Mobile carousel */
 .testimonials-grid {
   display: flex; gap: 1.25rem;
+  align-items: stretch;
   padding: 0 clamp(1.25rem, 5vw, 2.5rem); margin-bottom: 2.5rem;
   overflow-x: auto; scroll-snap-type: x mandatory;
   scroll-padding-left: clamp(1.25rem, 5vw, 2.5rem);
