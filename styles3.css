@@ -455,7 +455,7 @@ a   { text-decoration: none; color: inherit; }
   text-align: left;
   display: flex; flex-direction: column; gap: 0.35rem;
   width: 75vw; min-width: 260px; max-width: 320px; flex-shrink: 0;
-  height: 100%;
+  align-self: stretch;
   scroll-snap-align: center;
   border: 1px solid var(--border);
   border-top: 3px solid var(--orange);
