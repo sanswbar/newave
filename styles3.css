@@ -755,9 +755,10 @@ a   { text-decoration: none; color: inherit; }
   .modulo-body h3 { font-size: 1rem; }
   .modulo-body p { font-size: 0.875rem; }
   .modulo-extra-title { font-size: 1.1rem; }
-  .modulos-cta { padding: 0; }
+  .modulos-cta { padding: 0; margin-top: 2rem; }
+  .modulos-extra-toggle { margin-bottom: 0; }
   .inv-cta-note { text-align: center; }
-  .btn-ver-planes { display: block; width: auto; padding: 0.75rem 1.5rem; box-sizing: border-box; text-align: center; font-size: 0.9rem; }
+  .btn-ver-planes { display: inline-block; width: auto; padding: 0.7rem 2rem; font-size: 0.9rem; margin-top: 0.75rem; }
   .modulos-cta-intro { font-size: 0.875rem; }
 
   /* Testimonials */
