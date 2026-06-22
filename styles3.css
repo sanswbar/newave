@@ -698,7 +698,7 @@ a   { text-decoration: none; color: inherit; }
 
 @media (max-width: 768px) {
   :root { --section: 2rem; }
-  html { font-size: 18px; }
+  html { font-size: 16px; }
 
 
   /* Nav */
@@ -854,7 +854,6 @@ a   { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 420px) {
-  html { font-size: 20px; }
   .hero h1 { font-size: clamp(1.85rem, 9vw, 2.2rem); }
   .logo-img { height: 18px; }
   .why-grid { grid-template-columns: 1fr; }
