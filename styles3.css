@@ -137,7 +137,7 @@ a   { text-decoration: none; color: inherit; }
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 .btn-primary:hover { background: rgba(245,245,247,0.88); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.12); }
-.btn-large { font-size: 1.1rem; padding: 1.05rem 2.75rem; box-shadow: 0 0 40px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3); }
+.btn-large { font-size: 0.95rem; padding: 0.85rem 2.25rem; box-shadow: 0 0 40px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.3); }
 
 @keyframes pulse-orange {
   0%   { box-shadow: 0 0 0 0 rgba(252,115,66,0.55); }
@@ -619,7 +619,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .cta-inner { max-width: var(--max); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
 .cta-section h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: var(--white); }
-.cta-section p { font-size: 1.05rem; color: rgba(232,231,231,0.75); max-width: 480px; line-height: 1.75; }
+.cta-section p { font-size: 0.95rem; color: rgba(232,231,231,0.75); max-width: 480px; line-height: 1.75; }
 .cta-note { font-family: var(--mono); font-size: 0.68rem; color: var(--subtle); letter-spacing: 0.06em; }
 
 /* ── VER PLANES ── */
