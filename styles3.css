@@ -698,6 +698,7 @@ a   { text-decoration: none; color: inherit; }
 
 @media (max-width: 768px) {
   :root { --section: 2rem; }
+  html { font-size: 15px; }
 
   /* Nav */
   .nav { padding: 0 1.25rem; height: 54px; }
