@@ -1937,7 +1937,7 @@ a.autoridad-stat-pill:hover {
 .sticky-cta-mobile {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
   background: rgba(15,17,20,0.97);
   border-top: 1px solid rgba(255,255,255,0.08);
   box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
@@ -1949,9 +1949,9 @@ a.autoridad-stat-pill:hover {
 .sticky-cta-btn {
   display: block; width: 100%;
   background: #FC7342; color: #fff;
-  text-align: center; padding: 0.85rem 1rem;
-  border-radius: 8px; font-weight: 700;
-  font-size: 1rem; text-decoration: none;
+  text-align: center; padding: 0.65rem 1rem;
+  border-radius: 6px; font-weight: 600;
+  font-size: 0.9rem; text-decoration: none;
 }
 @media (max-width: 768px) {
   .sticky-cta-mobile { display: block; }
