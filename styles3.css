@@ -697,7 +697,7 @@ a   { text-decoration: none; color: inherit; }
   .nav { padding: 0 1.25rem; height: 54px; }
 
   /* Hero */
-  .hero { padding: 3rem 1.25rem 1.5rem; text-align: center; min-height: unset; }
+  .hero { padding: 4.5rem 1.25rem 2.5rem; text-align: center; min-height: unset; }
   .hero h1 { font-size: clamp(2.2rem, 10vw, 3rem); letter-spacing: -0.045em; line-height: 1.06; margin-bottom: 1rem; }
   .hero-sub { font-size: 1.05rem; color: rgba(232,231,231,0.85); margin-bottom: 1.25rem; text-align: center; }
   .hero-eyebrow { font-size: 0.65rem; }
