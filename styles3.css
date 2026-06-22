@@ -1013,6 +1013,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .modulos-cta {
   display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  margin-top: 3.5rem;
 }
 .modulos-cta-intro {
   font-size: 1.1rem;
