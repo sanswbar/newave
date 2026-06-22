@@ -310,7 +310,7 @@
 
       </div>
 
-      <details class="modulos-extra-toggle">
+      <details class="modulos-extra-toggle" open>
         <summary>Ver módulos adicionales (3) +</summary>
         <div class="modulos-extra-grid">
 
@@ -843,6 +843,12 @@
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
 
+
+    /* MODULOS EXTRA — close on mobile */
+    if (window.innerWidth <= 768) {
+      var modExtra = document.querySelector('.modulos-extra-toggle');
+      if (modExtra) modExtra.removeAttribute('open');
+    }
 
     /* FAQ ACCORDION */
     document.querySelectorAll('.faq-trigger').forEach(btn => {
