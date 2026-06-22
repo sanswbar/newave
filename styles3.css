@@ -897,7 +897,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .company-logo {
   height: 40px;
-  max-width: 140px;
+  max-width: 180px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
