@@ -758,6 +758,13 @@ a   { text-decoration: none; color: inherit; }
   .modulos-cta { padding: 0; }
   .inv-cta-note { text-align: center; }
   .btn-ver-planes { display: block; width: 100%; padding: 1.1rem 1.25rem; box-sizing: border-box; text-align: center; font-size: 1.05rem; }
+  /* Módulos extra: en mobile se muestran como lista compacta, no cards grandes */
+  .modulos-extra-grid { display: flex; flex-direction: column; gap: 0; }
+  .modulos-extra-grid .modulo-card { display: flex; flex-direction: row; align-items: center; gap: 0.75rem; padding: 0.75rem 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.07); border-radius: 0; }
+  .modulos-extra-grid .modulo-thumb { display: none; }
+  .modulos-extra-grid .modulo-body { padding: 0; }
+  .modulos-extra-grid .modulo-body h3 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .modulos-extra-grid .modulo-body p { font-size: 0.8rem; color: rgba(232,231,231,0.55); }
 
   /* Testimonials */
   .testimonials-section { padding-bottom: 2.5rem; }
