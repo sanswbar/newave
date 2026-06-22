@@ -1463,15 +1463,17 @@ a.autoridad-stat-pill {
 }
 a.autoridad-stat-pill:hover {
   transform: translateY(-2px);
-  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
 }
 .autoridad-stat-pill {
   display: flex; flex-direction: column; align-items: center;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: #fff;
+  border: 1px solid rgba(20,24,30,0.09);
+  border-top: 3px solid var(--orange);
   border-radius: 14px;
   padding: 1.1rem 1.75rem;
   min-width: 160px; flex: 1;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   gap: 0.3rem;
 }
 .autoridad-stat-pill-num {
@@ -1480,7 +1482,7 @@ a.autoridad-stat-pill:hover {
   color: var(--orange);
 }
 .autoridad-stat-pill-label {
-  font-size: 0.78rem; color: rgba(255,255,255,0.45);
+  font-size: 0.78rem; color: rgba(20,24,30,0.55);
   line-height: 1.4; text-align: center;
 }
 @media (max-width: 600px) {
