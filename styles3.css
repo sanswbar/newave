@@ -265,6 +265,7 @@ a   { text-decoration: none; color: inherit; }
   font-family: var(--mono); font-size: 0.7rem;
   color: var(--subtle);
 }
+.hero-proof span { text-align: center; }
 .proof-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
 
 /* ── HERO PARTNER BADGE ── */
