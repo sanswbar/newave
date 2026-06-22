@@ -1979,5 +1979,5 @@ a.autoridad-stat-pill:hover {
   margin-top: 1rem;
 }
 @media (max-width: 768px) {
-  .modulos-extra-grid { grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+  .modulos-extra-grid { grid-template-columns: 1fr; gap: 0.85rem; }
 }
