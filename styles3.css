@@ -757,7 +757,7 @@ a   { text-decoration: none; color: inherit; }
   .modulo-extra-title { font-size: 1.1rem; }
   .modulos-cta { padding: 0; }
   .inv-cta-note { text-align: center; }
-  .btn-ver-planes { display: block; width: 100%; padding: 1.1rem 1.25rem; box-sizing: border-box; text-align: center; font-size: 1.05rem; }
+  .btn-ver-planes { display: block; width: auto; padding: 0.75rem 1.5rem; box-sizing: border-box; text-align: center; font-size: 0.9rem; }
   .modulos-cta-intro { font-size: 0.875rem; }
 
   /* Testimonials */
