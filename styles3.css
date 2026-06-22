@@ -212,15 +212,8 @@ a   { text-decoration: none; color: inherit; }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 0.5rem;
   font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em;
-  color: var(--orange); margin-bottom: 1.75rem;
-  border: 1px solid rgba(252,115,66,0.25);
-  padding: 0.35rem 0.9rem; border-radius: 20px;
-  background: rgba(252,115,66,0.06);
-  cursor: pointer; text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
-}
-.hero-eyebrow:hover {
-  background: rgba(252,115,66,0.14); border-color: rgba(252,115,66,0.5);
+  color: rgba(252,115,66,0.7); margin-bottom: 1.75rem;
+  cursor: default; text-decoration: none;
 }
 .hero-corner-isotipo {
   position: absolute;
