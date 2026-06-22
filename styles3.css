@@ -872,7 +872,7 @@ a   { text-decoration: none; color: inherit; }
 }
 .companies-label {
   font-family: var(--mono);
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--subtle);
@@ -886,7 +886,7 @@ a   { text-decoration: none; color: inherit; }
 .companies-track {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  gap: 3.5rem;
   width: max-content;
   animation: logo-scroll 22s linear infinite;
 }
@@ -914,12 +914,7 @@ a   { text-decoration: none; color: inherit; }
   color: rgba(212,211,211,0.85);
   white-space: nowrap;
   flex-shrink: 0;
-  padding: 0.4rem 1rem;
-  border: 1px solid rgba(212,211,211,0.28);
-  border-radius: 6px;
-  transition: color 0.2s, border-color 0.2s;
 }
-.logo-placeholder:hover { color: var(--white); border-color: rgba(212,211,211,0.55); }
 
 /* ── MÓDULOS ── */
 .modulos-section {
