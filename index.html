@@ -754,10 +754,6 @@
   </section>
 
 
-  <!-- STICKY CTA MOBILE -->
-  <div class="sticky-cta-mobile" id="stickyCta">
-    <a href="https://www.newaveacademy.com/formulario/" class="sticky-cta-btn" data-cta="sticky-mobile">Encuentra tu programa →</a>
-  </div>
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -847,18 +843,6 @@
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
 
-    /* STICKY CTA MOBILE */
-    (function() {
-      const sticky = document.getElementById('stickyCta');
-      const hero = document.querySelector('.hero');
-      const ctaSection = document.getElementById('contact');
-      if (!sticky || !hero) return;
-      window.addEventListener('scroll', function() {
-        const pastHero = window.scrollY > hero.offsetHeight * 0.6;
-        const nearCta = ctaSection && window.scrollY + window.innerHeight > ctaSection.offsetTop - 40;
-        sticky.classList.toggle('visible', pastHero && !nearCta);
-      }, { passive: true });
-    })();
 
     /* FAQ ACCORDION */
     document.querySelectorAll('.faq-trigger').forEach(btn => {
