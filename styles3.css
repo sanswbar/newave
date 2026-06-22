@@ -257,7 +257,7 @@ a   { text-decoration: none; color: inherit; }
   max-width: 800px; line-height: 1.65;
   margin-bottom: 2.5rem; text-align: center;
 }
-.hero-actions { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.5rem; }
+.hero-actions { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
 .hero-proof {
   display: flex; align-items: center; gap: 0.5rem;
   font-family: var(--mono); font-size: 0.7rem;
@@ -896,8 +896,8 @@ a   { text-decoration: none; color: inherit; }
   to   { transform: translateX(-50%); }
 }
 .company-logo {
-  height: 40px;
-  max-width: 180px;
+  height: 36px;
+  max-width: 200px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
