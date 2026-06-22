@@ -759,7 +759,7 @@ a   { text-decoration: none; color: inherit; }
   .inv-cta-note { text-align: center; }
   .btn-ver-planes { display: block; width: 100%; padding: 1.1rem 1.25rem; box-sizing: border-box; text-align: center; font-size: 1.05rem; }
   .modulos-cta-intro { font-size: 0.875rem; }
-  .modulos-extra-grid { display: contents; }
+  .modulos-extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 0.85rem; }
 
   /* Testimonials */
   .testimonials-section { padding-bottom: 2.5rem; }
