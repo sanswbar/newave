@@ -1957,14 +1957,27 @@ a.autoridad-stat-pill:hover {
   width: 100%;
 }
 .modulos-extra-toggle summary {
-  cursor: pointer;
-  font-size: 0.85rem; font-weight: 600;
-  color: #FC7342;
-  padding: 0.75rem 0;
-  list-style: none;
-  text-align: center;
+  display: none;
 }
-.modulos-extra-toggle summary::-webkit-details-marker { display: none; }
 .modulos-extra-grid {
-  display: contents;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+  .modulos-extra-toggle summary {
+    display: block;
+    cursor: pointer;
+    font-size: 0.85rem; font-weight: 600;
+    color: #FC7342;
+    padding: 0.75rem 0;
+    list-style: none;
+    text-align: center;
+  }
+  .modulos-extra-toggle summary::-webkit-details-marker { display: none; }
+  .modulos-extra-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
 }

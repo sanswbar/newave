@@ -308,47 +308,47 @@
           </div>
         </div>
 
-        <details class="modulos-extra-toggle">
-          <summary>Ver módulos adicionales (3) +</summary>
-          <div class="modulos-extra-grid">
-
-            <div class="modulo-card modulo-extra">
-              <div class="modulo-thumb modulo-thumb-extra">
-                <span class="modulo-badge">EXTRA</span>
-                <span class="modulo-extra-title">Asesoría<br>uno a uno</span>
-              </div>
-              <div class="modulo-body">
-                <h3>Asesoría personalizada uno a uno</h3>
-                <p>Sesión privada con el equipo para revisión de documentos, diagnóstico de posicionamiento y diseño de estrategia individual.</p>
-              </div>
-            </div>
-
-            <div class="modulo-card modulo-extra">
-              <div class="modulo-thumb modulo-thumb-extra">
-                <span class="modulo-badge">EXTRA</span>
-                <span class="modulo-extra-title">Inteligencia<br>Artificial</span>
-              </div>
-              <div class="modulo-body">
-                <h3>Inteligencia Artificial aplicada</h3>
-                <p>Implementación de IA en cada etapa del proceso. Herramientas, prompts y certificaciones para optimizar tiempo y calidad de aplicación.</p>
-              </div>
-            </div>
-
-            <div class="modulo-card modulo-extra">
-              <div class="modulo-thumb modulo-thumb-extra">
-                <span class="modulo-badge">EXTRA</span>
-                <span class="modulo-extra-title">Ruta<br>Freelancer</span>
-              </div>
-              <div class="modulo-body">
-                <h3>Ruta paralela como freelancer internacional</h3>
-                <p>Activación de ingresos en dólares vía plataformas freelance mientras se desarrolla la búsqueda de empleo formal.</p>
-              </div>
-            </div>
-
-          </div>
-        </details>
-
       </div>
+
+      <details class="modulos-extra-toggle" open>
+        <summary>Ver módulos adicionales (3) +</summary>
+        <div class="modulos-extra-grid">
+
+          <div class="modulo-card modulo-extra">
+            <div class="modulo-thumb modulo-thumb-extra">
+              <span class="modulo-badge">EXTRA</span>
+              <span class="modulo-extra-title">Asesoría<br>uno a uno</span>
+            </div>
+            <div class="modulo-body">
+              <h3>Asesoría personalizada uno a uno</h3>
+              <p>Sesión privada con el equipo para revisión de documentos, diagnóstico de posicionamiento y diseño de estrategia individual.</p>
+            </div>
+          </div>
+
+          <div class="modulo-card modulo-extra">
+            <div class="modulo-thumb modulo-thumb-extra">
+              <span class="modulo-badge">EXTRA</span>
+              <span class="modulo-extra-title">Inteligencia<br>Artificial</span>
+            </div>
+            <div class="modulo-body">
+              <h3>Inteligencia Artificial aplicada</h3>
+              <p>Implementación de IA en cada etapa del proceso. Herramientas, prompts y certificaciones para optimizar tiempo y calidad de aplicación.</p>
+            </div>
+          </div>
+
+          <div class="modulo-card modulo-extra">
+            <div class="modulo-thumb modulo-thumb-extra">
+              <span class="modulo-badge">EXTRA</span>
+              <span class="modulo-extra-title">Ruta<br>Freelancer</span>
+            </div>
+            <div class="modulo-body">
+              <h3>Ruta paralela como freelancer internacional</h3>
+              <p>Activación de ingresos en dólares vía plataformas freelance mientras se desarrolla la búsqueda de empleo formal.</p>
+            </div>
+          </div>
+
+        </div>
+      </details>
 
       <div class="modulos-cta" data-animate>
         <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;margin:0 0 0.4rem;">¿No sabes por dónde empezar?</p>
@@ -843,6 +843,12 @@
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
 
+
+    /* MODULOS EXTRA — close on mobile, open on desktop */
+    if (window.innerWidth <= 768) {
+      var modExtra = document.querySelector('.modulos-extra-toggle');
+      if (modExtra) modExtra.removeAttribute('open');
+    }
 
     /* FAQ ACCORDION */
     document.querySelectorAll('.faq-trigger').forEach(btn => {
