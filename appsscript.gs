@@ -4,7 +4,7 @@ const SHEET_ID   = '10J5chMWPrFFzIYEkjc36HMDJ1H-_q5Q2IsE7srnv1MA';
 const SHEET_NAME = 'Registros';
 
 const SKOOL_URL        = 'https://www.skool.com/newave';
-const TESTIMONIOS_URL  = 'https://www.newaveacademy.com/#testimonios';
+const COMUNIDAD_URL    = 'https://www.newaveacademy.com/#comunidad';
 const FROM_NAME        = 'Santiago · NEWAVE';
 const FROM_EMAIL       = 'hello@nwave.co';
 
@@ -81,7 +81,12 @@ function sendPendingEmail1() {
     const correo = data.correo;
 
     if (correo) {
-      sendEmail1(nombre, correo);
+      try {
+        sendEmail1(nombre, correo);
+      } catch (err) {
+        // Bad email or send error — skip it, don't block the rest of the queue
+        Logger.log('Error Email 1 (' + correo + '): ' + err.message);
+      }
     }
 
     props.deleteProperty(key);
@@ -98,23 +103,24 @@ function sendPendingEmail1() {
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
 
-  const subject = 'Prueba Newave Academy 7 días gratis';
+  const subject = 'Llenaste nuestro formulario. Te queremos en Newave Academy.';
 
   const utmUrl1 = SKOOL_URL + '?utm_source=email&utm_medium=registro&utm_campaign=email1';
 
   const html = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>Soy Santiago, cofundador de Newave Academy.</p>
   <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto.</p>
   <p>No sé qué te frenó para unirte al programa, pero realmente queremos ayudarte. Por eso te invitamos a probar Newave gratis durante 7 días.</p>
   <p>Sin compromiso.</p>
+  <p>Y algo importante: Newave funciona para cualquier perfil profesional, no solo tech. Tenemos casos en marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más.</p>
   <p>Dentro tendrás acceso al curso completo, plantillas de CV, Cover Letter y LinkedIn, nuestra comunidad privada, herramientas de AI y una bolsa de trabajo con vacantes 100% remotas.</p>
-  <p><a href="${utmUrl1}" style="color:#FC7342;">Entra aquí → Newave Academy</a></p>
+  <p>Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
   <p>Si después de una semana sientes que no es para ti, no pagas.</p>
   <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, ganar en dólares y tener más libertad, este es tu mejor camino.</p>
   <p>Nos vemos dentro.</p>
-  <p style="margin-top:32px;">Santiago<br>Co-Founder<br>NEWAVE</p>
+  <p>Santiago<br>Co-Founder<br>NEWAVE</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', {
@@ -159,12 +165,17 @@ function sendPendingEmail2() {
     const skip    = estatus.includes('pago') || estatus.includes('trial');
 
     if (!skip && correo) {
-      sendEmail2(nombre, correo);
-      // Update Estatus
-      sheet.getRange(rowNumber, COL_ESTATUS).setValue('Correo enviado: 24h');
+      try {
+        sendEmail2(nombre, correo);
+        // Update Estatus
+        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Correo enviado: 24h');
+      } catch (err) {
+        // Bad email or send error — log it and move on, don't block the queue
+        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Error correo 24h: ' + err.message);
+      }
     }
 
-    // Clean up the property regardless
+    // Clean up the property regardless — even if the email failed, so it never blocks the queue
     props.deleteProperty(key);
   }
 
@@ -183,18 +194,18 @@ function sendEmail2(nombre, correo) {
   const subject = 'Te estamos esperando';
 
   const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
-  const utmTestimonios = TESTIMONIOS_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
+  const utmComunidad = COMUNIDAD_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
 
   const html = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:#111111;max-width:560px;margin:0 auto;">
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>Ayer llenaste el formulario. No quiero que se te pase.</p>
   <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
-  <p style="border-left:3px solid #FC7342;padding-left:16px;color:#333333;font-style:italic;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br><br>— Rebeca Cruz, consiguió oferta en Stripe</p>
-  <p>Si quieres ver más historias: <a href="${utmTestimonios}" style="color:#FC7342;">Historias de egresados</a></p>
-  <p>7 días gratis.<br><a href="${utmUrl2}" style="color:#FC7342;">Entra aquí → Newave Academy</a></p>
+  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
+  <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
+  <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
-  <p style="margin-top:32px;">Santiago<br>Co-Founder<br>NEWAVE</p>
+  <p>Santiago<br>Co-Founder<br>NEWAVE</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', {
