@@ -2006,7 +2006,19 @@ a.autoridad-stat-pill:hover {
 /* ── TU PROFESIÓN YA ES REMOTA ── */
 .remota-section {
   padding: var(--section) 2rem;
+  padding-bottom: calc(var(--section) * 0.7);
   background: var(--bg);
+}
+.remota-section + .modulos-section {
+  padding-top: calc(var(--section) * 0.7);
+}
+.remota-inner::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: calc(var(--section) * 0.7) auto 0;
 }
 .remota-inner {
   max-width: 720px;
