@@ -2002,3 +2002,60 @@ a.autoridad-stat-pill:hover {
     gap: 0.85rem;
   }
 }
+
+/* ── TU PROFESIÓN YA ES REMOTA ── */
+.remota-section {
+  padding: var(--section) 2rem;
+  background: var(--bg);
+}
+.remota-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.remota-h2 {
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 1.75rem;
+}
+.remota-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(232,231,231,0.7);
+  margin-bottom: 1.1rem;
+}
+.remota-text strong { color: var(--white); }
+.remota-equiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 2.5rem;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.remota-equiv-item {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+.remota-from { text-align: right; color: rgba(232,231,231,0.55); }
+.remota-arrow { color: var(--orange); font-weight: 700; }
+.remota-to { text-align: left; color: var(--white); font-weight: 600; }
+
+@media (max-width: 768px) {
+  .remota-section { padding: 2.5rem 1.25rem; }
+  .remota-h2 { font-size: 1.5rem; margin-bottom: 1.25rem; }
+  .remota-text p { font-size: 0.95rem; }
+  .remota-equiv { margin-top: 1.75rem; gap: 0.5rem; }
+  .remota-equiv-item { font-size: 0.75rem; padding: 0.6rem 0.85rem; gap: 0.6rem; }
+}
