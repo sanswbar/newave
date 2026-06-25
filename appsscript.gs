@@ -5,7 +5,7 @@ const SHEET_NAME = 'Registros';
 
 const SKOOL_URL        = 'https://www.skool.com/newave';
 const COMUNIDAD_URL    = 'https://www.newaveacademy.com/#comunidad';
-const FROM_NAME        = 'Santiago · NEWAVE';
+const FROM_NAME        = 'Newave Academy';
 const FROM_EMAIL       = 'hello@nwave.co';
 
 // Column indices (1-based) — must match sheet headers
