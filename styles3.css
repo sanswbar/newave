@@ -2061,7 +2061,7 @@ a.autoridad-stat-pill:hover {
 }
 
 .remota-cierre {
-  margin-top: 1.5rem;
+  margin-top: 2.75rem;
   font-size: 0.95rem;
   color: rgba(232,231,231,0.6);
   line-height: 1.6;
@@ -2070,5 +2070,5 @@ a.autoridad-stat-pill:hover {
   margin-right: auto;
 }
 @media (max-width: 768px) {
-  .remota-cierre { font-size: 0.875rem; margin-top: 1.25rem; }
+  .remota-cierre { font-size: 0.875rem; margin-top: 2rem; }
 }
