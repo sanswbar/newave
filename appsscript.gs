@@ -38,12 +38,14 @@ function doGet(e) {
     ];
     sheet.appendRow(row);
 
-    // Schedule Email 1 for 2 minutes later
     const lastRow = sheet.getLastRow();
-    scheduleEmail1delayed(nombre, correo, lastRow);
 
-    // Schedule Email 2 for 24 hours later
-    scheduleEmail2(nombre, correo, lastRow);
+    // Schedule the full email sequence
+    scheduleEmail(1, nombre, correo, lastRow, 2 * 60 * 1000);            // Email 1 — 2 min
+    scheduleEmail(2, nombre, correo, lastRow, 24 * 60 * 60 * 1000);      // Email 2 — 24 h
+    scheduleEmail(3, nombre, correo, lastRow, 3 * 24 * 60 * 60 * 1000);  // Email 3 — 3 días
+    scheduleEmail(4, nombre, correo, lastRow, 5 * 24 * 60 * 60 * 1000);  // Email 4 — 5 días
+    scheduleEmail(5, nombre, correo, lastRow, 7 * 24 * 60 * 60 * 1000);  // Email 5 — 7 días
 
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))
@@ -55,50 +57,77 @@ function doGet(e) {
   }
 }
 
-// ─── EMAIL 1 — 2 minute delay ─────────────────────────────────────────────
+// ─── EMAIL SCHEDULING (generic) ───────────────────────────────────────────
 
-function scheduleEmail1delayed(nombre, correo, rowNumber) {
+function scheduleEmail(emailNum, nombre, correo, rowNumber, delayMs) {
   const props = PropertiesService.getScriptProperties();
-  const key   = 'email1_' + rowNumber;
+  const key   = 'email' + emailNum + '_' + rowNumber;
   const data  = JSON.stringify({ nombre: nombre, correo: correo, row: rowNumber });
   props.setProperty(key, data);
 
-  ScriptApp.newTrigger('sendPendingEmail1')
+  ScriptApp.newTrigger('sendPendingEmail' + emailNum)
     .timeBased()
-    .after(2 * 60 * 1000) // 2 minutes in ms
+    .after(delayMs)
     .create();
 }
 
-function sendPendingEmail1() {
+// Returns true if the lead already started a trial or paid — used to stop the sequence.
+function isTrialOrPaid(sheet, rowNumber) {
+  const estatus = sheet.getRange(rowNumber, COL_ESTATUS).getValue().toString().toLowerCase();
+  return estatus.includes('pago') || estatus.includes('trial');
+}
+
+// Generic processor for any pending email in the sequence.
+// skipIfConverted = true for emails 2-5 (don't send if already trial/paid).
+function processPendingEmails(emailNum, sendFn, skipIfConverted) {
   const props = PropertiesService.getScriptProperties();
+  const sheet = getSheet(SHEET_NAME);
   const allProps = props.getProperties();
+  const prefix = 'email' + emailNum + '_';
 
   for (const key in allProps) {
-    if (!key.startsWith('email1_')) continue;
+    if (key.indexOf(prefix) !== 0) continue;
 
-    const data   = JSON.parse(allProps[key]);
-    const nombre = data.nombre;
-    const correo = data.correo;
+    const data      = JSON.parse(allProps[key]);
+    const rowNumber = data.row;
+    const nombre    = data.nombre;
+    const correo    = data.correo;
 
-    if (correo) {
+    // Stop the sequence for anyone who already entered the trial or paid
+    const skip = skipIfConverted && isTrialOrPaid(sheet, rowNumber);
+
+    if (!skip && correo) {
       try {
-        sendEmail1(nombre, correo);
+        sendFn(nombre, correo);
+        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Correo enviado: email ' + emailNum);
       } catch (err) {
-        // Bad email or send error — skip it, don't block the rest of the queue
-        Logger.log('Error Email 1 (' + correo + '): ' + err.message);
+        // Bad email or send error — log it, mark it, and move on (never block the queue)
+        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Error correo ' + emailNum + ': ' + err.message);
       }
     }
 
+    // Clean up the property regardless — even if it failed or was skipped
     props.deleteProperty(key);
   }
 
+  // Delete this email's time-based triggers that have already fired
   const triggers = ScriptApp.getProjectTriggers();
   for (const trigger of triggers) {
-    if (trigger.getHandlerFunction() === 'sendPendingEmail1') {
+    if (trigger.getHandlerFunction() === 'sendPendingEmail' + emailNum) {
       ScriptApp.deleteTrigger(trigger);
     }
   }
 }
+
+// ─── TRIGGER HANDLERS ─────────────────────────────────────────────────────
+
+function sendPendingEmail1() { processPendingEmails(1, sendEmail1, false); }
+function sendPendingEmail2() { processPendingEmails(2, sendEmail2, true);  }
+function sendPendingEmail3() { processPendingEmails(3, sendEmail3, true);  }
+function sendPendingEmail4() { processPendingEmails(4, sendEmail4, true);  }
+function sendPendingEmail5() { processPendingEmails(5, sendEmail5, true);  }
+
+// ─── EMAIL 1 — 2 minutos ──────────────────────────────────────────────────
 
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -110,7 +139,7 @@ function sendEmail1(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Soy Santiago, cofundador de Newave Academy.</p>
+  <p>Te escribe Santiago, cofundador de Newave Academy.</p>
   <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto.</p>
   <p>No sé qué te frenó para unirte al programa, pero realmente queremos ayudarte. Por eso te invitamos a probar Newave gratis durante 7 días.</p>
   <p>Sin compromiso.</p>
@@ -120,7 +149,7 @@ function sendEmail1(nombre, correo) {
   <p>Si después de una semana sientes que no es para ti, no pagas.</p>
   <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, ganar en dólares y tener más libertad, este es tu mejor camino.</p>
   <p>Nos vemos dentro.</p>
-  <p>Santiago<br>Co-Founder<br>NEWAVE</p>
+  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', {
@@ -130,63 +159,7 @@ function sendEmail1(nombre, correo) {
   });
 }
 
-// ─── EMAIL 2 — 24 hours later ─────────────────────────────────────────────
-
-function scheduleEmail2(nombre, correo, rowNumber) {
-  // Store pending email in Script Properties so the trigger can retrieve it
-  const props = PropertiesService.getScriptProperties();
-  const key   = 'pending_' + rowNumber;
-  const data  = JSON.stringify({ nombre: nombre, correo: correo, row: rowNumber });
-  props.setProperty(key, data);
-
-  // Create a one-time trigger 24 hours from now
-  ScriptApp.newTrigger('sendPendingEmail2')
-    .timeBased()
-    .after(24 * 60 * 60 * 1000) // 24 hours in ms
-    .create();
-}
-
-function sendPendingEmail2() {
-  const props = PropertiesService.getScriptProperties();
-  const sheet = getSheet(SHEET_NAME);
-  const allProps = props.getProperties();
-
-  // Find all pending email 2 entries
-  for (const key in allProps) {
-    if (!key.startsWith('pending_')) continue;
-
-    const data      = JSON.parse(allProps[key]);
-    const rowNumber = data.row;
-    const nombre    = data.nombre;
-    const correo    = data.correo;
-
-    // Check current Estatus in the sheet — skip if already Pago or Trial
-    const estatus = sheet.getRange(rowNumber, COL_ESTATUS).getValue().toString().toLowerCase();
-    const skip    = estatus.includes('pago') || estatus.includes('trial');
-
-    if (!skip && correo) {
-      try {
-        sendEmail2(nombre, correo);
-        // Update Estatus
-        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Correo enviado: 24h');
-      } catch (err) {
-        // Bad email or send error — log it and move on, don't block the queue
-        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Error correo 24h: ' + err.message);
-      }
-    }
-
-    // Clean up the property regardless — even if the email failed, so it never blocks the queue
-    props.deleteProperty(key);
-  }
-
-  // Delete all time-based triggers named sendPendingEmail2 that have already fired
-  const triggers = ScriptApp.getProjectTriggers();
-  for (const trigger of triggers) {
-    if (trigger.getHandlerFunction() === 'sendPendingEmail2') {
-      ScriptApp.deleteTrigger(trigger);
-    }
-  }
-}
+// ─── EMAIL 2 — 24 horas ───────────────────────────────────────────────────
 
 function sendEmail2(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -205,7 +178,91 @@ function sendEmail2(nombre, correo) {
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
   <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
-  <p>Santiago<br>Co-Founder<br>NEWAVE</p>
+  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+</div>`;
+
+  GmailApp.sendEmail(correo, subject, '', {
+    name: FROM_NAME,
+    replyTo: FROM_EMAIL,
+    htmlBody: html,
+  });
+}
+
+// ─── EMAIL 3 — 3 días (caso de éxito) ─────────────────────────────────────
+
+function sendEmail3(nombre, correo) {
+  const firstName = nombre.split(' ')[0] || 'hola';
+
+  const subject = 'Quedó en una empresa de tech en 2 meses';
+
+  const utmUrl3 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email3';
+
+  const html = `
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
+  <p>Hola ${firstName},</p>
+  <p>Hace unos días llenaste el formulario. Quiero contarte algo que pasó dentro de Newave.</p>
+  <p>Uno de nuestros miembros llevaba alrededor de dos meses aplicando. Hace poco quedó en una posición de ADR en Samsara, una empresa de tech.</p>
+  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"De lo más valioso en mi proceso fue lograr una creación espectacular de mi currículum gracias a los videos y el acompañamiento. En el flujo de entrevistas llegué con el CCO de México y lo primero que me dijo fue: 'estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar, tengo muy claro todos tus logros'. Eso fue oro para mí."</p>
+  <p>Fíjate en el detalle: no fue suerte. Fue tener un CV que comunica tus logros en el lenguaje correcto. Eso es lo que te enseñamos a construir.</p>
+  <p>Pruébalo gratis 7 días: <a href="${utmUrl3}">Newave Academy</a></p>
+  <p>Nos vemos dentro.</p>
+  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+</div>`;
+
+  GmailApp.sendEmail(correo, subject, '', {
+    name: FROM_NAME,
+    replyTo: FROM_EMAIL,
+    htmlBody: html,
+  });
+}
+
+// ─── EMAIL 4 — 5 días (objeción tarjeta) ──────────────────────────────────
+
+function sendEmail4(nombre, correo) {
+  const firstName = nombre.split(' ')[0] || 'hola';
+
+  const subject = 'Solo necesitas una semana';
+
+  const utmUrl4 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email4';
+
+  const html = `
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
+  <p>Hola ${firstName},</p>
+  <p>No tienes que decidir hoy si Newave es para ti. Solo entra y compruébalo.</p>
+  <p>7 días gratis. Acceso completo. Si no es lo tuyo, sales sin pagar.</p>
+  <p>Una semana para ver si esto cambia tu situación. Nada más.</p>
+  <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
+  <p>Nos vemos dentro.</p>
+  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+</div>`;
+
+  GmailApp.sendEmail(correo, subject, '', {
+    name: FROM_NAME,
+    replyTo: FROM_EMAIL,
+    htmlBody: html,
+  });
+}
+
+// ─── EMAIL 5 — 7 días (última llamada) ────────────────────────────────────
+
+function sendEmail5(nombre, correo) {
+  const firstName = nombre.split(' ')[0] || 'hola';
+
+  const subject = 'Esto es lo último que te escribo';
+
+  const utmUrl5 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email5';
+
+  const html = `
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
+  <p>Hola ${firstName},</p>
+  <p>Este es el último correo que te mando sobre esto.</p>
+  <p>Hace una semana diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
+  <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
+  <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
+  <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
+  <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
+  <p>Tú decides.</p>
+  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', {
