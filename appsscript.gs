@@ -14,6 +14,17 @@ const COL_NOMBRE     = 2;
 const COL_CORREO     = 3;
 const COL_ESTATUS    = 12; // Column L — add manually if not present
 
+// Email sequence delays (ms after signup)
+const EMAIL_DELAYS = {
+  1: 2 * 60 * 1000,            // 2 min
+  2: 24 * 60 * 60 * 1000,      // 24 h
+  3: 3 * 24 * 60 * 60 * 1000,  // 3 días
+  4: 5 * 24 * 60 * 60 * 1000,  // 5 días
+  5: 7 * 24 * 60 * 60 * 1000,  // 7 días
+};
+
+// ─── FORM SUBMISSION ──────────────────────────────────────────────────────
+
 function doGet(e) {
   try {
     const track = e.parameter.track || '';
@@ -34,18 +45,15 @@ function doGet(e) {
       e.parameter.compromiso || '',
       e.parameter.inversion  || '',
       track,
-      'Correo enviado: inmediato', // initial Estatus
+      'Registrado', // initial Estatus
     ];
     sheet.appendRow(row);
 
+    // Queue the full email sequence in Script Properties.
+    // A single recurring trigger (every5min) processes the queue — no per-email triggers.
     const lastRow = sheet.getLastRow();
-
-    // Schedule the full email sequence
-    scheduleEmail(1, nombre, correo, lastRow, 2 * 60 * 1000);            // Email 1 — 2 min
-    scheduleEmail(2, nombre, correo, lastRow, 24 * 60 * 60 * 1000);      // Email 2 — 24 h
-    scheduleEmail(3, nombre, correo, lastRow, 3 * 24 * 60 * 60 * 1000);  // Email 3 — 3 días
-    scheduleEmail(4, nombre, correo, lastRow, 5 * 24 * 60 * 60 * 1000);  // Email 4 — 5 días
-    scheduleEmail(5, nombre, correo, lastRow, 7 * 24 * 60 * 60 * 1000);  // Email 5 — 7 días
+    queueSequence(nombre, correo, lastRow);
+    ensureProcessorTrigger();
 
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))
@@ -57,83 +65,82 @@ function doGet(e) {
   }
 }
 
-// ─── EMAIL SCHEDULING (generic) ───────────────────────────────────────────
+// ─── QUEUE + SINGLE RECURRING TRIGGER ─────────────────────────────────────
 
-function scheduleEmail(emailNum, nombre, correo, rowNumber, delayMs) {
+// Store one pending entry per email in the sequence, each with its due timestamp.
+function queueSequence(nombre, correo, rowNumber) {
   const props = PropertiesService.getScriptProperties();
-  const key   = 'email' + emailNum + '_' + rowNumber;
-  const data  = JSON.stringify({ nombre: nombre, correo: correo, row: rowNumber });
-  props.setProperty(key, data);
+  const now   = Date.now();
 
-  ScriptApp.newTrigger('sendPendingEmail' + emailNum)
+  for (let n = 1; n <= 5; n++) {
+    const key  = 'seq_' + rowNumber + '_' + n;
+    const data = JSON.stringify({
+      emailNum: n,
+      nombre:   nombre,
+      correo:   correo,
+      row:      rowNumber,
+      dueAt:    now + EMAIL_DELAYS[n],
+    });
+    props.setProperty(key, data);
+  }
+}
+
+// Make sure exactly ONE recurring processor trigger exists (every 5 minutes).
+function ensureProcessorTrigger() {
+  const triggers = ScriptApp.getProjectTriggers();
+  for (const t of triggers) {
+    if (t.getHandlerFunction() === 'processQueue') return; // already exists
+  }
+  ScriptApp.newTrigger('processQueue')
     .timeBased()
-    .after(delayMs)
+    .everyMinutes(5)
     .create();
 }
 
-// Returns true if the lead already started a trial or paid — used to stop the sequence.
+// Runs every 5 min: sends any email whose dueAt has passed, skipping converted leads.
+function processQueue() {
+  const props = PropertiesService.getScriptProperties();
+  const sheet = getSheet(SHEET_NAME);
+  const allProps = props.getProperties();
+  const now = Date.now();
+
+  const senders = {
+    1: sendEmail1, 2: sendEmail2, 3: sendEmail3, 4: sendEmail4, 5: sendEmail5,
+  };
+
+  for (const key in allProps) {
+    if (key.indexOf('seq_') !== 0) continue;
+
+    const data = JSON.parse(allProps[key]);
+    if (now < data.dueAt) continue; // not due yet
+
+    // Email 1 always sends; 2-5 skip if the lead already started trial or paid
+    const skip = (data.emailNum !== 1) && isTrialOrPaid(sheet, data.row);
+
+    if (!skip && data.correo) {
+      try {
+        senders[data.emailNum](data.nombre, data.correo);
+        sheet.getRange(data.row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
+      } catch (err) {
+        sheet.getRange(data.row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + err.message);
+      }
+    }
+
+    // Remove this entry whether it sent, failed, or was skipped — never blocks the queue
+    props.deleteProperty(key);
+  }
+}
+
 function isTrialOrPaid(sheet, rowNumber) {
   const estatus = sheet.getRange(rowNumber, COL_ESTATUS).getValue().toString().toLowerCase();
   return estatus.includes('pago') || estatus.includes('trial');
 }
 
-// Generic processor for any pending email in the sequence.
-// skipIfConverted = true for emails 2-5 (don't send if already trial/paid).
-function processPendingEmails(emailNum, sendFn, skipIfConverted) {
-  const props = PropertiesService.getScriptProperties();
-  const sheet = getSheet(SHEET_NAME);
-  const allProps = props.getProperties();
-  const prefix = 'email' + emailNum + '_';
-
-  for (const key in allProps) {
-    if (key.indexOf(prefix) !== 0) continue;
-
-    const data      = JSON.parse(allProps[key]);
-    const rowNumber = data.row;
-    const nombre    = data.nombre;
-    const correo    = data.correo;
-
-    // Stop the sequence for anyone who already entered the trial or paid
-    const skip = skipIfConverted && isTrialOrPaid(sheet, rowNumber);
-
-    if (!skip && correo) {
-      try {
-        sendFn(nombre, correo);
-        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Correo enviado: email ' + emailNum);
-      } catch (err) {
-        // Bad email or send error — log it, mark it, and move on (never block the queue)
-        sheet.getRange(rowNumber, COL_ESTATUS).setValue('Error correo ' + emailNum + ': ' + err.message);
-      }
-    }
-
-    // Clean up the property regardless — even if it failed or was skipped
-    props.deleteProperty(key);
-  }
-
-  // Delete this email's time-based triggers that have already fired
-  const triggers = ScriptApp.getProjectTriggers();
-  for (const trigger of triggers) {
-    if (trigger.getHandlerFunction() === 'sendPendingEmail' + emailNum) {
-      ScriptApp.deleteTrigger(trigger);
-    }
-  }
-}
-
-// ─── TRIGGER HANDLERS ─────────────────────────────────────────────────────
-
-function sendPendingEmail1() { processPendingEmails(1, sendEmail1, false); }
-function sendPendingEmail2() { processPendingEmails(2, sendEmail2, true);  }
-function sendPendingEmail3() { processPendingEmails(3, sendEmail3, true);  }
-function sendPendingEmail4() { processPendingEmails(4, sendEmail4, true);  }
-function sendPendingEmail5() { processPendingEmails(5, sendEmail5, true);  }
-
 // ─── EMAIL 1 — 2 minutos ──────────────────────────────────────────────────
 
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-
   const subject = 'Llenaste nuestro formulario. Te queremos en Newave Academy.';
-
   const utmUrl1 = SKOOL_URL + '?utm_source=email&utm_medium=registro&utm_campaign=email1';
 
   const html = `
@@ -152,20 +159,14 @@ function sendEmail1(nombre, correo) {
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
-  GmailApp.sendEmail(correo, subject, '', {
-    name: FROM_NAME,
-    replyTo: FROM_EMAIL,
-    htmlBody: html,
-  });
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
 // ─── EMAIL 2 — 24 horas ───────────────────────────────────────────────────
 
 function sendEmail2(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-
   const subject = 'Te estamos esperando';
-
   const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
   const utmComunidad = COMUNIDAD_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
 
@@ -181,20 +182,14 @@ function sendEmail2(nombre, correo) {
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
-  GmailApp.sendEmail(correo, subject, '', {
-    name: FROM_NAME,
-    replyTo: FROM_EMAIL,
-    htmlBody: html,
-  });
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
 // ─── EMAIL 3 — 3 días (caso de éxito) ─────────────────────────────────────
 
 function sendEmail3(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-
   const subject = 'Quedó en una empresa de tech en 2 meses';
-
   const utmUrl3 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email3';
 
   const html = `
@@ -209,20 +204,14 @@ function sendEmail3(nombre, correo) {
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
-  GmailApp.sendEmail(correo, subject, '', {
-    name: FROM_NAME,
-    replyTo: FROM_EMAIL,
-    htmlBody: html,
-  });
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── EMAIL 4 — 5 días (objeción tarjeta) ──────────────────────────────────
+// ─── EMAIL 4 — 5 días ─────────────────────────────────────────────────────
 
 function sendEmail4(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-
   const subject = 'Solo necesitas una semana';
-
   const utmUrl4 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email4';
 
   const html = `
@@ -236,20 +225,14 @@ function sendEmail4(nombre, correo) {
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
-  GmailApp.sendEmail(correo, subject, '', {
-    name: FROM_NAME,
-    replyTo: FROM_EMAIL,
-    htmlBody: html,
-  });
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
 // ─── EMAIL 5 — 7 días (última llamada) ────────────────────────────────────
 
 function sendEmail5(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-
   const subject = 'Esto es lo último que te escribo';
-
   const utmUrl5 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email5';
 
   const html = `
@@ -265,11 +248,7 @@ function sendEmail5(nombre, correo) {
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
-  GmailApp.sendEmail(correo, subject, '', {
-    name: FROM_NAME,
-    replyTo: FROM_EMAIL,
-    htmlBody: html,
-  });
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
 // ─── SHEET SETUP ──────────────────────────────────────────────────────────
