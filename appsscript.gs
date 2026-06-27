@@ -168,7 +168,7 @@ function sendEmail2(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
   const subject = 'Te estamos esperando';
   const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
-  const utmComunidad = COMUNIDAD_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
+  const utmComunidad = 'https://www.newaveacademy.com/?utm_source=email&utm_medium=followup&utm_campaign=email2#comunidad';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
