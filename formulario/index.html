@@ -254,6 +254,32 @@
     }
     .opt.selected .opt-text { color: var(--white); }
 
+    .opt-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-weight: 600;
+    }
+    .opt-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--orange);
+      background: rgba(252,115,66,0.14);
+      border: 1px solid rgba(252,115,66,0.35);
+      padding: 0.12rem 0.5rem;
+      border-radius: 980px;
+      white-space: nowrap;
+    }
+    .opt-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: 0.15rem;
+      line-height: 1.4;
+    }
+    .opt.selected .opt-desc { color: rgba(255,255,255,0.75); }
     .opt-features {
       list-style: none;
       margin: 0.5rem 0 0;
@@ -780,7 +806,8 @@
         <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Tengo entre $100 y $150 USD
+            <div class="opt-head">Tengo entre $150 y $250 USD</div>
+            <div class="opt-desc">El programa completo para conseguir tu trabajo remoto</div>
             <ul class="opt-features">
               <li>Acceso al curso completo</li>
               <li>Plantillas de CV, Cover Letter y LinkedIn</li>
@@ -792,7 +819,8 @@
         <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Tengo entre $150 y $200 USD
+            <div class="opt-head">Tengo entre $200 y $300 USD <span class="opt-badge">El más elegido</span></div>
+            <div class="opt-desc">Revisamos tu CV y te damos estrategia personalizada</div>
             <ul class="opt-features">
               <li>Todo lo del plan anterior</li>
               <li>Revisión personalizada de CV, Cover Letter y LinkedIn</li>
@@ -804,7 +832,8 @@
         <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            Tengo entre $200 y $300 USD
+            <div class="opt-head">Tengo entre $250 y $350 USD</div>
+            <div class="opt-desc">Sesión 1-a-1 con un coach, IA aplicada y vacantes exclusivas para tu perfil</div>
             <ul class="opt-features">
               <li>Todo lo del plan anterior +</li>
               <li>Módulo con vacantes remotas exclusivas para tu perfil cada semana</li>
@@ -816,6 +845,7 @@
         </div>
       </div>
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.4);text-align:center;margin-top:1rem;line-height:1.4;">Todos los planes son de suscripción anual y puedes cancelar en cualquier momento.</p>
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
