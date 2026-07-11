@@ -848,7 +848,7 @@
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
-        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Enviar →</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Ver mi plan →</button>
       </div>
     </div>
 
@@ -1286,7 +1286,7 @@
 
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
-    btn.textContent = 'Enviando…';
+    btn.textContent = 'Preparando tu plan…';
 
     sendToSheets();
     showResult();
