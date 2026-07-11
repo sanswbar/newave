@@ -1343,12 +1343,12 @@
     });
     const url = APPS_SCRIPT_URL + '?' + params.toString();
 
-    // sendBeacon sobrevive a la navegación al abrir Skool; fetch como respaldo
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(url);
-    } else {
-      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {});
-    }
+    // GET con keepalive: sobrevive a la navegación y lo atiende doGet.
+    // (sendBeacon no sirve aquí porque siempre envía POST.)
+    fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {
+      // Respaldo: imagen invisible, también dispara un GET
+      new Image().src = url;
+    });
   }
 
   function showResult() {
