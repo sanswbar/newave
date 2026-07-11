@@ -331,6 +331,22 @@
       transform: none;
     }
 
+    /* CTA final: se ve clickeable sin animación agresiva */
+    #lowPlanBtn {
+      font-size: 1.05rem;
+      padding: 1.05rem 1.5rem;
+      box-shadow: 0 6px 24px rgba(252,115,66,0.38);
+      transition: background 0.2s, transform 0.18s, box-shadow 0.25s;
+    }
+    #lowPlanBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(252,115,66,0.55);
+    }
+    #lowPlanBtn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 16px rgba(252,115,66,0.4);
+    }
+
     .btn-back {
       background: none;
       border: none;
