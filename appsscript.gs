@@ -97,6 +97,24 @@ function ensureProcessorTrigger() {
     .create();
 }
 
+// Finds a lead's current row by email (most recent match).
+// Rows are looked up by email — not stored index — so deleting sheet rows never desyncs.
+function buscarFilaPorCorreo(sheet, correo) {
+  if (!correo) return 0;
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return 0;
+
+  const correos = sheet.getRange(1, COL_CORREO, lastRow, 1).getValues();
+  const target = correo.trim().toLowerCase();
+
+  for (let i = correos.length - 1; i >= 1; i--) {
+    if (correos[i][0].toString().trim().toLowerCase() === target) {
+      return i + 1; // 1-based row number
+    }
+  }
+  return 0; // not found (row was deleted)
+}
+
 // Runs every 5 min: sends any email whose dueAt has passed, skipping converted leads.
 function processQueue() {
   const props = PropertiesService.getScriptProperties();
@@ -114,15 +132,17 @@ function processQueue() {
     const data = JSON.parse(allProps[key]);
     if (now < data.dueAt) continue; // not due yet
 
+    const row = buscarFilaPorCorreo(sheet, data.correo);
+
     // Email 1 always sends; 2-5 skip if the lead already started trial or paid
-    const skip = (data.emailNum !== 1) && isTrialOrPaid(sheet, data.row);
+    const skip = (data.emailNum !== 1) && row && isTrialOrPaid(sheet, row);
 
     if (!skip && data.correo) {
       try {
         senders[data.emailNum](data.nombre, data.correo);
-        sheet.getRange(data.row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
+        if (row) sheet.getRange(row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
       } catch (err) {
-        sheet.getRange(data.row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + err.message);
+        if (row) sheet.getRange(row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + err.message);
       }
     }
 
