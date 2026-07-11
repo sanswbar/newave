@@ -1333,6 +1333,24 @@
       });
   }
 
+  // Marca en el Sheet que el lead dio click en "Unirme ahora" (columna M)
+  function registrarClickPlan() {
+    if (APPS_SCRIPT_URL === 'TU_APPS_SCRIPT_URL_AQUI' || !answers.correo) return;
+
+    const params = new URLSearchParams({
+      action: 'click',
+      correo: answers.correo,
+    });
+    const url = APPS_SCRIPT_URL + '?' + params.toString();
+
+    // sendBeacon sobrevive a la navegación al abrir Skool; fetch como respaldo
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(url);
+    } else {
+      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {});
+    }
+  }
+
   function showResult() {
     document.getElementById('mainCard').style.display = 'none';
     document.getElementById('progressWrap').style.display = 'none';
@@ -1358,6 +1376,7 @@
         btn.href = 'https://www.skool.com/newave/plans';
         btn.addEventListener('click', function() {
           if (window.clarity) clarity('event', 'click_unirme_ahora');
+          registrarClickPlan();
         }, { once: true });
       } else {
         btn.textContent = 'Conocer el programa';
