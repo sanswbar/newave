@@ -115,6 +115,10 @@ function buscarFilaPorCorreo(sheet, correo) {
   return 0; // not found (row was deleted)
 }
 
+// Max emails sent per 5-minute run. Spreads sends out instead of bursting,
+// which is gentler on the daily quota and on Gmail's spam heuristics.
+const MAX_POR_CORRIDA = 10;
+
 // Runs every 5 min: sends any email whose dueAt has passed, skipping converted leads.
 function processQueue() {
   const props = PropertiesService.getScriptProperties();
@@ -122,12 +126,18 @@ function processQueue() {
   const allProps = props.getProperties();
   const now = Date.now();
 
+  // Stop early if Gmail has no quota left — leave everything queued for later.
+  if (MailApp.getRemainingDailyQuota() <= 0) return;
+
   const senders = {
     1: sendEmail1, 2: sendEmail2, 3: sendEmail3, 4: sendEmail4, 5: sendEmail5,
   };
 
+  let enviados = 0;
+
   for (const key in allProps) {
     if (key.indexOf('seq_') !== 0) continue;
+    if (enviados >= MAX_POR_CORRIDA) break; // throttle: rest waits for next run
 
     const data = JSON.parse(allProps[key]);
     if (now < data.dueAt) continue; // not due yet
@@ -137,17 +147,27 @@ function processQueue() {
     // Email 1 always sends; 2-5 skip if the lead already started trial or paid
     const skip = (data.emailNum !== 1) && row && isTrialOrPaid(sheet, row);
 
-    if (!skip && data.correo) {
-      try {
-        senders[data.emailNum](data.nombre, data.correo);
-        if (row) sheet.getRange(row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
-      } catch (err) {
-        if (row) sheet.getRange(row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + err.message);
-      }
+    if (skip || !data.correo) {
+      props.deleteProperty(key);
+      continue;
     }
 
-    // Remove this entry whether it sent, failed, or was skipped — never blocks the queue
-    props.deleteProperty(key);
+    try {
+      senders[data.emailNum](data.nombre, data.correo);
+      if (row) sheet.getRange(row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
+      enviados++;
+      props.deleteProperty(key);
+    } catch (err) {
+      const msg = err.message || '';
+      // Daily limit hit: keep it queued and retry on a later run (quota resets daily)
+      if (msg.indexOf('too many times') !== -1 || msg.indexOf('Límite') !== -1) {
+        if (row) sheet.getRange(row, COL_ESTATUS).setValue('En espera (límite diario)');
+        return; // no quota left — stop this run, nothing gets dropped
+      }
+      // Any other error (invalid address, etc.): unrecoverable, drop it
+      if (row) sheet.getRange(row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + msg);
+      props.deleteProperty(key);
+    }
   }
 }
 
