@@ -333,14 +333,17 @@
 
     /* CTA final: se ve clickeable sin animación agresiva */
     #lowPlanBtn {
-      font-size: 1.05rem;
-      padding: 1.05rem 1.5rem;
-      box-shadow: 0 6px 24px rgba(252,115,66,0.38);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      padding: 1.2rem 1.5rem;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(252,115,66,0.45);
       transition: background 0.2s, transform 0.18s, box-shadow 0.25s;
     }
     #lowPlanBtn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(252,115,66,0.55);
+      box-shadow: 0 12px 36px rgba(252,115,66,0.6);
     }
     #lowPlanBtn:active {
       transform: translateY(0);
@@ -1387,7 +1390,7 @@
 
       const btn = document.getElementById('lowPlanBtn');
       if (listo) {
-        btn.textContent = 'Comenzar mi prueba';
+        btn.textContent = 'Entrar a Newave →';
         btn.href = 'https://www.skool.com/newave/plans';
         btn.addEventListener('click', function() {
           if (window.clarity) clarity('event', 'click_unirme_ahora');
