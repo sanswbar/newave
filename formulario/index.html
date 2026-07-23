@@ -350,6 +350,58 @@
       box-shadow: 0 4px 16px rgba(252,115,66,0.4);
     }
 
+    /* ── Cupos limitados ── */
+    .cupos-card {
+      background: linear-gradient(160deg, rgba(252,115,66,0.09), rgba(252,115,66,0.02));
+      border: 1px solid rgba(252,115,66,0.28);
+      border-radius: 16px;
+      padding: 1.15rem 1.35rem;
+      max-width: 340px;
+      margin: 0.5rem auto 1rem;
+    }
+    .cupos-top {
+      display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+      margin-bottom: 0.85rem;
+    }
+    .cupos-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #FC7342;
+      box-shadow: 0 0 0 0 rgba(252,115,66,0.6);
+      animation: cuposPulse 2s infinite;
+    }
+    @keyframes cuposPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(252,115,66,0.55); }
+      70%  { box-shadow: 0 0 0 7px rgba(252,115,66,0); }
+      100% { box-shadow: 0 0 0 0 rgba(252,115,66,0); }
+    }
+    .cupos-label {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.11em;
+      text-transform: uppercase; color: rgba(255,255,255,0.55);
+    }
+    .cupos-num-row {
+      display: flex; align-items: center; justify-content: center; gap: 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+    .cupos-num {
+      font-size: 3.2rem; font-weight: 800; color: #FC7342;
+      letter-spacing: -0.03em; line-height: 1;
+    }
+    .cupos-num-side { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start; }
+    .cupos-of { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.45); }
+    .cupos-bar {
+      width: 90px; height: 6px; border-radius: 999px;
+      background: rgba(255,255,255,0.12); overflow: hidden;
+    }
+    .cupos-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #FC7342, #ff9a6b);
+      transition: width 0.6s ease;
+    }
+    .cupos-reason {
+      margin: 0; font-size: 0.75rem; line-height: 1.5;
+      color: rgba(255,255,255,0.5); text-align: center;
+    }
+
     .btn-back {
       background: none;
       border: none;
@@ -906,12 +958,19 @@
 
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="background:#0f1317;border:1px solid rgba(252,115,66,0.3);border-radius:14px;padding:1rem 1.25rem;display:inline-block;min-width:260px;margin:0.5rem 0">
-        <p style="margin:0 0 0.4rem;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)">Cupos disponibles esta semana</p>
-        <p style="margin:0;line-height:1.1"><span id="cuposNum" style="font-size:2.4rem;font-weight:800;color:#FC7342;letter-spacing:-0.02em">8</span><span style="font-size:1.1rem;font-weight:700;color:rgba(255,255,255,0.6);margin-left:0.35rem">lugares</span></p>
-        <p style="margin:0.5rem 0 0;font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.5">Revisamos tus documentos y damos sesiones 1:1 nosotros mismos. Por eso recibimos un número limitado de miembros por semana.</p>
+    <div class="cupos-card">
+      <div class="cupos-top">
+        <span class="cupos-dot"></span>
+        <span class="cupos-label">Cupos disponibles esta semana</span>
       </div>
+      <div class="cupos-num-row">
+        <span id="cuposNum" class="cupos-num">8</span>
+        <div class="cupos-num-side">
+          <span class="cupos-of">de 12</span>
+          <div class="cupos-bar"><div id="cuposBar" class="cupos-bar-fill"></div></div>
+        </div>
+      </div>
+      <p class="cupos-reason">Revisamos tus documentos y damos sesiones 1:1. Por eso el cupo es limitado.</p>
     </div>
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
@@ -1589,6 +1648,8 @@
       if (cupos < CUPOS_MIN) cupos = CUPOS_MIN;
       var el = document.getElementById('cuposNum');
       if (el) el.textContent = cupos;
+      var bar = document.getElementById('cuposBar');
+      if (bar) bar.style.width = Math.round(cupos / CUPOS_LUNES * 100) + '%';
     }
     updateCupos();
   })();
