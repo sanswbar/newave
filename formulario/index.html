@@ -907,25 +907,10 @@
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
     <div style="text-align:center;margin-bottom:1rem">
-      <p style="margin:0 0 0.25rem;font-size:1rem;font-weight:700;color:var(--white)">Conoce nuestro programa</p>
       <div style="background:#0f1317;border:1px solid rgba(252,115,66,0.3);border-radius:14px;padding:1rem 1.25rem;display:inline-block;min-width:260px;margin:0.5rem 0">
-        <p style="margin:0 0 0.65rem;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)">⏱ La oferta vence en</p>
-        <div style="display:flex;gap:0.5rem;align-items:flex-end;justify-content:center">
-          <div style="text-align:center">
-            <span id="cdHours" style="font-size:2rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.02em">00</span>
-            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.2rem">hrs</span>
-          </div>
-          <span style="font-size:1.75rem;font-weight:800;color:#FC7342;line-height:1.1;padding-bottom:0.35rem">:</span>
-          <div style="text-align:center">
-            <span id="cdMins" style="font-size:2rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.02em">00</span>
-            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.2rem">min</span>
-          </div>
-          <span style="font-size:1.75rem;font-weight:800;color:#FC7342;line-height:1.1;padding-bottom:0.35rem">:</span>
-          <div style="text-align:center">
-            <span id="cdSecs" style="font-size:2rem;font-weight:800;color:#FC7342;line-height:1;letter-spacing:-0.02em">00</span>
-            <span style="display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(252,115,66,0.5);margin-top:0.2rem">seg</span>
-          </div>
-        </div>
+        <p style="margin:0 0 0.4rem;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)">Cupos disponibles esta semana</p>
+        <p style="margin:0;line-height:1.1"><span id="cuposNum" style="font-size:2.4rem;font-weight:800;color:#FC7342;letter-spacing:-0.02em">8</span><span style="font-size:1.1rem;font-weight:700;color:rgba(255,255,255,0.6);margin-left:0.35rem">lugares</span></p>
+        <p style="margin:0.5rem 0 0;font-size:0.72rem;color:rgba(255,255,255,0.4)">Damos acompañamiento personalizado, por eso el cupo es limitado.</p>
       </div>
     </div>
 
@@ -1592,24 +1577,20 @@
 
 <script>
   (function() {
-    function updateCountdown() {
-      var now = new Date();
-      var midnight = new Date(now);
-      midnight.setHours(24, 0, 0, 0);
-      var diff = Math.floor((midnight - now) / 1000);
-      var h = Math.floor(diff / 3600);
-      var m = Math.floor((diff % 3600) / 60);
-      var s = diff % 60;
-      var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
-      var elH = document.getElementById('cdHours');
-      var elM = document.getElementById('cdMins');
-      var elS = document.getElementById('cdSecs');
-      if (elH) elH.textContent = pad(h);
-      if (elM) elM.textContent = pad(m);
-      if (elS) elS.textContent = pad(s);
+    // Cupos limitados: arranca alto el lunes y baja durante la semana, sin llegar a 0.
+    // Refleja la capacidad real de acompañamiento por semana.
+    function updateCupos() {
+      var CUPOS_LUNES = 12;   // lunes
+      var CUPOS_MIN   = 3;    // nunca baja de aquí (domingo)
+      var day = new Date().getDay(); // 0=domingo ... 6=sábado
+      // días transcurridos desde el lunes (lunes=0, martes=1, ... domingo=6)
+      var desdeLunes = (day + 6) % 7;
+      var cupos = CUPOS_LUNES - Math.round(desdeLunes * (CUPOS_LUNES - CUPOS_MIN) / 6);
+      if (cupos < CUPOS_MIN) cupos = CUPOS_MIN;
+      var el = document.getElementById('cuposNum');
+      if (el) el.textContent = cupos;
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    updateCupos();
   })();
 </script>
 
