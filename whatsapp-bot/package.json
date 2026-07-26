@@ -1,0 +1,9 @@
+{
+  "name": "newave-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp con IA (Claude) para Newave Academy",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
