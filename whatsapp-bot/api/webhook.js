@@ -109,11 +109,19 @@ async function generarRespuesta(from, text, name) {
 
   if (!resp.ok) {
     console.error('[Claude] ERROR', resp.status, JSON.stringify(data));
-  } else if (!data?.content?.[0]?.text) {
-    console.error('[Claude] Respuesta sin texto usable:', JSON.stringify(data));
   }
 
-  const reply = data?.content?.[0]?.text?.trim()
+  // El modelo a veces manda un bloque "thinking" antes del bloque "text"
+  // (extended thinking). Buscamos el bloque de texto real, no asumimos [0].
+  const textBlock = Array.isArray(data?.content)
+    ? data.content.find(block => block.type === 'text')
+    : null;
+
+  if (resp.ok && !textBlock) {
+    console.error('[Claude] Respuesta sin bloque de texto:', JSON.stringify(data));
+  }
+
+  const reply = textBlock?.text?.trim()
     || 'Perdón, tuve un problemita. ¿Me lo repites? 🙏';
 
   // Guarda la respuesta del bot en el historial
