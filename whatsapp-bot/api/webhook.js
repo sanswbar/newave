@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
         return res.status(200).send('ok');
       }
 
-      const from = message.from;              // número del usuario
+      const from = normalizarNumeroMx(message.from); // número del usuario
       const text = message.text.body;          // lo que escribió
       const name = change.value?.contacts?.[0]?.profile?.name || '';
 
@@ -113,6 +113,16 @@ async function generarRespuesta(from, text, name) {
   history.push({ role: 'assistant', content: reply });
 
   return reply;
+}
+
+// WhatsApp a veces manda números mexicanos con un "1" extra después del 52
+// (ej. 5215541454466), pero la API para ENVIAR espera sin ese "1"
+// (5541454466... con 52). Lo quitamos si detectamos ese patrón.
+function normalizarNumeroMx(numero) {
+  if (numero && numero.startsWith('521') && numero.length === 13) {
+    return '52' + numero.slice(3);
+  }
+  return numero;
 }
 
 // ─── ENVIAR MENSAJE POR WHATSAPP ───────────────────────────────────────────
