@@ -117,7 +117,9 @@ async function generarRespuesta(from, text, name) {
 
 // ─── ENVIAR MENSAJE POR WHATSAPP ───────────────────────────────────────────
 async function enviarWhatsApp(to, body) {
-  await fetch(`https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`, {
+  console.log('[enviarWhatsApp] to=', JSON.stringify(to), 'PHONE_NUMBER_ID=', PHONE_NUMBER_ID);
+
+  const resp = await fetch(`https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
@@ -130,4 +132,11 @@ async function enviarWhatsApp(to, body) {
       text: { body: body },
     }),
   });
+
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    console.error('[enviarWhatsApp] ERROR', resp.status, JSON.stringify(data));
+  } else {
+    console.log('[enviarWhatsApp] OK', JSON.stringify(data));
+  }
 }
