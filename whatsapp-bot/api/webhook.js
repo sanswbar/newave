@@ -106,6 +106,13 @@ async function generarRespuesta(from, text, name) {
   });
 
   const data = await resp.json();
+
+  if (!resp.ok) {
+    console.error('[Claude] ERROR', resp.status, JSON.stringify(data));
+  } else if (!data?.content?.[0]?.text) {
+    console.error('[Claude] Respuesta sin texto usable:', JSON.stringify(data));
+  }
+
   const reply = data?.content?.[0]?.text?.trim()
     || 'Perdón, tuve un problemita. ¿Me lo repites? 🙏';
 
