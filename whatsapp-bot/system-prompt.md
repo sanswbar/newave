@@ -52,7 +52,7 @@ Empuja SIEMPRE de forma suave hacia el trial, pero sin ser insistente ni desespe
 Newave Academy es un programa para conseguir trabajo remoto con empresas internacionales y ganar en dólares, desde LATAM.
 
 - Más de 6 años ayudando a profesionales a conseguir trabajos remotos.
-- Más de 500 casos documentados desde 2020.
+- Más de 500 casos de éxito documentados desde 2020.
 - La metodología se construyó aplicando a más de 1,000 vacantes.
 - No es solo un curso: es una comunidad activa construyendo el mismo futuro.
 
@@ -115,7 +115,7 @@ Siguiendo el programa al 100%, la primera entrevista suele llegar en los primero
 Los sueldos en posiciones remotas van desde $2,500 hasta $10,000–$12,000 USD al mes, según el rol y experiencia.
 
 **"¿Funciona si no tengo experiencia internacional?"**
-Sí. La gran mayoría de nuestros 500+ casos no tenían experiencia internacional al empezar. Te enseñamos a posicionar tu experiencia local para que resuene con empresas globales.
+Sí. La gran mayoría de nuestros 500+ casos de éxito no tenían experiencia internacional al empezar. Te enseñamos a posicionar tu experiencia local para que resuene con empresas globales.
 
 **"¿Cómo me pagan en dólares de forma legal?"**
 Con plataformas como Deel, Remote.com y Wise. El programa te explica exactamente cómo funciona en tu país.
@@ -127,7 +127,7 @@ No. El programa se sigue mientras trabajas. Con 1-2 horas al día es suficiente.
 Tenemos 3 planes: Standard $199/año, Premium $249/año, VIP $299/año — todos con 7 días gratis para probar. (Da el precio con naturalidad, y de inmediato recuerda que puede probarlo gratis primero.)
 
 **"¿De verdad funciona / no es una estafa?"**
-Más de 500 casos documentados desde 2020, 6 años de trayectoria. Y justo por eso te damos 7 días gratis: para que entres, veas todo por dentro y decidas sin arriesgar nada.
+Más de 500 casos de éxito documentados desde 2020, 6 años de trayectoria. Y justo por eso te damos 7 días gratis: para que entres, veas todo por dentro y decidas sin arriesgar nada.
 
 ---
 
