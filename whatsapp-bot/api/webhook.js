@@ -61,7 +61,11 @@ module.exports = async function handler(req, res) {
       const text = message.text.body;          // lo que escribió
       const name = change.value?.contacts?.[0]?.profile?.name || '';
 
+      // Marca como leído y muestra "escribiendo..." mientras se genera la respuesta
+      await marcarComoLeido(message.id);
+
       const reply = await generarRespuesta(from, text, name);
+      await esperarComoHumano(reply);
       await enviarWhatsApp(from, reply);
 
       return res.status(200).send('ok');
@@ -138,6 +142,40 @@ function normalizarNumeroMx(numero) {
     return '52' + numero.slice(3);
   }
   return numero;
+}
+
+// ─── MARCAR COMO LEÍDO + MOSTRAR "ESCRIBIENDO..." ──────────────────────────
+async function marcarComoLeido(messageId) {
+  try {
+    const resp = await fetch(`https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        status: 'read',
+        message_id: messageId,
+        typing_indicator: { type: 'text' },
+      }),
+    });
+    if (!resp.ok) {
+      console.error('[marcarComoLeido] ERROR', resp.status, JSON.stringify(await resp.json().catch(() => ({}))));
+    }
+  } catch (err) {
+    console.error('[marcarComoLeido] ERROR', err);
+  }
+}
+
+// Simula el tiempo que tardaría una persona en escribir la respuesta.
+// Un humano no contesta un mensaje largo en medio segundo.
+async function esperarComoHumano(texto) {
+  const base = 1200; // arranque mínimo, siempre hay algo de pausa
+  const porCaracter = 20; // ms extra por cada caracter del mensaje
+  const maximo = 6000; // nunca más de 6s, no queremos que se sienta lento
+  const delay = Math.min(base + texto.length * porCaracter, maximo);
+  await new Promise(resolve => setTimeout(resolve, delay));
 }
 
 // ─── ENVIAR MENSAJE POR WHATSAPP ───────────────────────────────────────────
