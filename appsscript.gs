@@ -74,9 +74,12 @@ function doGet(e) {
     sheet.appendRow(row);
 
     const lastRow = sheet.getLastRow();
-    Logger.log('[doGet] whatsapp param=' + JSON.stringify(whatsapp) + ' lastRow=' + lastRow);
     queueSequence(nombre, correo, lastRow);
-    queueWhatsapp(nombre, whatsapp, lastRow);
+    // Envío automático de plantilla de bienvenida desactivado: la entrega de
+    // plantillas Marketing a números con historial previo no es confiable.
+    // En su lugar, el link de WhatsApp va dentro del Email 1 — la persona
+    // inicia la conversación, lo cual siempre llega sin restricción de plantilla.
+    // queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
 
     return ContentService
@@ -306,6 +309,7 @@ function sendEmail1(nombre, correo) {
   <p>Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
   <p>Si después de una semana sientes que no es para ti, no pagas.</p>
   <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, ganar en dólares y tener más libertad, este es tu mejor camino.</p>
+  <p>¿Prefieres atención más personalizada? Escríbenos por WhatsApp: <a href="https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
