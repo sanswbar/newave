@@ -21,7 +21,7 @@ const R_COL_WHATSAPP   = 4;
 const R_COL_COMPROMISO = 9;
 const R_COL_ESTATUS    = 12;
 
-const WA_TEMPLATE_NAME = 'nw_reactivacion_lead';
+const WA_TEMPLATE_NAME = 'nw_reactivacion_lead_v2';
 const WA_TEMPLATE_LANG = 'es_MX';
 
 // Máximo de mensajes por corrida del trigger (cada 5 min). Reparte el
