@@ -53,14 +53,23 @@ module.exports = async function handler(req, res) {
       const change  = entry?.changes?.[0];
       const message = change?.value?.messages?.[0];
 
-      // Si no es un mensaje de texto (status, etc.), ignora
-      if (!message || message.type !== 'text') {
+      // Sin mensaje real (es un status: "leído", "entregado", etc.), ignora
+      if (!message) {
         return res.status(200).send('ok');
       }
 
-      const from = normalizarNumeroMx(message.from); // número del usuario
-      const text = message.text.body;          // lo que escribió
+      const from = normalizarNumeroMx(message.from);
       const name = change.value?.contacts?.[0]?.profile?.name || '';
+
+      // No podemos procesar audio/imagen/etc. — avisamos en vez de quedarnos callados
+      if (message.type !== 'text') {
+        await marcarComoLeido(message.id);
+        const avisoNoTexto = mensajeParaTipoNoSoportado(message.type);
+        await enviarWhatsApp(from, avisoNoTexto);
+        return res.status(200).send('ok');
+      }
+
+      const text = message.text.body;
 
       // Marca como leído y muestra "escribiendo..." mientras se genera la respuesta
       await marcarComoLeido(message.id);
@@ -161,6 +170,18 @@ function esNombreReal(name) {
   }
 
   return true;
+}
+
+// El bot todavía no puede "escuchar" audios ni "ver" imágenes — en vez de
+// quedarse callado (lo cual parece que está roto), avisa qué sí puede leer.
+function mensajeParaTipoNoSoportado(tipo) {
+  if (tipo === 'audio') {
+    return 'Por ahora no puedo escuchar notas de voz, ¿me lo escribes por texto? 🙏';
+  }
+  if (tipo === 'image' || tipo === 'sticker') {
+    return 'Por ahora no puedo ver imágenes, ¿me lo escribes por texto? 🙏';
+  }
+  return 'Por ahora solo puedo leer mensajes de texto, ¿me lo escribes así? 🙏';
 }
 
 // WhatsApp a veces manda números mexicanos con un "1" extra después del 52
