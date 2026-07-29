@@ -304,6 +304,11 @@
       margin-top: 1px;
     }
     .opt.selected .opt-features li { color: rgba(255,255,255,0.75); }
+    .opt-cancel {
+      margin-top: 0.6rem;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.4);
+    }
 
     /* ── Buttons ── */
     .btn-primary {
@@ -884,14 +889,14 @@
     <!-- ── Paso 6: Inversión ── -->
     <div class="step" id="step-6">
       <div class="step-eyebrow">Paso 6 de 6</div>
-      <h2 class="step-title">Una última pregunta, sé honesto/a</h2>
-      <p class="step-sub">Queremos trabajar con personas comprometidas con su carrera profesional. Lee las siguientes opciones y selecciona el plan que mejor se adapte a tu situación actual y nivel de acompañamiento requerido.</p>
+      <h2 class="step-title">Elige el plan que mejor se ajuste a ti</h2>
+      <p class="step-sub">Todos incluyen 7 días de prueba gratis. Elige según el nivel de acompañamiento que buscas.</p>
 
       <div class="options" id="opts-inversion">
         <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            <div class="opt-head">Tengo entre $150 y $250 USD</div>
+            <div class="opt-head">Standard — $199/año</div>
             <div class="opt-desc">El programa completo para conseguir tu trabajo remoto</div>
             <ul class="opt-features">
               <li>Acceso al curso completo</li>
@@ -899,12 +904,13 @@
               <li>Comunidad activa NEWAVE</li>
               <li>Bolsas de trabajo 100% remotas</li>
             </ul>
+            <div class="opt-cancel">Cancela cuando quieras</div>
           </div>
         </div>
         <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            <div class="opt-head">Tengo entre $200 y $300 USD</div>
+            <div class="opt-head">Premium — $249/año</div>
             <div class="opt-desc">Revisamos tu CV y te damos estrategia personalizada</div>
             <ul class="opt-features">
               <li>Todo lo del plan anterior</li>
@@ -912,12 +918,13 @@
               <li>Estrategia de aplicación y negociación de sueldo</li>
               <li>Sesiones semanales de Q&A en vivo</li>
             </ul>
+            <div class="opt-cancel">Cancela cuando quieras</div>
           </div>
         </div>
         <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
-            <div class="opt-head">Tengo entre $250 y $350 USD</div>
+            <div class="opt-head">VIP — $299/año</div>
             <div class="opt-desc">Sesión 1-a-1 con un coach, IA aplicada y vacantes exclusivas para tu perfil</div>
             <ul class="opt-features">
               <li>Todo lo del plan anterior +</li>
@@ -926,6 +933,7 @@
               <li>Sesiones en vivo para aprender a usar Inteligencia Artificial en tu vida profesional</li>
               <li>Te conectamos a través de Newave Hire con nuestra red de empresas 100% remotas</li>
             </ul>
+            <div class="opt-cancel">Cancela cuando quieras</div>
           </div>
         </div>
       </div>
