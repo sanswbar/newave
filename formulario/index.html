@@ -359,6 +359,15 @@
       max-width: 340px;
       margin: 0.5rem auto 1rem;
     }
+    .viendo-ahora {
+      margin: 0 0 0.7rem; padding-bottom: 0.7rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-align: center; font-size: 0.72rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .viendo-ahora #viendoNum {
+      color: rgba(255,255,255,0.8); font-weight: 700;
+    }
     .cupos-top {
       display: flex; align-items: center; justify-content: center; gap: 0.45rem;
       margin-bottom: 0.85rem;
@@ -963,11 +972,8 @@
 
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
-    <p id="viendoAhora" style="text-align:center;font-size:0.8rem;color:rgba(255,255,255,0.6);margin:0 0 0.6rem">
-      <span id="viendoNum">--</span> personas están viendo este programa
-    </p>
-
     <div class="cupos-card">
+      <p class="viendo-ahora"><span id="viendoNum">--</span> personas están viendo este programa</p>
       <div class="cupos-top">
         <span class="cupos-dot"></span>
         <span class="cupos-label">Cupos disponibles</span>
