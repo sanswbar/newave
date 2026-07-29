@@ -259,7 +259,7 @@ function enviarPlantillaWhatsapp(nombre, whatsapp) {
       language: { code: WA_TEMPLATE_LANG },
       components: [{
         type: 'body',
-        parameters: [{ type: 'text', text: firstName }],
+        parameters: [{ type: 'text', parameter_name: 'nombre', text: firstName }],
       }],
     },
   };
