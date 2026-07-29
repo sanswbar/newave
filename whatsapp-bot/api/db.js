@@ -59,4 +59,10 @@ async function obtenerConversacion(numero) {
   return rows;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion };
+// Borra todos los mensajes de un número específico.
+async function borrarConversacion(numero) {
+  await asegurarTabla();
+  await sql`DELETE FROM mensajes WHERE numero = ${numero};`;
+}
+
+module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion };

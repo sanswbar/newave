@@ -64,7 +64,10 @@
     <div id="listaConversaciones"></div>
   </div>
   <div id="chat">
-    <div id="chatHeader">Selecciona una conversación</div>
+    <div id="chatHeader">
+      <span id="chatHeaderText">Selecciona una conversación</span>
+      <button id="borrarBtn" onclick="borrarConversacionActiva()" style="display:none;float:right;background:none;border:1px solid #a33;color:#f88;border-radius:6px;padding:0.25rem 0.6rem;font-size:0.75rem;cursor:pointer">Borrar conversación</button>
+    </div>
     <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
   </div>
 </div>
@@ -114,7 +117,8 @@
     activo = numero;
     cargarLista();
 
-    document.getElementById('chatHeader').textContent = (nombre || 'Sin nombre') + ' — ' + numero;
+    document.getElementById('chatHeaderText').textContent = (nombre || 'Sin nombre') + ' — ' + numero;
+    document.getElementById('borrarBtn').style.display = 'inline-block';
     const resp = await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE) + '&numero=' + encodeURIComponent(numero));
     const data = await resp.json();
 
@@ -127,6 +131,21 @@
       body.appendChild(div);
     });
     body.scrollTop = body.scrollHeight;
+  }
+
+  async function borrarConversacionActiva() {
+    if (!activo) return;
+    if (!confirm('¿Borrar toda la conversación con ' + activo + '? Esto no se puede deshacer.')) return;
+
+    await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE) + '&numero=' + encodeURIComponent(activo), {
+      method: 'DELETE',
+    });
+
+    activo = null;
+    document.getElementById('chatHeaderText').textContent = 'Selecciona una conversación';
+    document.getElementById('borrarBtn').style.display = 'none';
+    document.getElementById('chatBody').innerHTML = '<div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div>';
+    cargarLista();
   }
 
   function formatearHora(iso) {
