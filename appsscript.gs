@@ -428,6 +428,13 @@ function getSheet(name) {
   return sheet;
 }
 
+// Corre esta función una sola vez para forzar el prompt de autorización
+// de UrlFetchApp (llamadas HTTP salientes, necesarias para WhatsApp).
+function autorizarUrlFetch() {
+  const resp = UrlFetchApp.fetch('https://www.google.com', { muteHttpExceptions: true });
+  Logger.log('OK, código: ' + resp.getResponseCode());
+}
+
 function diagnostico() {
   const props = PropertiesService.getScriptProperties();
   const all = props.getProperties();
