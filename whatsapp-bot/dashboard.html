@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Newave — Conversaciones del bot</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0d0d0f; color: #f2f2f2; height: 100vh; display: flex;
+  }
+  #login {
+    margin: auto; text-align: center; padding: 2rem;
+  }
+  #login input {
+    padding: 0.6rem 0.9rem; border-radius: 8px; border: 1px solid #333;
+    background: #1a1a1d; color: #fff; font-size: 1rem; width: 240px;
+  }
+  #login button {
+    margin-left: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 8px; border: none;
+    background: #FC7342; color: #fff; font-weight: 600; cursor: pointer;
+  }
+  #app { display: none; width: 100%; height: 100%; }
+  #sidebar {
+    width: 320px; border-right: 1px solid #222; overflow-y: auto; flex-shrink: 0;
+  }
+  #sidebar h1 { font-size: 0.95rem; padding: 1rem; margin: 0; border-bottom: 1px solid #222; }
+  .conv-item {
+    padding: 0.85rem 1rem; border-bottom: 1px solid #1a1a1d; cursor: pointer;
+  }
+  .conv-item:hover { background: #17171a; }
+  .conv-item.active { background: #1f1f23; }
+  .conv-nombre { font-weight: 600; font-size: 0.9rem; }
+  .conv-numero { font-size: 0.75rem; color: #888; margin-top: 2px; }
+  .conv-preview { font-size: 0.8rem; color: #aaa; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .conv-hora { font-size: 0.7rem; color: #666; margin-top: 4px; }
+  #chat { flex: 1; display: flex; flex-direction: column; }
+  #chatHeader { padding: 1rem; border-bottom: 1px solid #222; font-weight: 600; }
+  #chatBody { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  #chatEmpty { margin: auto; color: #666; }
+  .msg { max-width: 70%; padding: 0.6rem 0.9rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; white-space: pre-wrap; }
+  .msg.user { align-self: flex-start; background: #1f1f23; }
+  .msg.assistant { align-self: flex-end; background: #FC7342; color: #fff; }
+  .msg-hora { font-size: 0.65rem; color: #888; margin-top: 3px; }
+  #refreshBtn {
+    background: none; border: 1px solid #333; color: #ccc; border-radius: 6px;
+    padding: 0.3rem 0.7rem; font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <p>Contraseña del dashboard</p>
+  <input type="password" id="clave" placeholder="••••••••" />
+  <button onclick="entrar()">Entrar</button>
+  <p id="loginError" style="color:#ff6b6b;font-size:0.85rem;display:none">Contraseña incorrecta</p>
+</div>
+
+<div id="app">
+  <div id="sidebar">
+    <h1>Conversaciones <button id="refreshBtn" onclick="cargarLista()">Actualizar</button></h1>
+    <div id="listaConversaciones"></div>
+  </div>
+  <div id="chat">
+    <div id="chatHeader">Selecciona una conversación</div>
+    <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
+  </div>
+</div>
+
+<script>
+  let CLAVE = '';
+  let activo = null;
+
+  function entrar() {
+    CLAVE = document.getElementById('clave').value;
+    if (!CLAVE) return;
+    cargarLista();
+  }
+
+  document.getElementById('clave').addEventListener('keydown', e => {
+    if (e.key === 'Enter') entrar();
+  });
+
+  async function cargarLista() {
+    const resp = await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE));
+    if (resp.status === 401) {
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+
+    const data = await resp.json();
+    const cont = document.getElementById('listaConversaciones');
+    cont.innerHTML = '';
+
+    data.conversaciones.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'conv-item' + (c.numero === activo ? ' active' : '');
+      div.onclick = () => abrirConversacion(c.numero, c.nombre);
+      div.innerHTML = `
+        <div class="conv-nombre">${escapeHtml(c.nombre || 'Sin nombre')}</div>
+        <div class="conv-numero">${escapeHtml(c.numero)}</div>
+        <div class="conv-preview">${c.ultimo_rol === 'assistant' ? '🤖 ' : ''}${escapeHtml(c.ultimo_mensaje)}</div>
+        <div class="conv-hora">${formatearHora(c.ultima_actividad)}</div>
+      `;
+      cont.appendChild(div);
+    });
+  }
+
+  async function abrirConversacion(numero, nombre) {
+    activo = numero;
+    cargarLista();
+
+    document.getElementById('chatHeader').textContent = (nombre || 'Sin nombre') + ' — ' + numero;
+    const resp = await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE) + '&numero=' + encodeURIComponent(numero));
+    const data = await resp.json();
+
+    const body = document.getElementById('chatBody');
+    body.innerHTML = '';
+    data.mensajes.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + m.rol;
+      div.innerHTML = escapeHtml(m.contenido) + '<div class="msg-hora">' + formatearHora(m.creado_en) + '</div>';
+      body.appendChild(div);
+    });
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function formatearHora(iso) {
+    const d = new Date(iso);
+    return d.toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>

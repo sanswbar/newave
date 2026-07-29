@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { guardarMensaje } = require('./db');
 
 // ─── CONFIG (todo vive en variables de entorno de Vercel, NO en el código) ───
 const VERIFY_TOKEN   = process.env.VERIFY_TOKEN;          // el que tú inventes para verificar el webhook
@@ -86,6 +87,7 @@ async function generarRespuesta(from, text, name) {
 
   // Agrega el mensaje del usuario
   history.push({ role: 'user', content: text });
+  guardarMensaje(from, name, 'user', text).catch(err => console.error('[DB] Error guardando mensaje user:', err));
 
   // Limita el historial para no gastar de más
   const trimmed = history.slice(-MAX_TURNS);
@@ -130,6 +132,7 @@ async function generarRespuesta(from, text, name) {
 
   // Guarda la respuesta del bot en el historial
   history.push({ role: 'assistant', content: reply });
+  guardarMensaje(from, name, 'assistant', reply).catch(err => console.error('[DB] Error guardando mensaje assistant:', err));
 
   return reply;
 }
