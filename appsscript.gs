@@ -300,7 +300,7 @@ function sendEmail1(nombre, correo) {
   <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
   <p>Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
   <p>Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
-  <p>¿Prefieres atención más personalizada? Escríbenos por WhatsApp: <a href="https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda">wa.me/525573906923</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
