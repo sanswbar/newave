@@ -7,6 +7,7 @@ const SKOOL_URL        = 'https://www.skool.com/newave';
 const COMUNIDAD_URL    = 'https://www.newaveacademy.com/#comunidad';
 const FROM_NAME        = 'Newave Academy';
 const FROM_EMAIL       = 'hello@nwave.co';
+const WA_LINK          = 'https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda';
 
 // Column indices (1-based) — must match sheet headers
 const COL_FECHA      = 1;
@@ -19,9 +20,9 @@ const COL_CLICK      = 13; // Column M — "Click a plan"
 const EMAIL_DELAYS = {
   1: 2 * 60 * 1000,            // 2 min
   2: 24 * 60 * 60 * 1000,      // 24 h
-  3: 3 * 24 * 60 * 60 * 1000,  // 3 días
-  4: 5 * 24 * 60 * 60 * 1000,  // 5 días
-  5: 7 * 24 * 60 * 60 * 1000,  // 7 días
+  3: 2 * 24 * 60 * 60 * 1000,  // 2 días
+  4: 4 * 24 * 60 * 60 * 1000,  // 4 días
+  5: 6 * 24 * 60 * 60 * 1000,  // 6 días
 };
 
 // Máximo de correos por corrida (cada 5 min). Reparte los envíos en vez de
@@ -300,7 +301,7 @@ function sendEmail1(nombre, correo) {
   <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
   <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
   <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
-  <p style="margin:0 0 16px">Cualquier duda, puedes escribirnos por WhatsApp: <a href="https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda">wa.me/525573906923</a></p>
+  <p style="margin:0 0 16px">Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
   <p style="margin:0">Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -324,6 +325,7 @@ function sendEmail2(nombre, correo) {
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
   <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -331,7 +333,7 @@ function sendEmail2(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── EMAIL 3 — 3 días (caso de éxito) ─────────────────────────────────────
+// ─── EMAIL 3 — 2 días (caso de éxito) ─────────────────────────────────────
 
 function sendEmail3(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -346,6 +348,7 @@ function sendEmail3(nombre, correo) {
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"De lo más valioso en mi proceso fue lograr una creación espectacular de mi currículum gracias a los videos y el acompañamiento. En el flujo de entrevistas llegué con el CCO de México y lo primero que me dijo fue: 'estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar, tengo muy claro todos tus logros'. Eso fue oro para mí."</p>
   <p>Fíjate en el detalle: no fue suerte. Fue tener un CV que comunica tus logros en el lenguaje correcto. Eso es lo que te enseñamos a construir.</p>
   <p>Pruébalo gratis 7 días: <a href="${utmUrl3}">Newave Academy</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -353,7 +356,7 @@ function sendEmail3(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── EMAIL 4 — 5 días ─────────────────────────────────────────────────────
+// ─── EMAIL 4 — 4 días ─────────────────────────────────────────────────────
 
 function sendEmail4(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -365,8 +368,8 @@ function sendEmail4(nombre, correo) {
   <p>Hola ${firstName},</p>
   <p>No tienes que decidir hoy si Newave es para ti. Solo entra y compruébalo.</p>
   <p>7 días gratis. Acceso completo. Si no es lo tuyo, sales sin pagar.</p>
-  <p>Una semana para ver si esto cambia tu situación. Nada más.</p>
   <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -374,7 +377,7 @@ function sendEmail4(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── EMAIL 5 — 7 días (última llamada) ────────────────────────────────────
+// ─── EMAIL 5 — 6 días (última llamada) ────────────────────────────────────
 
 function sendEmail5(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -385,10 +388,11 @@ function sendEmail5(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>Este es el último correo que te mando sobre esto.</p>
-  <p>Hace una semana diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
+  <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
   <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
   <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
   <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
   <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
   <p>Tú decides.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
