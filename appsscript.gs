@@ -307,7 +307,7 @@ function sendEmail1(nombre, correo) {
   <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
   <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
   <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
-  <p style="margin:0 0 16px">Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
+  <p style="margin:0 0 16px">Cualquier duda, puedes escribirnos por WhatsApp <a href="${WA_LINK}">aquí</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
   <p style="margin:0">Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -331,7 +331,7 @@ function sendEmail2(nombre, correo) {
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
   <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
-  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp <a href="${WA_LINK}">aquí</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -354,7 +354,7 @@ function sendEmail3(nombre, correo) {
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"De lo más valioso en mi proceso fue lograr una creación espectacular de mi currículum gracias a los videos y el acompañamiento. En el flujo de entrevistas llegué con el CCO de México y lo primero que me dijo fue: 'estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar, tengo muy claro todos tus logros'. Eso fue oro para mí."</p>
   <p>Fíjate en el detalle: no fue suerte. Fue tener un CV que comunica tus logros en el lenguaje correcto. Eso es lo que te enseñamos a construir.</p>
   <p>Pruébalo gratis 7 días: <a href="${utmUrl3}">Newave Academy</a></p>
-  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp <a href="${WA_LINK}">aquí</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -375,7 +375,7 @@ function sendEmail4(nombre, correo) {
   <p>No tienes que decidir hoy si Newave es para ti. Solo entra y compruébalo.</p>
   <p>7 días gratis. Acceso completo. Si no es lo tuyo, sales sin pagar.</p>
   <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
-  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp <a href="${WA_LINK}">aquí</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -398,7 +398,7 @@ function sendEmail5(nombre, correo) {
   <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
   <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
   <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
-  <p>Cualquier duda, puedes escribirnos por WhatsApp: <a href="${WA_LINK}">wa.me/525573906923</a></p>
+  <p>Cualquier duda, puedes escribirnos por WhatsApp <a href="${WA_LINK}">aquí</a></p>
   <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
   <p>Tú decides.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
