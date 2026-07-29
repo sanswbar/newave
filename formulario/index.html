@@ -360,13 +360,13 @@
       margin: 0.5rem auto 1rem;
     }
     .viendo-ahora {
-      margin: 0 0 0.7rem; padding-bottom: 0.7rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      text-align: center; font-size: 0.72rem;
-      color: rgba(255,255,255,0.5);
+      margin: 0 0 0.6rem;
+      text-align: center; font-size: 0.68rem;
+      color: rgba(255,255,255,0.38);
+      font-weight: 400;
     }
     .viendo-ahora #viendoNum {
-      color: rgba(255,255,255,0.8); font-weight: 700;
+      color: rgba(255,255,255,0.55); font-weight: 600;
     }
     .cupos-top {
       display: flex; align-items: center; justify-content: center; gap: 0.45rem;
@@ -1674,34 +1674,26 @@
   (function() {
     // Cupos limitados: arranca alto el lunes y baja durante la semana, sin llegar a 0.
     // Refleja la capacidad real de acompañamiento por semana.
-    // "Personas viendo ahora": estimado a partir del tráfico real (~30 visitas/día),
-    // distribuido según la hora (más gente despierta = más gente viendo), con una
-    // pequeña variación aleatoria para que no se sienta un número fijo.
-    function updateViendoAhora() {
-      var hour = new Date().getHours();
-      // Curva de actividad por hora del día (0 = madrugada, 1 = hora pico)
-      var actividadPorHora = [0.1, 0.05, 0.05, 0.05, 0.05, 0.1, 0.2, 0.35, 0.5, 0.6, 0.7, 0.75, 0.8, 0.75, 0.7, 0.65, 0.7, 0.85, 1, 0.95, 0.8, 0.6, 0.4, 0.2];
-      var base = 6; // personas viendo en la hora más activa (~30 visitas/día repartidas)
-      var estimado = Math.round(base * actividadPorHora[hour]);
-      var variacion = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
-      var personas = Math.max(2, estimado + variacion); // nunca baja de 2
-      var el = document.getElementById('viendoNum');
-      if (el) el.textContent = personas;
-    }
-    updateViendoAhora();
+    var CUPOS_LUNES = 12;   // lunes
+    var CUPOS_MIN   = 3;    // nunca baja de aquí (domingo)
+    var day = new Date().getDay(); // 0=domingo ... 6=sábado
+    // días transcurridos desde el lunes (lunes=0, martes=1, ... domingo=6)
+    var desdeLunes = (day + 6) % 7;
+    var cupos = CUPOS_LUNES - Math.round(desdeLunes * (CUPOS_LUNES - CUPOS_MIN) / 6);
+    if (cupos < CUPOS_MIN) cupos = CUPOS_MIN;
+    var elCupos = document.getElementById('cuposNum');
+    if (elCupos) elCupos.textContent = cupos;
 
-    function updateCupos() {
-      var CUPOS_LUNES = 12;   // lunes
-      var CUPOS_MIN   = 3;    // nunca baja de aquí (domingo)
-      var day = new Date().getDay(); // 0=domingo ... 6=sábado
-      // días transcurridos desde el lunes (lunes=0, martes=1, ... domingo=6)
-      var desdeLunes = (day + 6) % 7;
-      var cupos = CUPOS_LUNES - Math.round(desdeLunes * (CUPOS_LUNES - CUPOS_MIN) / 6);
-      if (cupos < CUPOS_MIN) cupos = CUPOS_MIN;
-      var el = document.getElementById('cuposNum');
-      if (el) el.textContent = cupos;
-    }
-    updateCupos();
+    // "Personas viendo ahora": siempre por encima de los cupos disponibles
+    // (si no, resta urgencia en vez de sumarla), variando un poco según la
+    // hora del día y con algo de aleatoriedad para que no se vea fijo.
+    var hour = new Date().getHours();
+    var actividadPorHora = [0.3, 0.2, 0.15, 0.15, 0.15, 0.2, 0.35, 0.55, 0.7, 0.8, 0.85, 0.9, 0.95, 0.9, 0.85, 0.8, 0.85, 0.95, 1, 0.95, 0.9, 0.75, 0.6, 0.4];
+    var margenExtra = Math.round(15 * actividadPorHora[hour]); // 4-15 según hora
+    var variacion = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
+    var viendo = cupos + margenExtra + variacion;
+    var elViendo = document.getElementById('viendoNum');
+    if (elViendo) elViendo.textContent = viendo;
   })();
 </script>
 
