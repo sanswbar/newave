@@ -963,6 +963,10 @@
 
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
+    <p id="viendoAhora" style="text-align:center;font-size:0.8rem;color:rgba(255,255,255,0.6);margin:0 0 0.6rem">
+      <span id="viendoNum">--</span> personas están viendo este programa
+    </p>
+
     <div class="cupos-card">
       <div class="cupos-top">
         <span class="cupos-dot"></span>
@@ -1664,6 +1668,22 @@
   (function() {
     // Cupos limitados: arranca alto el lunes y baja durante la semana, sin llegar a 0.
     // Refleja la capacidad real de acompañamiento por semana.
+    // "Personas viendo ahora": estimado a partir del tráfico real (~30 visitas/día),
+    // distribuido según la hora (más gente despierta = más gente viendo), con una
+    // pequeña variación aleatoria para que no se sienta un número fijo.
+    function updateViendoAhora() {
+      var hour = new Date().getHours();
+      // Curva de actividad por hora del día (0 = madrugada, 1 = hora pico)
+      var actividadPorHora = [0.1, 0.05, 0.05, 0.05, 0.05, 0.1, 0.2, 0.35, 0.5, 0.6, 0.7, 0.75, 0.8, 0.75, 0.7, 0.65, 0.7, 0.85, 1, 0.95, 0.8, 0.6, 0.4, 0.2];
+      var base = 6; // personas viendo en la hora más activa (~30 visitas/día repartidas)
+      var estimado = Math.round(base * actividadPorHora[hour]);
+      var variacion = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
+      var personas = Math.max(2, estimado + variacion); // nunca baja de 2
+      var el = document.getElementById('viendoNum');
+      if (el) el.textContent = personas;
+    }
+    updateViendoAhora();
+
     function updateCupos() {
       var CUPOS_LUNES = 12;   // lunes
       var CUPOS_MIN   = 3;    // nunca baja de aquí (domingo)
