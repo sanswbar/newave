@@ -431,6 +431,20 @@ function autorizarUrlFetch() {
   Logger.log('OK, código: ' + resp.getResponseCode());
 }
 
+// Borra todas las claves wa_ pendientes (limpieza de pruebas viejas).
+function limpiarColaWhatsapp() {
+  const props = PropertiesService.getScriptProperties();
+  const all = props.getProperties();
+  let borradas = 0;
+  for (const key in all) {
+    if (key.indexOf('wa_') === 0) {
+      props.deleteProperty(key);
+      borradas++;
+    }
+  }
+  Logger.log('Borradas ' + borradas + ' claves wa_');
+}
+
 function diagnostico() {
   const props = PropertiesService.getScriptProperties();
   const all = props.getProperties();
