@@ -75,11 +75,7 @@ function doGet(e) {
 
     const lastRow = sheet.getLastRow();
     queueSequence(nombre, correo, lastRow);
-    // Envío automático de plantilla de bienvenida desactivado: la entrega de
-    // plantillas Marketing a números con historial previo no es confiable.
-    // En su lugar, el link de WhatsApp va dentro del Email 1 — la persona
-    // inicia la conversación, lo cual siempre llega sin restricción de plantilla.
-    // queueWhatsapp(nombre, whatsapp, lastRow);
+    queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
 
     return ContentService
