@@ -92,8 +92,9 @@ async function generarRespuesta(from, text, name) {
   // Limita el historial para no gastar de más
   const trimmed = history.slice(-MAX_TURNS);
 
+  const nombreUsable = esNombreReal(name) ? name : null;
   const systemFull = SYSTEM_PROMPT +
-    (name ? `\n\nEl nombre de esta persona es: ${name}. Úsalo con naturalidad.` : '') +
+    (nombreUsable ? `\n\nEl nombre de esta persona es: ${nombreUsable}. Úsalo con naturalidad.` : '\n\nNo uses ningún nombre para dirigirte a esta persona (el que tenemos guardado son iniciales o no es un nombre real) — salúdala sin nombre, ej. "¡Hola! ¿Qué duda tienes?" en vez de "¡Hola X!".') +
     `\n\nLink para empezar el trial: ${SKOOL_LINK}`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -135,6 +136,31 @@ async function generarRespuesta(from, text, name) {
   guardarMensaje(from, name, 'assistant', reply).catch(err => console.error('[DB] Error guardando mensaje assistant:', err));
 
   return reply;
+}
+
+// El "nombre" que manda WhatsApp a veces son iniciales (ej. "DF", "SSW")
+// en vez de un nombre real — usar eso como saludo suena raro/impersonal.
+// Heurística: nombres reales tienen vocales y normalmente más de 3-4
+// letras por palabra; las iniciales son cortas, todo mayúsculas, sin vocal
+// suficiente para ser una palabra pronunciable.
+function esNombreReal(name) {
+  if (!name) return false;
+  const limpio = name.trim();
+  if (!limpio) return false;
+
+  const primeraPalabra = limpio.split(/\s+/)[0];
+
+  // Todo mayúsculas y 4 letras o menos: casi siempre iniciales (DF, SSW, FDR)
+  if (primeraPalabra.length <= 4 && primeraPalabra === primeraPalabra.toUpperCase() && /^[A-ZÁÉÍÓÚÑ]+$/.test(primeraPalabra)) {
+    return false;
+  }
+
+  // Sin ninguna vocal: no es una palabra pronunciable como nombre
+  if (!/[aeiouáéíóúAEIOUÁÉÍÓÚ]/.test(primeraPalabra)) {
+    return false;
+  }
+
+  return true;
 }
 
 // WhatsApp a veces manda números mexicanos con un "1" extra después del 52
