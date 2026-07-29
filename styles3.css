@@ -127,6 +127,16 @@ a   { text-decoration: none; color: inherit; }
 }
 .nav-cta:hover { background: var(--orange-h); transform: translateY(-1px); }
 
+.nav-whatsapp {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  color: var(--white, #fff);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-whatsapp:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
+
 /* ── BUTTONS ── */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center;
