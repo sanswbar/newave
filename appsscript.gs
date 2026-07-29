@@ -297,14 +297,9 @@ function sendEmail1(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>Te escribe Santiago, cofundador de Newave Academy.</p>
-  <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto.</p>
-  <p>No sé qué te frenó para unirte al programa, pero realmente queremos ayudarte. Por eso te invitamos a probar Newave gratis durante 7 días.</p>
-  <p>Sin compromiso.</p>
-  <p>Y algo importante: Newave funciona para cualquier perfil profesional, no solo tech. Tenemos casos en marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más.</p>
-  <p>Dentro tendrás acceso al curso completo, plantillas de CV, Cover Letter y LinkedIn, nuestra comunidad privada, herramientas de AI y una bolsa de trabajo con vacantes 100% remotas.</p>
+  <p>Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
+  <p>Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
   <p>Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
-  <p>Si después de una semana sientes que no es para ti, no pagas.</p>
-  <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, ganar en dólares y tener más libertad, este es tu mejor camino.</p>
   <p>¿Prefieres atención más personalizada? Escríbenos por WhatsApp: <a href="https://wa.me/525573906923?text=Hola%2C%20llen%C3%A9%20el%20formulario%20y%20tengo%20una%20duda">wa.me/525573906923</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
