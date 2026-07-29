@@ -12,7 +12,8 @@ const FROM_EMAIL       = 'hello@nwave.co';
 const COL_FECHA      = 1;
 const COL_NOMBRE     = 2;
 const COL_CORREO     = 3;
-const COL_ESTATUS    = 12; // Column L — add manually if not present
+const COL_ESTATUS    = 12; // Column L
+const COL_CLICK      = 13; // Column M — "Click a plan"
 
 // Email sequence delays (ms after signup)
 const EMAIL_DELAYS = {
@@ -23,15 +24,38 @@ const EMAIL_DELAYS = {
   5: 7 * 24 * 60 * 60 * 1000,  // 7 días
 };
 
+// Máximo de correos por corrida (cada 5 min). Reparte los envíos en vez de
+// mandarlos de golpe: más suave para la cuota diaria y para los filtros de Gmail.
+const MAX_POR_CORRIDA = 10;
+
+// Delay before sending the WhatsApp welcome template (ms after signup)
+const WHATSAPP_DELAY = 2 * 60 * 1000; // 2 min, same as email 1
+
+// WhatsApp Cloud API config — token y phone number id viven en Script
+// Properties (Project Settings > Script Properties), no aquí en el código:
+//   WA_TOKEN            = token permanente del System User
+//   WA_PHONE_NUMBER_ID  = Phone Number ID de producción
+const WA_TEMPLATE_NAME = 'nw_bienvenida_lead';
+const WA_TEMPLATE_LANG = 'es_MX';
+
 // ─── FORM SUBMISSION ──────────────────────────────────────────────────────
 
 function doGet(e) {
   try {
+    // Registro de click en el CTA final — no crea lead nuevo
+    if (e.parameter.action === 'click') {
+      registrarClick(e.parameter.correo || '');
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', click: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     const track = e.parameter.track || '';
     const sheet = getSheet(SHEET_NAME);
 
-    const nombre  = e.parameter.nombre  || '';
-    const correo  = e.parameter.correo  || '';
+    const nombre   = e.parameter.nombre   || '';
+    const correo   = e.parameter.correo   || '';
+    const whatsapp = e.parameter.whatsapp || '';
 
     const row = [
       new Date(),
@@ -45,14 +69,13 @@ function doGet(e) {
       e.parameter.compromiso || '',
       e.parameter.inversion  || '',
       track,
-      'Registrado', // initial Estatus
+      'Registrado',
     ];
     sheet.appendRow(row);
 
-    // Queue the full email sequence in Script Properties.
-    // A single recurring trigger (every5min) processes the queue — no per-email triggers.
     const lastRow = sheet.getLastRow();
     queueSequence(nombre, correo, lastRow);
+    queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
 
     return ContentService
@@ -65,9 +88,14 @@ function doGet(e) {
   }
 }
 
+function registrarClick(correo) {
+  const sheet = getSheet(SHEET_NAME);
+  const row = buscarFilaPorCorreo(sheet, correo);
+  if (row) sheet.getRange(row, COL_CLICK).setValue('Sí');
+}
+
 // ─── QUEUE + SINGLE RECURRING TRIGGER ─────────────────────────────────────
 
-// Store one pending entry per email in the sequence, each with its due timestamp.
 function queueSequence(nombre, correo, rowNumber) {
   const props = PropertiesService.getScriptProperties();
   const now   = Date.now();
@@ -85,11 +113,25 @@ function queueSequence(nombre, correo, rowNumber) {
   }
 }
 
-// Make sure exactly ONE recurring processor trigger exists (every 5 minutes).
+// Queue the WhatsApp welcome template for this lead, if they gave a number.
+function queueWhatsapp(nombre, whatsapp, rowNumber) {
+  if (!whatsapp) return; // no number given, nothing to send
+
+  const props = PropertiesService.getScriptProperties();
+  const key   = 'wa_' + rowNumber;
+  const data  = JSON.stringify({
+    nombre:   nombre,
+    whatsapp: whatsapp,
+    row:      rowNumber,
+    dueAt:    Date.now() + WHATSAPP_DELAY,
+  });
+  props.setProperty(key, data);
+}
+
 function ensureProcessorTrigger() {
   const triggers = ScriptApp.getProjectTriggers();
   for (const t of triggers) {
-    if (t.getHandlerFunction() === 'processQueue') return; // already exists
+    if (t.getHandlerFunction() === 'processQueue') return;
   }
   ScriptApp.newTrigger('processQueue')
     .timeBased()
@@ -97,8 +139,8 @@ function ensureProcessorTrigger() {
     .create();
 }
 
-// Finds a lead's current row by email (most recent match).
-// Rows are looked up by email — not stored index — so deleting sheet rows never desyncs.
+// Encuentra la fila actual de un lead por su correo (el más reciente).
+// Se busca por correo, no por índice, para que borrar filas nunca desincronice.
 function buscarFilaPorCorreo(sheet, correo) {
   if (!correo) return 0;
   const lastRow = sheet.getLastRow();
@@ -109,17 +151,15 @@ function buscarFilaPorCorreo(sheet, correo) {
 
   for (let i = correos.length - 1; i >= 1; i--) {
     if (correos[i][0].toString().trim().toLowerCase() === target) {
-      return i + 1; // 1-based row number
+      return i + 1;
     }
   }
-  return 0; // not found (row was deleted)
+  return 0;
 }
 
-// Max emails sent per 5-minute run. Spreads sends out instead of bursting,
-// which is gentler on the daily quota and on Gmail's spam heuristics.
-const MAX_POR_CORRIDA = 10;
-
-// Runs every 5 min: sends any email whose dueAt has passed, skipping converted leads.
+// Corre cada 5 min: manda los correos vencidos, con tope por corrida y
+// reintento automático si Gmail se queda sin cuota. También procesa la
+// cola de WhatsApp (plantilla de bienvenida para leads nuevos).
 function processQueue() {
   const props = PropertiesService.getScriptProperties();
   const sheet = getSheet(SHEET_NAME);
@@ -159,16 +199,88 @@ function processQueue() {
       props.deleteProperty(key);
     } catch (err) {
       const msg = err.message || '';
-      // Daily limit hit: keep it queued and retry on a later run (quota resets daily)
       if (msg.indexOf('too many times') !== -1 || msg.indexOf('Límite') !== -1) {
         if (row) sheet.getRange(row, COL_ESTATUS).setValue('En espera (límite diario)');
-        return; // no quota left — stop this run, nothing gets dropped
+        return;
       }
-      // Any other error (invalid address, etc.): unrecoverable, drop it
       if (row) sheet.getRange(row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + msg);
       props.deleteProperty(key);
     }
   }
+
+  for (const key in allProps) {
+    if (key.indexOf('wa_') !== 0) continue;
+
+    const data = JSON.parse(allProps[key]);
+    Logger.log('[WA queue] ' + key + ' dueAt=' + data.dueAt + ' now=' + now + ' pendiente=' + (now < data.dueAt));
+    if (now < data.dueAt) continue; // not due yet
+
+    try {
+      enviarPlantillaWhatsapp(data.nombre, data.whatsapp);
+      if (data.row) agregarEstatus(sheet, data.row, 'WhatsApp enviado');
+      Logger.log('[WA queue] enviado OK a fila ' + data.row);
+    } catch (err) {
+      Logger.log('[WA queue] ERROR: ' + (err.message || err));
+      if (data.row) agregarEstatus(sheet, data.row, 'Error WhatsApp: ' + (err.message || err));
+    }
+    props.deleteProperty(key);
+  }
+}
+
+// Appends a note to the Estatus cell instead of overwriting it, so the
+// email-sequence status and the WhatsApp status don't clobber each other.
+function agregarEstatus(sheet, row, nota) {
+  const cell = sheet.getRange(row, COL_ESTATUS);
+  const actual = cell.getValue().toString().trim();
+  cell.setValue(actual ? actual + ' | ' + nota : nota);
+}
+
+// ─── WHATSAPP (Cloud API) ─────────────────────────────────────────────────
+
+// Sends the approved "nw_bienvenida_lead" template to a new lead.
+function enviarPlantillaWhatsapp(nombre, whatsapp) {
+  const props = PropertiesService.getScriptProperties();
+  const token         = props.getProperty('WA_TOKEN');
+  const phoneNumberId = props.getProperty('WA_PHONE_NUMBER_ID');
+  if (!token || !phoneNumberId) throw new Error('Faltan WA_TOKEN / WA_PHONE_NUMBER_ID en Script Properties');
+
+  const to = normalizarNumero(whatsapp);
+  const firstName = nombre.split(' ')[0] || 'hola';
+
+  const payload = {
+    messaging_product: 'whatsapp',
+    to: to,
+    type: 'template',
+    template: {
+      name: WA_TEMPLATE_NAME,
+      language: { code: WA_TEMPLATE_LANG },
+      components: [{
+        type: 'body',
+        parameters: [{ type: 'text', text: firstName }],
+      }],
+    },
+  };
+
+  const resp = UrlFetchApp.fetch(
+    'https://graph.facebook.com/v21.0/' + phoneNumberId + '/messages',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + token },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true,
+    }
+  );
+
+  const code = resp.getResponseCode();
+  if (code >= 300) throw new Error('WhatsApp API ' + code + ': ' + resp.getContentText());
+}
+
+// Strips non-digit characters and ensures the Mexico country code (52) is present.
+function normalizarNumero(numero) {
+  let digits = numero.toString().replace(/\D/g, '');
+  if (digits.length === 10) digits = '52' + digits; // bare 10-digit MX number
+  return digits;
 }
 
 function isTrialOrPaid(sheet, rowNumber) {
@@ -301,7 +413,7 @@ function getSheet(name) {
     const headers = [
       'Fecha', 'Nombre', 'Correo', 'WhatsApp', 'LinkedIn',
       'Inglés', 'Trabajo actual', 'Razón del cambio',
-      'Nivel de compromiso', 'Capacidad de inversión', 'Track', 'Estatus',
+      'Nivel de compromiso', 'Capacidad de inversión', 'Track', 'Estatus', 'Click a plan',
     ];
     const headerRow = sheet.getRange(1, 1, 1, headers.length);
     headerRow.setValues([headers]);
