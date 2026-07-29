@@ -35,7 +35,7 @@ const WHATSAPP_DELAY = 2 * 60 * 1000; // 2 min, same as email 1
 // Properties (Project Settings > Script Properties), no aquí en el código:
 //   WA_TOKEN            = token permanente del System User
 //   WA_PHONE_NUMBER_ID  = Phone Number ID de producción
-const WA_TEMPLATE_NAME = 'nw_bienvenida_lead';
+const WA_TEMPLATE_NAME = 'nw_bienvenida_lead_v2';
 const WA_TEMPLATE_LANG = 'es_MX';
 
 // ─── FORM SUBMISSION ──────────────────────────────────────────────────────
@@ -241,6 +241,7 @@ function agregarEstatus(sheet, row, nota) {
 // ─── WHATSAPP (Cloud API) ─────────────────────────────────────────────────
 
 // Sends the approved "nw_bienvenida_lead" template to a new lead.
+// La plantilla no tiene variables, así que el payload no lleva parameters.
 function enviarPlantillaWhatsapp(nombre, whatsapp) {
   const props = PropertiesService.getScriptProperties();
   const token         = props.getProperty('WA_TOKEN');
@@ -248,7 +249,6 @@ function enviarPlantillaWhatsapp(nombre, whatsapp) {
   if (!token || !phoneNumberId) throw new Error('Faltan WA_TOKEN / WA_PHONE_NUMBER_ID en Script Properties');
 
   const to = normalizarNumero(whatsapp);
-  const firstName = nombre.split(' ')[0] || 'hola';
 
   const payload = {
     messaging_product: 'whatsapp',
@@ -257,10 +257,6 @@ function enviarPlantillaWhatsapp(nombre, whatsapp) {
     template: {
       name: WA_TEMPLATE_NAME,
       language: { code: WA_TEMPLATE_LANG },
-      components: [{
-        type: 'body',
-        parameters: [{ type: 'text', parameter_name: 'nombre', text: firstName }],
-      }],
     },
   };
 
