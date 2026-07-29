@@ -74,6 +74,7 @@ function doGet(e) {
     sheet.appendRow(row);
 
     const lastRow = sheet.getLastRow();
+    Logger.log('[doGet] whatsapp param=' + JSON.stringify(whatsapp) + ' lastRow=' + lastRow);
     queueSequence(nombre, correo, lastRow);
     queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
@@ -166,16 +167,18 @@ function processQueue() {
   const allProps = props.getProperties();
   const now = Date.now();
 
-  // Stop early if Gmail has no quota left — leave everything queued for later.
-  if (MailApp.getRemainingDailyQuota() <= 0) return;
-
   const senders = {
     1: sendEmail1, 2: sendEmail2, 3: sendEmail3, 4: sendEmail4, 5: sendEmail5,
   };
 
   let enviados = 0;
 
+  // Sin cuota de Gmail, se salta el bloque de correos pero el de WhatsApp
+  // sigue corriendo abajo — no dependen del mismo límite.
+  const sinCuotaGmail = MailApp.getRemainingDailyQuota() <= 0;
+
   for (const key in allProps) {
+    if (sinCuotaGmail) break;
     if (key.indexOf('seq_') !== 0) continue;
     if (enviados >= MAX_POR_CORRIDA) break; // throttle: rest waits for next run
 
@@ -201,7 +204,7 @@ function processQueue() {
       const msg = err.message || '';
       if (msg.indexOf('too many times') !== -1 || msg.indexOf('Límite') !== -1) {
         if (row) sheet.getRange(row, COL_ESTATUS).setValue('En espera (límite diario)');
-        return;
+        break; // se acabó la cuota de Gmail — el bloque de WhatsApp sigue abajo
       }
       if (row) sheet.getRange(row, COL_ESTATUS).setValue('Error correo ' + data.emailNum + ': ' + msg);
       props.deleteProperty(key);
@@ -423,4 +426,18 @@ function getSheet(name) {
     sheet.setFrozenRows(1);
   }
   return sheet;
+}
+
+function diagnostico() {
+  const props = PropertiesService.getScriptProperties();
+  const all = props.getProperties();
+  const waKeys = Object.keys(all).filter(k => k.indexOf('wa_') === 0);
+  Logger.log('Total properties: ' + Object.keys(all).length);
+  Logger.log('Claves wa_: ' + JSON.stringify(waKeys));
+
+  const sheet = getSheet(SHEET_NAME);
+  const lastRow = sheet.getLastRow();
+  Logger.log('Última fila del sheet: ' + lastRow);
+  const rowData = sheet.getRange(lastRow, 1, 1, 13).getValues()[0];
+  Logger.log('Datos última fila: ' + JSON.stringify(rowData));
 }
