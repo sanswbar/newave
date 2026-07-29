@@ -1263,6 +1263,19 @@
     document.getElementById(`err-${group}`).classList.remove('show');
   }
 
+  // Detecta typos comunes de dominio (gmial.com, hotmial.com, gmail.con, etc.)
+  // para atrapar correos que pasan la validación de formato pero son inválidos.
+  function tieneTypoDeDominio(correo) {
+    const dominio = correo.split('@')[1]?.toLowerCase() || '';
+    const typosConocidos = [
+      'gmial.com', 'gmai.com', 'gmail.co', 'gmail.con', 'gmail.cm', 'gmailcom',
+      'hotmial.com', 'hotmai.com', 'hotmail.co', 'hotmail.con', 'hotmailcom',
+      'outlok.com', 'outloo.com', 'outlook.co', 'outlook.con',
+      'yaho.com', 'yahoo.co', 'yahoo.con',
+    ];
+    return typosConocidos.includes(dominio);
+  }
+
   // ── Validation ──
   function validateStep(step) {
     let ok = true;
@@ -1284,7 +1297,7 @@
       if (!n) { setErr('err-nombre', true); setInputErr('nombre', true); ok = false; }
       else     { setErr('err-nombre', false); setInputErr('nombre', false); answers.nombre = n; }
 
-      if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { setErr('err-correo', true); setInputErr('correo', true); ok = false; }
+      if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) || tieneTypoDeDominio(e)) { setErr('err-correo', true); setInputErr('correo', true); ok = false; }
       else { setErr('err-correo', false); setInputErr('correo', false); answers.correo = e; }
 
       const wFull = itiInstance ? itiInstance.getNumber() : w;

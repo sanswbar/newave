@@ -75,7 +75,13 @@ function doGet(e) {
     sheet.appendRow(row);
 
     const lastRow = sheet.getLastRow();
-    queueSequence(nombre, correo, lastRow);
+    const compromiso = e.parameter.compromiso || '';
+    // No gastar cuota de Gmail en quien de entrada dijo que solo está
+    // buscando, aún no listo — se manda solo a los dos niveles de mayor
+    // interés real.
+    if (compromiso !== 'Buscando, no listo aun') {
+      queueSequence(nombre, correo, lastRow);
+    }
     queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
 
@@ -442,6 +448,22 @@ function limpiarColaWhatsapp() {
     }
   }
   Logger.log('Borradas ' + borradas + ' claves wa_');
+}
+
+// Manda los 5 correos de la secuencia a tu propio correo, para revisar
+// diseño/contenido antes de que le lleguen a leads reales. Borra esta
+// función cuando termines de probar.
+function probarSecuenciaEmails() {
+  const correoPrueba = 'sanswbar@gmail.com';
+  const nombrePrueba = 'Santiago';
+
+  sendEmail1(nombrePrueba, correoPrueba);
+  sendEmail2(nombrePrueba, correoPrueba);
+  sendEmail3(nombrePrueba, correoPrueba);
+  sendEmail4(nombrePrueba, correoPrueba);
+  sendEmail5(nombrePrueba, correoPrueba);
+
+  Logger.log('Enviados los 5 correos de prueba a ' + correoPrueba);
 }
 
 function diagnostico() {
