@@ -999,22 +999,13 @@
 
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
 
-    <div class="cupos-card">
-      <p class="viendo-ahora"><span id="viendoNum">--</span> personas están viendo este programa</p>
-      <div class="cupos-top">
-        <span class="cupos-dot"></span>
-        <span class="cupos-label">Cupos disponibles</span>
-      </div>
-      <div class="cupos-num-row">
-        <span id="cuposNum" class="cupos-num">8</span>
-        <span class="cupos-unit">lugares</span>
-      </div>
-      <p class="cupos-reason">Revisamos tus documentos y damos sesiones 1:1. Por eso el cupo es limitado.</p>
-    </div>
+    <p style="font-size:1.05rem;font-weight:700;color:var(--white);text-align:center;margin-bottom:1.25rem">Estás a un paso de empezar a construir la vida que quieres.</p>
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
 
-    <p style="text-align:center;font-size:0.85rem;color:#999;margin:0.75rem 0 0">
+    <p style="text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.5);margin:0.9rem 0 0">Nos vemos dentro. — Santiago</p>
+
+    <p style="text-align:center;font-size:0.85rem;color:#999;margin:0.5rem 0 0">
       ¿Tienes dudas? <a href="https://wa.me/525573906923?text=Hola%2C%20tengo%20una%20duda" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Escríbenos por WhatsApp</a>
     </p>
 
@@ -1497,7 +1488,7 @@
 
       const btn = document.getElementById('lowPlanBtn');
       if (listo) {
-        btn.textContent = 'Prueba gratis por 7 días';
+        btn.textContent = 'Empieza tu prueba gratis';
         btn.href = 'https://www.skool.com/newave/plans';
         btn.addEventListener('click', function() {
           if (window.clarity) clarity('event', 'click_unirme_ahora');
