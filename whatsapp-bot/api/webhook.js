@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { guardarMensaje } = require('./db');
+const { guardarMensaje, obtenerConversacion } = require('./db');
 
 // ─── CONFIG (todo vive en variables de entorno de Vercel, NO en el código) ───
 const VERIFY_TOKEN   = process.env.VERIFY_TOKEN;          // el que tú inventes para verificar el webhook
@@ -90,8 +90,13 @@ module.exports = async function handler(req, res) {
 
 // ─── GENERAR RESPUESTA CON CLAUDE ──────────────────────────────────────────
 async function generarRespuesta(from, text, name) {
-  // Recupera o crea el historial de esta persona
-  if (!conversations[from]) conversations[from] = [];
+  // Recupera o crea el historial de esta persona. La memoria en RAM se
+  // pierde cada vez que Vercel reinicia la función (cold start), así que si
+  // no hay nada en memoria pero sí hubo conversación antes, la reconstruimos
+  // desde Postgres para no re-saludar a alguien a medio de una conversación.
+  if (!conversations[from]) {
+    conversations[from] = await recuperarHistorialDeDb(from);
+  }
   const history = conversations[from];
 
   // Agrega el mensaje del usuario
@@ -101,9 +106,9 @@ async function generarRespuesta(from, text, name) {
   // Limita el historial para no gastar de más
   const trimmed = history.slice(-MAX_TURNS);
 
-  const nombreUsable = esNombreReal(name) ? name : null;
+  const nombreUsable = esNombreReal(name) ? name.trim().split(/\s+/)[0] : null;
   const systemFull = SYSTEM_PROMPT +
-    (nombreUsable ? `\n\nEl nombre de esta persona es: ${nombreUsable}. Úsalo con naturalidad.` : '\n\nNo uses ningún nombre para dirigirte a esta persona (el que tenemos guardado son iniciales o no es un nombre real) — salúdala sin nombre, ej. "¡Hola! ¿Qué duda tienes?" en vez de "¡Hola X!".') +
+    (nombreUsable ? `\n\nEl nombre de esta persona es: ${nombreUsable}. Úsalo con naturalidad y con moderación (no en cada mensaje, no en cada saludo si ya la saludaste antes en esta conversación) — nunca uses el apellido, solo el primer nombre.` : '\n\nNo uses ningún nombre para dirigirte a esta persona (el que tenemos guardado son iniciales o no es un nombre real) — salúdala sin nombre, ej. "¡Hola! ¿Qué duda tienes?" en vez de "¡Hola X!".') +
     `\n\nLink para empezar el trial: ${SKOOL_LINK}`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -115,7 +120,7 @@ async function generarRespuesta(from, text, name) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-5',
-      max_tokens: 500,
+      max_tokens: 800,
       system: systemFull,
       messages: trimmed,
     }),
@@ -145,6 +150,20 @@ async function generarRespuesta(from, text, name) {
   guardarMensaje(from, name, 'assistant', reply).catch(err => console.error('[DB] Error guardando mensaje assistant:', err));
 
   return reply;
+}
+
+// Reconstruye el historial de esta persona desde Postgres cuando la
+// instancia serverless arranca en frío y perdió la memoria en RAM.
+async function recuperarHistorialDeDb(from) {
+  try {
+    const filas = await obtenerConversacion(from);
+    return filas
+      .slice(-MAX_TURNS)
+      .map(fila => ({ role: fila.rol, content: fila.contenido }));
+  } catch (err) {
+    console.error('[recuperarHistorialDeDb] Error:', err);
+    return [];
+  }
 }
 
 // El "nombre" que manda WhatsApp a veces son iniciales (ej. "DF", "SSW")
