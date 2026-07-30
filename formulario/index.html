@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MF4KQT22MK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MF4KQT22MK');
+  </script>
+  <!-- End Google tag -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NEWAVƎ — Formulario de Contacto</title>
@@ -1351,6 +1360,9 @@
 
   // ── Navigate ──
   let currentStep = 1;
+  if (typeof gtag === 'function') {
+    gtag('event', 'form_step_view', { step: 1 });
+  }
 
   function showStep(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -1359,6 +1371,10 @@
     currentStep = n;
     updateProgress(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'form_step_view', { step: n });
+    }
   }
 
   function nextStep(from) {
@@ -1389,6 +1405,10 @@
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
     btn.textContent = 'Preparando tu plan…';
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'form_submit', { compromiso: answers.compromiso, inversion: answers.inversion });
+    }
 
     if (typeof fbq === 'function') {
       // Advanced Matching: sube el Event Match Quality hasheando email/teléfono antes de trackear
