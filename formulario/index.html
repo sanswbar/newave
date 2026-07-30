@@ -142,6 +142,18 @@
       line-height: 1.5;
     }
 
+    .trial-badge {
+      display: inline-block;
+      background: rgba(252,115,66,0.12);
+      border: 1px solid rgba(252,115,66,0.3);
+      border-radius: 20px;
+      padding: 0.5rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.9rem;
+    }
+
     /* ── Fields ── */
     .field { margin-bottom: 1.1rem; }
 
@@ -896,7 +908,8 @@
     <div class="step" id="step-6">
       <div class="step-eyebrow">Paso 6 de 6</div>
       <h2 class="step-title">Elige el plan que mejor se ajuste a ti</h2>
-      <p class="step-sub"><strong style="color:var(--white)">Todos incluyen 7 días de prueba gratis.</strong> Elige según el nivel de acompañamiento que buscas.</p>
+      <div class="trial-badge">7 días de prueba gratis en cualquier plan</div>
+      <p class="step-sub">Elige según el nivel de acompañamiento que buscas.</p>
 
       <div class="options" id="opts-inversion">
         <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
