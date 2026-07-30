@@ -851,7 +851,7 @@
     <div class="step" id="step-4">
       <div class="step-eyebrow">Paso 4 de 6</div>
       <h2 class="step-title">¿Por qué quieres hacer un cambio en tu vida profesional?</h2>
-      <p class="step-sub">Cuéntanos cuál es tu motivación principal. Sé honesto/a.</p>
+      <p class="step-sub">Cuéntanos cuál es tu motivación principal.</p>
 
       <div class="field">
         <label for="razon">Tu razón principal *</label>
@@ -869,7 +869,7 @@
     <div class="step" id="step-5">
       <div class="step-eyebrow">Paso 5 de 6</div>
       <h2 class="step-title">¿Cuál es tu nivel de compromiso en este momento?</h2>
-      <p class="step-sub">Las expectativas son la base de una relación a largo plazo. Trabajamos con profesionales comprometidos que están listos para tomar acción hacia sus objetivos.</p>
+      <p class="step-sub">No hay respuesta incorrecta, solo queremos entender dónde estás para acompañarte de la mejor forma.</p>
 
       <div class="options" id="opts-compromiso">
         <div class="opt" data-val="Listo para tomar accion" onclick="selectOpt('compromiso', this)">
@@ -896,8 +896,9 @@
     <!-- ── Paso 6: Inversión ── -->
     <div class="step" id="step-6">
       <div class="step-eyebrow">Paso 6 de 6</div>
-      <h2 class="step-title">Elige el plan que mejor se ajuste a ti</h2>
-      <p class="step-sub"><strong style="color:var(--white);font-size:1.05rem">Todos incluyen 7 días de prueba gratis.</strong> Elige según el nivel de acompañamiento que buscas.</p>
+      <h2 class="step-title">Gracias por tus respuestas.</h2>
+      <p class="step-sub">Tenemos distintos planes, la diferencia está en el nivel de personalización y acompañamiento que buscas.</p>
+      <p class="step-sub"><strong style="color:var(--white);font-size:1.05rem">Todos incluyen 7 días de prueba gratis.</strong></p>
 
       <div class="options" id="opts-inversion">
         <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
@@ -948,7 +949,7 @@
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
-        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Ver mi plan →</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Ir a mi prueba →</button>
       </div>
     </div>
 
@@ -981,13 +982,11 @@
     <h2 class="result-title">Bienvenido/a a NEWAVE, <span id="lowNombre"></span></h2>
 
     <div id="lowPlanBox" style="margin-bottom:1.25rem;padding:1rem 1.25rem;border:1.5px solid rgba(252,115,66,0.4);border-radius:14px;background:rgba(252,115,66,0.06);">
-      <p style="margin:0 0 0.25rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">Plan recomendado para ti</p>
+      <p style="margin:0 0 0.25rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">Elegiste el</p>
       <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
     </div>
 
-    <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Déjanos ayudarte a tomar el control de tu carrera.</p>
-
-    <p style="font-size:1.05rem;font-weight:700;color:var(--white);text-align:center;margin-bottom:1.25rem">Estás a un paso de empezar a construir la vida que quieres.</p>
+    <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Estamos listos para ayudarte a tomar el control de tu carrera.</p>
 
     <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
 
@@ -1476,7 +1475,7 @@
 
       const btn = document.getElementById('lowPlanBtn');
       if (listo) {
-        btn.textContent = 'Empieza tu prueba gratis';
+        btn.textContent = 'Ir a mi prueba →';
         btn.href = 'https://www.skool.com/newave/plans';
         btn.addEventListener('click', function() {
           if (window.clarity) clarity('event', 'click_unirme_ahora');
