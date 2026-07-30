@@ -1378,7 +1378,12 @@
   }
 
   // ── Submit ──
-  function submitForm() {
+  async function sha256Hex(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function submitForm() {
     if (!validateStep(6)) return;
 
     const btn = document.getElementById('btnSubmit');
@@ -1386,6 +1391,11 @@
     btn.textContent = 'Preparando tu plan…';
 
     if (typeof fbq === 'function') {
+      // Advanced Matching: sube el Event Match Quality hasheando email/teléfono antes de trackear
+      const emHash = answers.correo ? await sha256Hex(answers.correo.trim().toLowerCase()) : undefined;
+      const phHash = answers.whatsapp ? await sha256Hex(answers.whatsapp.replace(/[^\d]/g, '')) : undefined;
+
+      fbq('init', '2100703077340387', { em: emHash, ph: phHash });
       fbq('track', 'CompleteRegistration', {
         content_name: 'Formulario Newave',
         status: answers.compromiso === 'Listo para tomar accion'
