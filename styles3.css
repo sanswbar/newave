@@ -276,10 +276,13 @@ a   { text-decoration: none; color: inherit; }
 }
 .hero-link-secondary:hover { color: rgba(232,231,231,0.85); }
 .hero-proof {
-  display: flex; align-items: center; gap: 0.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--mono); font-size: 0.7rem;
   color: var(--subtle);
+  text-decoration: none;
+  transition: color 0.2s;
 }
+.hero-proof:hover { color: var(--orange); }
 .hero-proof span { text-align: center; }
 .proof-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
 
