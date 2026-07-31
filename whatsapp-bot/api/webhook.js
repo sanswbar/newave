@@ -15,6 +15,9 @@ const SKOOL_LINK     = 'https://www.skool.com/newave/plans';
 
 // El cerebro (system prompt). Busca el archivo en varias rutas posibles
 // según cómo se despliegue (carpeta whatsapp-bot o raíz del proyecto).
+// Si no lo encuentra, usa un prompt mínimo de emergencia en vez de tumbar
+// toda la función — sin esto, un solo archivo faltante dejaba el bot
+// 100% inoperante (ni siquiera respondía la verificación del webhook).
 function cargarCerebro() {
   const rutas = [
     path.join(process.cwd(), 'system-prompt.md'),
@@ -24,7 +27,8 @@ function cargarCerebro() {
   for (const r of rutas) {
     try { return fs.readFileSync(r, 'utf8'); } catch (e) { /* siguiente */ }
   }
-  throw new Error('No se encontró system-prompt.md');
+  console.error('[cargarCerebro] No se encontró system-prompt.md, usando prompt de emergencia');
+  return 'Eres el asistente de Newave Academy por WhatsApp. Responde con calidez y honestidad, invitando a probar el programa gratis 7 días. Si no sabes algo específico, dilo con honestidad.';
 }
 const SYSTEM_PROMPT = cargarCerebro();
 
@@ -251,24 +255,28 @@ async function esperarComoHumano(texto) {
 async function enviarWhatsApp(to, body) {
   console.log('[enviarWhatsApp] to=', JSON.stringify(to), 'PHONE_NUMBER_ID=', PHONE_NUMBER_ID);
 
-  const resp = await fetch(`https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messaging_product: 'whatsapp',
-      to: to,
-      type: 'text',
-      text: { body: body },
-    }),
-  });
+  try {
+    const resp = await fetch(`https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: to,
+        type: 'text',
+        text: { body: body },
+      }),
+    });
 
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) {
-    console.error('[enviarWhatsApp] ERROR', resp.status, JSON.stringify(data));
-  } else {
-    console.log('[enviarWhatsApp] OK', JSON.stringify(data));
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      console.error('[enviarWhatsApp] ERROR', resp.status, JSON.stringify(data));
+    } else {
+      console.log('[enviarWhatsApp] OK', JSON.stringify(data));
+    }
+  } catch (err) {
+    console.error('[enviarWhatsApp] ERROR de red:', err);
   }
 }
