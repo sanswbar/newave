@@ -801,123 +801,169 @@
   </footer>
 
   <script>
-    /* LAZY IFRAME (Vimeo) */
-    (function() {
-      const lazyFrames = document.querySelectorAll('iframe.lazy-iframe');
-      if (!lazyFrames.length) return;
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.src = e.target.dataset.src;
-            io.unobserve(e.target);
+    /* ─────────────────────────────────────────────────────────────────
+       TRACKING CRÍTICO — va primero y aislado. Nunca debe dejar de
+       correr por un fallo en animaciones u otro código no esencial,
+       porque mide conversión real de campañas de Ads (Instagram/FB).
+       ───────────────────────────────────────────────────────────── */
+    try {
+      /* CTA TRACKING — GA4 + Meta Pixel con nombre de botón */
+      document.addEventListener('click', function(e) {
+        try {
+          var link = e.target.closest('a[href="https://www.newaveacademy.com/formulario/"]');
+          if (!link) return;
+          var ctaName = link.getAttribute('data-cta') || 'unknown';
+
+          if (typeof gtag === 'function') {
+            gtag('event', 'cta_click', {
+              'cta_location': ctaName,
+              'destination_url': 'https://www.newaveacademy.com/formulario/'
+            });
           }
-        });
-      }, { rootMargin: '200px' });
-      lazyFrames.forEach(f => io.observe(f));
-    })();
-    /* ISOTIPO HERO FADE ON SCROLL */
-    const heroBgIsotipo = document.getElementById('heroBgIsotipo');
-    window.addEventListener('scroll', () => {
-      if (heroBgIsotipo) {
-        const fade = Math.max(0, 1 - (window.scrollY / (window.innerHeight * 0.55)));
-        heroBgIsotipo.style.opacity = 0.08 * fade;
-      }
-    });
-
-    /* NAV SCROLL HIDE */
-    let lastY = 0;
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('nav');
-      const y = window.scrollY;
-      nav.style.transform = (y > lastY && y > 80) ? 'translateY(-100%)' : 'translateY(0)';
-      lastY = y;
-    });
-
-    /* SCROLL ANIMATIONS */
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(el => {
-        if (el.isIntersecting) {
-          el.target.classList.add('visible');
-          observer.unobserve(el.target);
+          if (typeof fbq === 'function') {
+            fbq('track', 'Lead', {
+              content_name: ctaName,
+              content_category: 'Landing Page'
+            });
+          }
+        } catch (err) {
+          console.error('CTA tracking falló:', err);
         }
       });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
-
-
-
-    /* MODULOS EXTRA — close on mobile, open on desktop */
-    if (window.innerWidth <= 768) {
-      var modExtra = document.querySelector('.modulos-extra-toggle');
-      if (modExtra) modExtra.removeAttribute('open');
+    } catch (err) {
+      console.error('No se pudo montar CTA tracking:', err);
     }
 
-    /* FAQ ACCORDION */
-    document.querySelectorAll('.faq-trigger').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        const body = document.getElementById(btn.getAttribute('aria-controls'));
-        const inner = body.querySelector('.faq-body-inner');
-        btn.setAttribute('aria-expanded', String(!expanded));
-        body.style.maxHeight = expanded ? '0' : inner.scrollHeight + 'px';
-        btn.querySelector('.faq-icon').textContent = expanded ? '+' : '×';
-      });
-    });
-
-    /* QUOTES SCROLLBAR */
-    (function() {
-      var grid = document.querySelector('.quotes-grid');
-      var thumb = document.getElementById('quotesScrollThumb');
-      if (!grid || !thumb) return;
-      function updateThumb() {
-        var ratio = grid.scrollLeft / (grid.scrollWidth - grid.clientWidth);
-        var trackW = thumb.parentElement.offsetWidth;
-        var thumbW = Math.max(40, trackW * (grid.clientWidth / grid.scrollWidth));
-        thumb.style.width = thumbW + 'px';
-        thumb.style.transform = 'translateX(' + (ratio * (trackW - thumbW)) + 'px)';
-      }
-      grid.addEventListener('scroll', updateThumb, { passive: true });
-      window.addEventListener('resize', updateThumb);
-      updateThumb();
-    })();
-
-    /* CTA TRACKING — GA4 + Meta Pixel con nombre de botón */
-    document.addEventListener('click', function(e) {
-      var link = e.target.closest('a[href="https://www.newaveacademy.com/formulario/"]');
-      if (!link) return;
-      var ctaName = link.getAttribute('data-cta') || 'unknown';
-
-      if (typeof gtag === 'function') {
-        /* GA4: registra qué botón se tocó para análisis interno */
-        gtag('event', 'cta_click', {
-          'cta_location': ctaName,
-          'destination_url': 'https://www.newaveacademy.com/formulario/'
-        });
-      }
-
-      /* Meta Pixel */
-      if (typeof fbq === 'function') {
-        fbq('track', 'Lead', {
-          content_name: ctaName,
-          content_category: 'Landing Page'
-        });
-      }
-    });
-
-    /* SCROLL DEPTH TRACKING */
-    (function() {
-      var fired = {};
-      var depths = [25, 50, 75, 90];
-      window.addEventListener('scroll', function() {
-        var pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-        depths.forEach(function(d) {
-          if (pct >= d && !fired[d]) {
-            fired[d] = true;
-            if (typeof gtag === 'function') gtag('event', 'scroll_depth', { 'depth': d });
+    try {
+      /* SCROLL DEPTH TRACKING */
+      (function() {
+        var fired = {};
+        var depths = [25, 50, 75, 90];
+        window.addEventListener('scroll', function() {
+          try {
+            var pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+            depths.forEach(function(d) {
+              if (pct >= d && !fired[d]) {
+                fired[d] = true;
+                if (typeof gtag === 'function') gtag('event', 'scroll_depth', { 'depth': d });
+              }
+            });
+          } catch (err) {
+            console.error('Scroll depth tracking falló:', err);
           }
+        }, { passive: true });
+      })();
+    } catch (err) {
+      console.error('No se pudo montar scroll depth tracking:', err);
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       VISUAL / UX — no crítico. Cada pieza aislada para que un fallo
+       en una nunca tumbe a las demás ni al tracking de arriba.
+       ───────────────────────────────────────────────────────────── */
+    try {
+      /* LAZY IFRAME (Vimeo) */
+      if ('IntersectionObserver' in window) {
+        const lazyFrames = document.querySelectorAll('iframe.lazy-iframe');
+        if (lazyFrames.length) {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                e.target.src = e.target.dataset.src;
+                io.unobserve(e.target);
+              }
+            });
+          }, { rootMargin: '200px' });
+          lazyFrames.forEach(f => io.observe(f));
+        }
+      }
+    } catch (err) { console.error('Lazy iframe falló:', err); }
+
+    try {
+      /* ISOTIPO HERO FADE ON SCROLL */
+      const heroBgIsotipo = document.getElementById('heroBgIsotipo');
+      window.addEventListener('scroll', () => {
+        if (heroBgIsotipo) {
+          const fade = Math.max(0, 1 - (window.scrollY / (window.innerHeight * 0.55)));
+          heroBgIsotipo.style.opacity = 0.08 * fade;
+        }
+      });
+    } catch (err) { console.error('Isotipo fade falló:', err); }
+
+    try {
+      /* NAV SCROLL HIDE */
+      let lastY = 0;
+      window.addEventListener('scroll', () => {
+        const nav = document.getElementById('nav');
+        if (!nav) return;
+        const y = window.scrollY;
+        nav.style.transform = (y > lastY && y > 80) ? 'translateY(-100%)' : 'translateY(0)';
+        lastY = y;
+      });
+    } catch (err) { console.error('Nav scroll hide falló:', err); }
+
+    try {
+      /* SCROLL ANIMATIONS */
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(el => {
+            if (el.isIntersecting) {
+              el.target.classList.add('visible');
+              observer.unobserve(el.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+      } else {
+        // Sin soporte: mostrar todo directo, sin animación
+        document.querySelectorAll('[data-animate]').forEach(el => el.classList.add('visible'));
+      }
+    } catch (err) { console.error('Scroll animations fallaron:', err); }
+
+
+
+    try {
+      /* MODULOS EXTRA — close on mobile, open on desktop */
+      if (window.innerWidth <= 768) {
+        var modExtra = document.querySelector('.modulos-extra-toggle');
+        if (modExtra) modExtra.removeAttribute('open');
+      }
+    } catch (err) { console.error('Modulos extra falló:', err); }
+
+    try {
+      /* FAQ ACCORDION */
+      document.querySelectorAll('.faq-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+          try {
+            const expanded = btn.getAttribute('aria-expanded') === 'true';
+            const body = document.getElementById(btn.getAttribute('aria-controls'));
+            const inner = body.querySelector('.faq-body-inner');
+            btn.setAttribute('aria-expanded', String(!expanded));
+            body.style.maxHeight = expanded ? '0' : inner.scrollHeight + 'px';
+            btn.querySelector('.faq-icon').textContent = expanded ? '+' : '×';
+          } catch (err) { console.error('FAQ toggle falló:', err); }
         });
-      }, { passive: true });
-    })();
+      });
+    } catch (err) { console.error('FAQ accordion falló:', err); }
+
+    try {
+      /* QUOTES SCROLLBAR */
+      (function() {
+        var grid = document.querySelector('.quotes-grid');
+        var thumb = document.getElementById('quotesScrollThumb');
+        if (!grid || !thumb) return;
+        function updateThumb() {
+          var ratio = grid.scrollLeft / (grid.scrollWidth - grid.clientWidth);
+          var trackW = thumb.parentElement.offsetWidth;
+          var thumbW = Math.max(40, trackW * (grid.clientWidth / grid.scrollWidth));
+          thumb.style.width = thumbW + 'px';
+          thumb.style.transform = 'translateX(' + (ratio * (trackW - thumbW)) + 'px)';
+        }
+        grid.addEventListener('scroll', updateThumb, { passive: true });
+        window.addEventListener('resize', updateThumb);
+        updateThumb();
+      })();
+    } catch (err) { console.error('Quotes scrollbar falló:', err); }
   </script>
 
 </body>

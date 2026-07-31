@@ -570,19 +570,6 @@
       transform: translateY(-1px);
     }
 
-    /* ── Calendly embed ── */
-    .calendly-wrap {
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      overflow: hidden;
-      min-height: 900px;
-    }
-    .calendly-inline-widget {
-      min-width: 100%;
-      height: 900px;
-      border: none;
-    }
 
     /* ── Disqualified ── */
     .disq-badge {
@@ -716,8 +703,6 @@
       .nav-row .btn-back { justify-content: center; }
       .webinar-date-pill { font-size: 0.88rem; }
       .cal-btn { font-size: 0.92rem; padding: 1rem; }
-      .calendly-wrap { min-height: 900px; }
-      .calendly-inline-widget { height: 900px !important; }
 
       /* Page high */
       #page-high { max-width: 100%; border-radius: 0; border-left: none; border-right: none; }
@@ -1076,23 +1061,6 @@
       </div>
     </div>
 
-    <!-- CUPOS DISPONIBLES: descomentar el bloque de abajo y borrar todo lo de arriba (desde result-icon hasta el enlace) para volver a mostrar Calendly
-    <div class="result-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-        <line x1="16" y1="2" x2="16" y2="6"/>
-        <line x1="8" y1="2" x2="8" y2="6"/>
-        <line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-    </div>
-    <h2 class="result-title">¡Excelente, <span id="highNombre"></span>!</h2>
-    <p class="result-body">Recibimos tu información. El siguiente paso es agendar una llamada con nuestro equipo para conocerte mejor y explicarte cómo podemos ayudarte a conseguir tu trabajo remoto.</p>
-    <div class="calendly-wrap">
-      <div class="calendly-inline-widget" data-url="https://calendly.com/hello-nwave/discovery-call?hide_gdpr_banner=1&background_color=12161b&text_color=ffffff&primary_color=FC7342" style="min-width:100%;height:900px;"></div>
-      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-    </div>
-    -->
-
     <!-- Bloque: tomar acción hoy -->
     <div style="margin-top:1.5rem;padding:1.5rem;border:1.5px solid rgba(252,115,66,0.4);border-radius:16px;background:rgba(252,115,66,0.06);text-align:left;">
       <p style="margin:0 0 0.4rem;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">¿Listo/a para tomar acción?</p>
@@ -1246,15 +1214,23 @@
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/intlTelInput.min.js"></script>
 <script>
   // ── intl-tel-input init ──
+  // Si la librería (CDN externo) no cargó, itiInstance queda undefined y
+  // validateStep(1) usa el fallback del input crudo — no debe romper nada más.
   let itiInstance;
   document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('whatsapp');
-    itiInstance = window.intlTelInput(input, {
-      initialCountry: 'mx',
-      preferredCountries: ['mx', 'co', 'ar', 'us', 'es', 've', 'pe', 'cl', 'ec', 'bo'],
-      separateDialCode: true,
-      utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/utils.js',
-    });
+    try {
+      const input = document.getElementById('whatsapp');
+      if (input && typeof window.intlTelInput === 'function') {
+        itiInstance = window.intlTelInput(input, {
+          initialCountry: 'mx',
+          preferredCountries: ['mx', 'co', 'ar', 'us', 'es', 've', 'pe', 'cl', 'ec', 'bo'],
+          separateDialCode: true,
+          utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/utils.js',
+        });
+      }
+    } catch (err) {
+      console.error('intl-tel-input no cargó, usando fallback de input crudo:', err);
+    }
   });
 
   // ── State ──
@@ -1325,7 +1301,9 @@
       else { setErr('err-correo', false); setInputErr('correo', false); answers.correo = e; }
 
       const wFull = itiInstance ? itiInstance.getNumber() : w;
-      const wValid = itiInstance ? itiInstance.isValidNumber() : !!w;
+      // Fallback si intl-tel-input no cargó: exige solo dígitos, largo de
+      // teléfono real (7-15), en vez de aceptar cualquier texto no vacío.
+      const wValid = itiInstance ? itiInstance.isValidNumber() : /^\d{7,15}$/.test(w.replace(/[^\d]/g, ''));
       if (!wValid) { setErr('err-whatsapp', true); setInputErr('whatsapp', true); ok = false; }
       else         { setErr('err-whatsapp', false); setInputErr('whatsapp', false); answers.whatsapp = wFull; }
     }
@@ -1406,25 +1384,35 @@
     btn.disabled = true;
     btn.textContent = 'Preparando tu plan…';
 
-    if (typeof gtag === 'function') {
-      gtag('event', 'form_submit', { compromiso: answers.compromiso, inversion: answers.inversion });
+    // Todo el tracking (GA4, Meta Pixel, Advanced Matching) va envuelto en
+    // try/catch, cada pieza por separado. El registro real del lead
+    // (sendToSheets) NUNCA debe bloquearse por un fallo de tracking —
+    // ya pasó una vez (30 jul 2026) y perdimos leads reales por esto.
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'form_submit', { compromiso: answers.compromiso, inversion: answers.inversion });
+      }
+    } catch (err) {
+      console.error('GA4 form_submit falló:', err);
     }
 
-    if (typeof fbq === 'function') {
-      // Advanced Matching: sube el Event Match Quality hasheando email/teléfono antes de trackear.
-      // Envuelto en try/catch: si crypto.subtle falla (in-app browsers restrictivos, contexto
-      // inseguro, navegadores viejos) el submit real NUNCA debe bloquearse por esto.
-      try {
-        const emHash = answers.correo ? await sha256Hex(answers.correo.trim().toLowerCase()) : undefined;
-        const phHash = answers.whatsapp ? await sha256Hex(answers.whatsapp.replace(/[^\d]/g, '')) : undefined;
-        fbq('init', '2100703077340387', { em: emHash, ph: phHash });
-      } catch (err) {
-        console.error('Advanced Matching falló, continuando sin hash:', err);
+    try {
+      if (typeof fbq === 'function') {
+        // Advanced Matching: sube el Event Match Quality hasheando email/teléfono.
+        try {
+          const emHash = answers.correo ? await sha256Hex(answers.correo.trim().toLowerCase()) : undefined;
+          const phHash = answers.whatsapp ? await sha256Hex(answers.whatsapp.replace(/[^\d]/g, '')) : undefined;
+          fbq('init', '2100703077340387', { em: emHash, ph: phHash });
+        } catch (err) {
+          console.error('Advanced Matching falló, continuando sin hash:', err);
+        }
+        fbq('track', 'CompleteRegistration', {
+          content_name: 'Formulario Newave',
+          status: answers.compromiso === 'Listo para tomar accion'
+        });
       }
-      fbq('track', 'CompleteRegistration', {
-        content_name: 'Formulario Newave',
-        status: answers.compromiso === 'Listo para tomar accion'
-      });
+    } catch (err) {
+      console.error('Meta Pixel CompleteRegistration falló:', err);
     }
 
     sendToSheets();
