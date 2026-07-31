@@ -82,7 +82,12 @@ function doGet(e) {
     if (compromiso !== 'Buscando, no listo aun') {
       queueSequence(nombre, correo, lastRow);
     }
-    queueWhatsapp(nombre, whatsapp, lastRow);
+    // Pausado 30 jul 2026 a petición de Santiago: sospecha de que el envío
+    // automático de WhatsApp está bajando los leads. Los datos del 28-29 jul
+    // no muestran esa correlación (29 jul fue el día con más leads, con el
+    // WhatsApp activo casi todo el día) — se pausa de todos modos por
+    // precaución. Reactivar descomentando esta línea si se descarta como causa.
+    // queueWhatsapp(nombre, whatsapp, lastRow);
     ensureProcessorTrigger();
 
     return ContentService
