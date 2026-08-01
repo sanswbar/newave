@@ -72,9 +72,43 @@ function doGet(e) {
       track,
       'Registrado',
     ];
-    sheet.appendRow(row);
 
-    const lastRow = sheet.getLastRow();
+    // Lock obligatorio: Apps Script atiende peticiones en paralelo y
+    // appendRow no es atómico entre ejecuciones. Sin esto, dos formularios
+    // enviados en el mismo segundo (normal con campañas activas) pueden
+    // pisarse la fila. Además getLastRow() justo después podría devolver la
+    // fila del OTRO lead y encolarle los correos a la persona equivocada.
+    //
+    // La deduplicación va DENTRO del lock a propósito: el formulario envía el
+    // registro por dos caminos a la vez (fetch + imagen) para que ningún lead
+    // se pierda, y esos dos llegan casi simultáneos. Comprobar el duplicado
+    // fuera del lock dejaría pasar ambos.
+    const lock = LockService.getScriptLock();
+    let lastRow;
+    let duplicado = false;
+    try {
+      lock.waitLock(30000);
+
+      const filaPrevia = buscarDuplicadoReciente(sheet, correo);
+      if (filaPrevia) {
+        duplicado = true;
+        lastRow = filaPrevia;
+      } else {
+        sheet.appendRow(row);
+        lastRow = sheet.getLastRow();
+      }
+    } finally {
+      lock.releaseLock();
+    }
+
+    // Si ya existía, no se vuelve a encolar la secuencia de correos: el lead
+    // recibiría la serie completa por duplicado.
+    if (duplicado) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', duplicado: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     const compromiso = e.parameter.compromiso || '';
     // No gastar cuota de Gmail en quien de entrada dijo que solo está
     // buscando, aún no listo — se manda solo a los dos niveles de mayor
@@ -151,6 +185,46 @@ function ensureProcessorTrigger() {
     .create();
 }
 
+// Ventana para considerar dos registros del mismo correo como el mismo envío.
+// El formulario manda fetch + imagen casi a la vez, y el reintento diferido de
+// localStorage puede llegar bastante después si la persona cerró la pestaña.
+// 10 min cubre ambos casos sin bloquear a quien vuelve a aplicar otro día.
+const VENTANA_DUPLICADO_MS = 10 * 60 * 1000;
+
+// Devuelve la fila de un registro reciente con el mismo correo, o 0 si no hay.
+// Solo mira las últimas filas: el duplicado siempre está al final, y así no se
+// recorre todo el sheet en cada submit.
+function buscarDuplicadoReciente(sheet, correo) {
+  if (!correo) return 0;
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return 0;
+
+  const FILAS_A_REVISAR = 30;
+  const desde = Math.max(2, lastRow - FILAS_A_REVISAR + 1);
+  const numFilas = lastRow - desde + 1;
+  if (numFilas < 1) return 0;
+
+  // Columnas 1..3 = Fecha, Nombre, Correo
+  const datos = sheet.getRange(desde, COL_FECHA, numFilas, COL_CORREO).getValues();
+  const target = correo.trim().toLowerCase();
+  const ahora = Date.now();
+
+  for (let i = datos.length - 1; i >= 0; i--) {
+    const correoFila = datos[i][COL_CORREO - 1];
+    if (!correoFila || correoFila.toString().trim().toLowerCase() !== target) continue;
+
+    const fecha = datos[i][COL_FECHA - 1];
+    // Si la fecha no es una fecha válida, se prefiere NO tratarlo como
+    // duplicado: registrar de más es mejor que perder el lead.
+    if (!(fecha instanceof Date) || isNaN(fecha.getTime())) continue;
+
+    if (ahora - fecha.getTime() <= VENTANA_DUPLICADO_MS) {
+      return desde + i;
+    }
+  }
+  return 0;
+}
+
 // Encuentra la fila actual de un lead por su correo (el más reciente).
 // Se busca por correo, no por índice, para que borrar filas nunca desincronice.
 function buscarFilaPorCorreo(sheet, correo) {
@@ -162,7 +236,11 @@ function buscarFilaPorCorreo(sheet, correo) {
   const target = correo.trim().toLowerCase();
 
   for (let i = correos.length - 1; i >= 1; i--) {
-    if (correos[i][0].toString().trim().toLowerCase() === target) {
+    // Guard contra celdas vacías o con error de fórmula: sin esto, un
+    // .toString() sobre null lanza excepción y tumba processQueue entero,
+    // dejando sin correos a TODOS los leads pendientes de esa corrida.
+    const val = correos[i][0];
+    if (val && val.toString().trim().toLowerCase() === target) {
       return i + 1;
     }
   }
@@ -193,7 +271,15 @@ function processQueue() {
     if (key.indexOf('seq_') !== 0) continue;
     if (enviados >= MAX_POR_CORRIDA) break; // throttle: rest waits for next run
 
-    const data = JSON.parse(allProps[key]);
+    // Una clave con JSON corrupto no debe tumbar la cola entera: se descarta
+    // y se sigue con los demás leads.
+    let data;
+    try {
+      data = JSON.parse(allProps[key]);
+    } catch (err) {
+      props.deleteProperty(key);
+      continue;
+    }
     if (now < data.dueAt) continue; // not due yet
 
     const row = buscarFilaPorCorreo(sheet, data.correo);
@@ -225,7 +311,13 @@ function processQueue() {
   for (const key in allProps) {
     if (key.indexOf('wa_') !== 0) continue;
 
-    const data = JSON.parse(allProps[key]);
+    let data;
+    try {
+      data = JSON.parse(allProps[key]);
+    } catch (err) {
+      props.deleteProperty(key);
+      continue;
+    }
     Logger.log('[WA queue] ' + key + ' dueAt=' + data.dueAt + ' now=' + now + ' pendiente=' + (now < data.dueAt));
     if (now < data.dueAt) continue; // not due yet
 

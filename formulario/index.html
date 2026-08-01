@@ -1381,8 +1381,20 @@
     if (!validateStep(6)) return;
 
     const btn = document.getElementById('btnSubmit');
+    const textoOriginal = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Preparando tu plan…';
+
+    // ORDEN DELIBERADO: el registro del lead va PRIMERO, antes de cualquier
+    // tracking. El 30 jul 2026 se perdieron leads porque una excepción en el
+    // hasheo de Advanced Matching detenía la función antes de llegar aquí.
+    // Con el registro al frente, ningún fallo de pixel/analytics puede
+    // impedir que el lead llegue al sheet, pase lo que pase más abajo.
+    try {
+      sendToSheets();
+    } catch (err) {
+      console.error('sendToSheets falló:', err);
+    }
 
     // Todo el tracking (GA4, Meta Pixel, Advanced Matching) va envuelto en
     // try/catch, cada pieza por separado. El registro real del lead
@@ -1415,8 +1427,16 @@
       console.error('Meta Pixel CompleteRegistration falló:', err);
     }
 
-    sendToSheets();
-    showResult();
+    // Si showResult() truena, el botón no puede quedarse muerto en
+    // "Preparando tu plan…" — la persona se quedaría sin salida y sin
+    // saber que su registro sí se envió.
+    try {
+      showResult();
+    } catch (err) {
+      console.error('showResult falló:', err);
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
   }
 
   function sendToSheets() {
@@ -1437,26 +1457,73 @@
 
     const url = APPS_SCRIPT_URL + '?' + params.toString();
 
-    function iframefallback() {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
-      document.body.appendChild(iframe);
-      setTimeout(() => iframe.remove(), 5000);
+    // Red de seguridad: se guarda la URL del registro ANTES de enviarla. Si
+    // los dos caminos de abajo fallan (sin red, navegador cortando la
+    // petición al navegar), el lead no se pierde: queda en el navegador y
+    // reintentaPendiente() lo reenvía en la siguiente visita. Se borra al
+    // confirmar el envío más abajo.
+    try {
+      localStorage.setItem('nw_registro_pendiente', url);
+    } catch (err) {
+      // localStorage puede estar bloqueado (modo privado, in-app browsers).
+      // No es motivo para detener el envío real.
+      console.error('No se pudo guardar el respaldo local:', err);
     }
 
-    fetch(url, { method: 'GET', mode: 'no-cors' })
-      .catch(() => {
-        setTimeout(() => {
-          fetch(url, { method: 'GET', mode: 'no-cors' })
-            .catch(() => {
-              setTimeout(() => {
-                fetch(url, { method: 'GET', mode: 'no-cors' })
-                  .catch(iframefallback);
-              }, 3000);
-            });
-        }, 3000);
-      });
+    // Doble envío en paralelo, a propósito. Con mode:'no-cors' la respuesta es
+    // opaca: si Apps Script truena por dentro (500, cuota, error de script) el
+    // fetch RESUELVE igual y el .catch nunca corre, así que no hay forma fiable
+    // de detectar el fallo desde aquí para reintentar. Además showResult() corre
+    // inmediatamente después y la persona puede navegar a Skool en 1-2s, lo que
+    // cancelaría cualquier reintento diferido.
+    //
+    // Por eso: keepalive en el fetch (sobrevive a la navegación) + una imagen
+    // que dispara el mismo GET por un camino independiente. Si uno de los dos
+    // llega, el lead queda registrado. En el peor caso se duplica una fila, que
+    // es infinitamente preferible a perder el lead (pasó el 30 jul 2026).
+    try {
+      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {});
+    } catch (err) {
+      console.error('fetch de registro falló:', err);
+    }
+
+    try {
+      new Image().src = url;
+    } catch (err) {
+      console.error('respaldo por imagen falló:', err);
+    }
+
+    // Se limpia el respaldo con un margen para que las peticiones alcancen a
+    // salir. Si la persona navega antes, la clave sobrevive y se reintenta en
+    // la siguiente visita — un duplicado ocasional es preferible a perder el
+    // lead.
+    setTimeout(() => {
+      try {
+        localStorage.removeItem('nw_registro_pendiente');
+      } catch (err) {}
+    }, 4000);
+  }
+
+  // Si un registro anterior quedó a medias (se cerró la pestaña, se fue el
+  // internet), se reenvía al volver a cargar el formulario.
+  function reintentarRegistroPendiente() {
+    let pendiente = null;
+    try {
+      pendiente = localStorage.getItem('nw_registro_pendiente');
+    } catch (err) {
+      return; // localStorage bloqueado, nada que hacer
+    }
+    if (!pendiente) return;
+
+    try {
+      new Image().src = pendiente;
+    } catch (err) {
+      console.error('reintento de registro pendiente falló:', err);
+    }
+
+    try {
+      localStorage.removeItem('nw_registro_pendiente');
+    } catch (err) {}
   }
 
   // Marca en el Sheet que el lead dio click en "Unirme ahora" (columna M)
@@ -1695,34 +1762,8 @@
 
   // Init
   updateProgress(1);
+  reintentarRegistroPendiente();
 
-</script>
-
-<script>
-  (function() {
-    // Cupos limitados: arranca alto el lunes y baja durante la semana, sin llegar a 0.
-    // Refleja la capacidad real de acompañamiento por semana.
-    var CUPOS_LUNES = 12;   // lunes
-    var CUPOS_MIN   = 3;    // nunca baja de aquí (domingo)
-    var day = new Date().getDay(); // 0=domingo ... 6=sábado
-    // días transcurridos desde el lunes (lunes=0, martes=1, ... domingo=6)
-    var desdeLunes = (day + 6) % 7;
-    var cupos = CUPOS_LUNES - Math.round(desdeLunes * (CUPOS_LUNES - CUPOS_MIN) / 6);
-    if (cupos < CUPOS_MIN) cupos = CUPOS_MIN;
-    var elCupos = document.getElementById('cuposNum');
-    if (elCupos) elCupos.textContent = cupos;
-
-    // "Personas viendo ahora": siempre por encima de los cupos disponibles
-    // (si no, resta urgencia en vez de sumarla), variando un poco según la
-    // hora del día y con algo de aleatoriedad para que no se vea fijo.
-    var hour = new Date().getHours();
-    var actividadPorHora = [0.3, 0.2, 0.15, 0.15, 0.15, 0.2, 0.35, 0.55, 0.7, 0.8, 0.85, 0.9, 0.95, 0.9, 0.85, 0.8, 0.85, 0.95, 1, 0.95, 0.9, 0.75, 0.6, 0.4];
-    var margenExtra = Math.round(15 * actividadPorHora[hour]); // 4-15 según hora
-    var variacion = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
-    var viendo = cupos + margenExtra + variacion;
-    var elViendo = document.getElementById('viendoNum');
-    if (elViendo) elViendo.textContent = viendo;
-  })();
 </script>
 
 </body>
