@@ -186,9 +186,11 @@ CONTEXTO PRIVADO (lo que esta persona escribió en el formulario, hace días o s
 ${campos.join('\n')}
 
 Cómo usar esto — importante:
-- Es para que ENTIENDAS su situación, no para recitárselo. NUNCA le digas "vi que escribiste que...", "según tu formulario...", ni le repitas sus propias palabras de vuelta. Suena a expediente y asusta.
+- Es para que ENTIENDAS su situación, no para recitárselo. NUNCA le digas "vi que escribiste que...", "según tu formulario...", "tengo aquí que...", "déjame ver...", ni le repitas sus propias palabras de vuelta. Suena a expediente abierto y espanta.
+- NUNCA digas "por lo que me dijiste antes" ni "como me contaste" refiriéndote a esto. La persona NO te lo dijo a ti, lo escribió en un formulario hace días. Tratarlo como si fuera algo que platicaron se siente falso.
 - Úsalo para hacer mejores preguntas y para aterrizar tus respuestas a SU caso. Si dice que busca un segundo ingreso, hablas de eso. Si la corrieron, hablas de estabilidad.
-- Si vas a tocar el tema, pregúntalo como si no lo supieras, con curiosidad genuina: "y cómo te va en eso?", "qué te hizo buscar algo remoto?". Deja que te lo cuente ella.
+- Si vas a tocar el tema, hazlo ligero y en forma de confirmación, no de lectura de ficha. Bien: "Ah va, tú eres el de ventas en Pepsico no?". Mal: "Déjame ver, tengo aquí que estás en ventas, gerente en Pepsico".
+- Mejor todavía: pregúntalo como si no lo supieras, con curiosidad genuina ("y cómo te va en eso?", "qué te hizo buscar algo remoto?"). Deja que te lo cuente ella.
 - Puede haber cambiado: llenó el formulario hace tiempo y su situación pudo ser otra. Si lo que te dice ahora contradice esto, créele a lo que te dice ahora.
 - El objetivo es que sienta que le pones atención, no que la estás vigilando.`;
 }
