@@ -18,7 +18,47 @@ async function asegurarTabla() {
     );
   `;
   await sql`CREATE INDEX IF NOT EXISTS idx_mensajes_numero ON mensajes (numero);`;
+
+  // Datos del formulario, para que el bot sepa con quién habla antes de que
+  // la persona se lo cuente. El número es la llave: es lo único que tenemos
+  // en común entre el formulario y quien escribe por WhatsApp.
+  await sql`
+    CREATE TABLE IF NOT EXISTS leads (
+      numero TEXT PRIMARY KEY,
+      nombre TEXT,
+      trabajo TEXT,
+      razon TEXT,
+      ingles TEXT,
+      compromiso TEXT,
+      creado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
   tablaLista = true;
+}
+
+// Guarda (o actualiza) los datos del formulario de un lead. Si la persona
+// vuelve a llenar el formulario, se queda la versión más reciente.
+async function guardarLead({ numero, nombre, trabajo, razon, ingles, compromiso }) {
+  await asegurarTabla();
+  await sql`
+    INSERT INTO leads (numero, nombre, trabajo, razon, ingles, compromiso)
+    VALUES (${numero}, ${nombre}, ${trabajo}, ${razon}, ${ingles}, ${compromiso})
+    ON CONFLICT (numero) DO UPDATE SET
+      nombre     = EXCLUDED.nombre,
+      trabajo    = EXCLUDED.trabajo,
+      razon      = EXCLUDED.razon,
+      ingles     = EXCLUDED.ingles,
+      compromiso = EXCLUDED.compromiso,
+      creado_en  = NOW();
+  `;
+}
+
+// Busca los datos del formulario de un número. Devuelve null si no hay
+// (ej. alguien que escribe sin haber llenado el formulario).
+async function obtenerLead(numero) {
+  await asegurarTabla();
+  const { rows } = await sql`SELECT * FROM leads WHERE numero = ${numero} LIMIT 1;`;
+  return rows[0] || null;
 }
 
 // Guarda un mensaje (rol: 'user' o 'assistant') asociado a un número.
@@ -65,4 +105,4 @@ async function borrarConversacion(numero) {
   await sql`DELETE FROM mensajes WHERE numero = ${numero};`;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion };
+module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead };

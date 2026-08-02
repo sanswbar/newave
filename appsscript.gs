@@ -122,6 +122,18 @@ function doGet(e) {
     // WhatsApp activo casi todo el día) — se pausa de todos modos por
     // precaución. Reactivar descomentando esta línea si se descarta como causa.
     // queueWhatsapp(nombre, whatsapp, lastRow);
+
+    // Le pasa al bot lo que la persona escribió, para que si escribe por
+    // WhatsApp ya sepa quién es y no pregunte de cero lo que ya contestó.
+    enviarLeadAlBot({
+      nombre:     nombre,
+      whatsapp:   whatsapp,
+      trabajo:    e.parameter.trabajo || '',
+      razon:      e.parameter.razon || '',
+      ingles:     e.parameter.ingles || '',
+      compromiso: compromiso,
+    });
+
     ensureProcessorTrigger();
 
     return ContentService
@@ -131,6 +143,34 @@ function doGet(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Manda los datos del formulario al bot de WhatsApp. Va envuelto en try/catch
+// a propósito: si el bot está caído o cambia de URL, el lead ya quedó guardado
+// en el sheet y no se debe perder el registro por esto. Falla en silencio
+// (solo log) porque este envío es un extra, no parte del registro del lead.
+function enviarLeadAlBot(datos) {
+  try {
+    const props  = PropertiesService.getScriptProperties();
+    const url    = props.getProperty('BOT_LEAD_URL');
+    const secret = props.getProperty('BOT_LEAD_SECRET');
+    if (!url || !secret) return; // no configurado todavía, no es un error
+
+    const resp = UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { 'x-lead-secret': secret },
+      payload: JSON.stringify(datos),
+      muteHttpExceptions: true,
+    });
+
+    const code = resp.getResponseCode();
+    if (code >= 300) {
+      console.error('enviarLeadAlBot: HTTP ' + code + ' — ' + resp.getContentText());
+    }
+  } catch (err) {
+    console.error('enviarLeadAlBot falló: ' + err);
   }
 }
 

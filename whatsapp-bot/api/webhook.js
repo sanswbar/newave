@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { guardarMensaje, obtenerConversacion } = require('./db');
+const { guardarMensaje, obtenerConversacion, obtenerLead } = require('./db');
 
 // ─── CONFIG (todo vive en variables de entorno de Vercel, NO en el código) ───
 const VERIFY_TOKEN   = process.env.VERIFY_TOKEN;          // el que tú inventes para verificar el webhook
@@ -113,6 +113,7 @@ async function generarRespuesta(from, text, name) {
   const nombreUsable = esNombreReal(name) ? name.trim().split(/\s+/)[0] : null;
   const systemFull = SYSTEM_PROMPT +
     (nombreUsable ? `\n\nEl nombre de esta persona es: ${nombreUsable}. Úsalo con naturalidad y con moderación (no en cada mensaje, no en cada saludo si ya la saludaste antes en esta conversación) — nunca uses el apellido, solo el primer nombre.` : '\n\nNo uses ningún nombre para dirigirte a esta persona (el que tenemos guardado son iniciales o no es un nombre real) — salúdala sin nombre, ej. "¡Hola! ¿Qué duda tienes?" en vez de "¡Hola X!".') +
+    await contextoDelLead(from) +
     `\n\nLink para empezar el trial: ${SKOOL_LINK}`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -154,6 +155,42 @@ async function generarRespuesta(from, text, name) {
   guardarMensaje(from, name, 'assistant', reply).catch(err => console.error('[DB] Error guardando mensaje assistant:', err));
 
   return reply;
+}
+
+// Lo que la persona escribió en el formulario, para que el bot no pregunte
+// de cero algo que ya contestó. Se le pasa a Claude como contexto de fondo,
+// NO como un guion que deba recitar (ver instrucciones abajo).
+async function contextoDelLead(from) {
+  let lead;
+  try {
+    lead = await obtenerLead(from);
+  } catch (err) {
+    console.error('[contextoDelLead] Error:', err);
+    return ''; // sin contexto el bot sigue funcionando igual que antes
+  }
+
+  if (!lead) return '';
+
+  const campos = [
+    lead.trabajo    && `A qué se dedica: ${lead.trabajo}`,
+    lead.razon      && `Por qué busca trabajo remoto: ${lead.razon}`,
+    lead.ingles     && `Nivel de inglés: ${lead.ingles}`,
+    lead.compromiso && `Qué tan listo está para empezar: ${lead.compromiso}`,
+  ].filter(Boolean);
+
+  if (!campos.length) return '';
+
+  return `
+
+CONTEXTO PRIVADO (lo que esta persona escribió en el formulario, hace días o semanas):
+${campos.join('\n')}
+
+Cómo usar esto — importante:
+- Es para que ENTIENDAS su situación, no para recitárselo. NUNCA le digas "vi que escribiste que...", "según tu formulario...", ni le repitas sus propias palabras de vuelta. Suena a expediente y asusta.
+- Úsalo para hacer mejores preguntas y para aterrizar tus respuestas a SU caso. Si dice que busca un segundo ingreso, hablas de eso. Si la corrieron, hablas de estabilidad.
+- Si vas a tocar el tema, pregúntalo como si no lo supieras, con curiosidad genuina: "y cómo te va en eso?", "qué te hizo buscar algo remoto?". Deja que te lo cuente ella.
+- Puede haber cambiado: llenó el formulario hace tiempo y su situación pudo ser otra. Si lo que te dice ahora contradice esto, créele a lo que te dice ahora.
+- El objetivo es que sienta que le pones atención, no que la estás vigilando.`;
 }
 
 // Reconstruye el historial de esta persona desde Postgres cuando la
