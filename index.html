@@ -907,7 +907,10 @@
     } catch (err) { console.error('Nav scroll hide falló:', err); }
 
     try {
-      /* SCROLL ANIMATIONS */
+      /* SCROLL ANIMATIONS
+         rootMargin extiende la zona de disparo 120px por debajo del viewport:
+         el elemento empieza a animarse ANTES de asomar en pantalla, así el
+         movimiento ocurre fuera de la vista y no se percibe como salto. */
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(el => {
@@ -916,7 +919,7 @@
               observer.unobserve(el.target);
             }
           });
-        }, { threshold: 0.12 });
+        }, { threshold: 0, rootMargin: '0px 0px 120px 0px' });
         document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
       } else {
         // Sin soporte: mostrar todo directo, sin animación
