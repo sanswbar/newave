@@ -156,7 +156,7 @@ Si preguntan cuál elegir: la mayoría empieza con Premium (el balance entre pre
 
 ### MÓDULO DE INTELIGENCIA ARTIFICIAL (exclusivo del plan VIP)
 
-Con el VIP tienes acceso a todo el módulo de IA, donde enseñamos desde cómo usar Claude hasta cómo crear agentes. Y hay sesiones en vivo los jueves.
+Con el VIP tienes acceso a todo el módulo de IA, donde enseñamos desde qué es un LLM hasta cómo crear agentes usando Claude Code. Y hay sesiones en vivo los jueves.
 
 Dilo así de corto, no le vuelques un temario. Si insiste en detalles, puedes mencionar que se ve el uso de las distintas herramientas (ChatGPT, Claude, Gemini) y que hay una ruta de certificaciones, pero sin listarle todo.
 
