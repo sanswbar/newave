@@ -32,6 +32,11 @@ const MAX_POR_CORRIDA = 10;
 // Delay before sending the WhatsApp welcome template (ms after signup)
 const WHATSAPP_DELAY = 2 * 60 * 1000; // 2 min, same as email 1
 
+// Si un envío encolado lleva más de esto esperando, se descarta en vez de
+// mandarse. Un "hola, vi que llenaste el formulario" que llega 3 días después
+// se lee como spam, no como bienvenida.
+const MAX_RETRASO_WHATSAPP = 6 * 60 * 60 * 1000; // 6 horas
+
 // WhatsApp Cloud API config — token y phone number id viven en Script
 // Properties (Project Settings > Script Properties), no aquí en el código:
 //   WA_TOKEN            = token permanente del System User
@@ -116,12 +121,15 @@ function doGet(e) {
     if (compromiso !== 'Buscando, no listo aun') {
       queueSequence(nombre, correo, lastRow);
     }
-    // Pausado 30 jul 2026 a petición de Santiago: sospecha de que el envío
-    // automático de WhatsApp está bajando los leads. Los datos del 28-29 jul
-    // no muestran esa correlación (29 jul fue el día con más leads, con el
-    // WhatsApp activo casi todo el día) — se pausa de todos modos por
-    // precaución. Reactivar descomentando esta línea si se descarta como causa.
-    // queueWhatsapp(nombre, whatsapp, lastRow);
+    // Reactivado 3 ago 2026, pero solo para el nivel de interés más alto.
+    // Se pausó el 30 jul por sospecha de que bajaba los leads; los datos no
+    // confirmaron esa correlación, así que se vuelve a encender de forma
+    // gradual en vez de a todo el mundo de golpe. Si estos envíos se
+    // comportan bien, ampliar a 'Interesado en conocer' (el mismo criterio
+    // que usan los correos arriba). Si algo sale mal, volver a comentar.
+    if (compromiso === 'Listo para tomar accion') {
+      queueWhatsapp(nombre, whatsapp, lastRow);
+    }
 
     // Le pasa al bot lo que la persona escribió, para que si escribe por
     // WhatsApp ya sepa quién es y no pregunte de cero lo que ya contestó.
@@ -361,6 +369,16 @@ function processQueue() {
     Logger.log('[WA queue] ' + key + ' dueAt=' + data.dueAt + ' now=' + now + ' pendiente=' + (now < data.dueAt));
     if (now < data.dueAt) continue; // not due yet
 
+    // Un mensaje de bienvenida que llega días tarde es peor que no mandarlo:
+    // la persona ya no se acuerda del formulario y se siente spam. Si la cola
+    // se atoró (pausa, error, cuota), se descarta en vez de enviarse tarde.
+    if (now - data.dueAt > MAX_RETRASO_WHATSAPP) {
+      Logger.log('[WA queue] descartado por viejo: ' + key + ' (' + Math.round((now - data.dueAt) / 3600000) + ' h de retraso)');
+      if (data.row) agregarEstatus(sheet, data.row, 'WhatsApp no enviado (encolado muy viejo)');
+      props.deleteProperty(key);
+      continue;
+    }
+
     try {
       enviarPlantillaWhatsapp(data.nombre, data.whatsapp);
       if (data.row) agregarEstatus(sheet, data.row, 'WhatsApp enviado');
@@ -419,9 +437,16 @@ function enviarPlantillaWhatsapp(nombre, whatsapp) {
 }
 
 // Strips non-digit characters and ensures the Mexico country code (52) is present.
+// El "1" después del 52 se quita: mucha gente escribe su número como
+// +52 1 55..., pero la Cloud API espera 52 + los 10 dígitos. Sin esto el envío
+// falla o va a un número distinto al que luego contesta por WhatsApp, y el bot
+// no encuentra el contexto del lead (que se guarda ya sin ese "1").
 function normalizarNumero(numero) {
   let digits = numero.toString().replace(/\D/g, '');
   if (digits.length === 10) digits = '52' + digits; // bare 10-digit MX number
+  if (digits.startsWith('521') && digits.length === 13) {
+    digits = '52' + digits.slice(3);
+  }
   return digits;
 }
 
