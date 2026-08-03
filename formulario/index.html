@@ -980,9 +980,9 @@
       <p id="lowPlanNombre" style="margin:0;font-size:1.1rem;font-weight:700;color:var(--white)"></p>
     </div>
 
-    <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Estamos listos para ayudarte a tomar el control de tu carrera.</p>
+    <p id="lowIntro" style="font-size:0.95rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:1.25rem;text-align:center">Estamos listos para ayudarte a tomar el control de tu carrera.</p>
 
-    <a id="lowPlanBtn" href="https://www.skool.com/newave/about" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
+    <a id="lowPlanBtn" href="https://www.skool.com/newave/plans" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:block;text-decoration:none;margin-top:0"></a>
 
     <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);text-align:center;margin:0.9rem 0 0">Nos vemos dentro.</p>
 
@@ -1563,21 +1563,24 @@
       const plan = planMap[answers.inversion] || { nombre: '' };
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
 
-      const btn = document.getElementById('lowPlanBtn');
-      if (listo) {
-        btn.textContent = 'Comenzar prueba gratis →';
-        btn.href = 'https://www.skool.com/newave/plans';
-        btn.addEventListener('click', function() {
-          if (window.clarity) clarity('event', 'click_unirme_ahora');
-          registrarClickPlan();
-        }, { once: true });
-      } else {
-        btn.textContent = 'Conocer el programa';
-        btn.href = 'https://www.skool.com/newave/about';
-        btn.addEventListener('click', function() {
-          if (window.clarity) clarity('event', 'click_conocer_programa');
-        }, { once: true });
+      // Quien no se declaró listo llega igual a /plans, pero conviene decirle
+      // que puede entrar a mirar sin pagar todavía.
+      const intro = document.getElementById('lowIntro');
+      if (intro && !listo) {
+        intro.textContent = 'Puedes entrar a ver el programa por dentro con los 7 días de prueba gratis y decidir con calma.';
       }
+
+      // Todos van a /plans: ahí es donde se activa la prueba gratis. Mandar a
+      // /about a quien ya llenó los 6 pasos lo obligaba a empezar de cero, y
+      // esa página no permite iniciar el trial. El copy sí cambia según el
+      // nivel de compromiso, el destino no.
+      const btn = document.getElementById('lowPlanBtn');
+      btn.textContent = 'Comenzar prueba gratis →';
+      btn.href = 'https://www.skool.com/newave/plans';
+      btn.addEventListener('click', function() {
+        if (window.clarity) clarity('event', listo ? 'click_unirme_ahora' : 'click_conocer_programa');
+        registrarClickPlan();
+      }, { once: true });
       btn.style.display = 'block';
 
       show('page-low');
