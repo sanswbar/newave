@@ -41,7 +41,7 @@ const MAX_RETRASO_WHATSAPP = 6 * 60 * 60 * 1000; // 6 horas
 // Properties (Project Settings > Script Properties), no aquí en el código:
 //   WA_TOKEN            = token permanente del System User
 //   WA_PHONE_NUMBER_ID  = Phone Number ID de producción
-const WA_TEMPLATE_NAME = 'nw_bienvenida_lead_v2';
+const WA_TEMPLATE_NAME = 'nw_bienvenida_lead_v3';
 const WA_TEMPLATE_LANG = 'es_MX';
 
 // ─── FORM SUBMISSION ──────────────────────────────────────────────────────
