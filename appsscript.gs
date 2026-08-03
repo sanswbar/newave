@@ -121,13 +121,11 @@ function doGet(e) {
     if (compromiso !== 'Buscando, no listo aun') {
       queueSequence(nombre, correo, lastRow);
     }
-    // Reactivado 3 ago 2026, pero solo para el nivel de interés más alto.
-    // Se pausó el 30 jul por sospecha de que bajaba los leads; los datos no
-    // confirmaron esa correlación, así que se vuelve a encender de forma
-    // gradual en vez de a todo el mundo de golpe. Si estos envíos se
-    // comportan bien, ampliar a 'Interesado en conocer' (el mismo criterio
-    // que usan los correos arriba). Si algo sale mal, volver a comentar.
-    if (compromiso === 'Listo para tomar accion') {
+    // Reactivado 3 ago 2026 (se pausó el 30 jul por sospecha de que bajaba
+    // los leads; los datos no confirmaron esa correlación). Mismo criterio
+    // que los correos de arriba: no se le escribe a quien de entrada dijo
+    // que solo está viendo. Si algo sale mal, volver a comentar esta línea.
+    if (compromiso !== 'Buscando, no listo aun') {
       queueWhatsapp(nombre, whatsapp, lastRow);
     }
 
