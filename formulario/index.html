@@ -12,6 +12,7 @@
   <!-- End Google tag -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080a0d" />
   <title>NEWAVƎ — Formulario de Contacto</title>
   <meta property="og:title" content="NEWAVƎ — Aplica al programa" />
   <meta property="og:description" content="Consigue trabajo remoto internacional y cobra en dólares desde LATAM." />
@@ -371,59 +372,6 @@
       box-shadow: 0 4px 16px rgba(252,115,66,0.4);
     }
 
-    /* ── Cupos limitados ── */
-    .cupos-card {
-      background: linear-gradient(160deg, rgba(252,115,66,0.09), rgba(252,115,66,0.02));
-      border: 1px solid rgba(252,115,66,0.28);
-      border-radius: 16px;
-      padding: 1.15rem 1.35rem;
-      max-width: 340px;
-      margin: 0.5rem auto 1rem;
-    }
-    .viendo-ahora {
-      margin: 0 0 0.6rem;
-      text-align: center; font-size: 0.68rem;
-      color: rgba(255,255,255,0.38);
-      font-weight: 400;
-    }
-    .viendo-ahora #viendoNum {
-      color: rgba(255,255,255,0.55); font-weight: 600;
-    }
-    .cupos-top {
-      display: flex; align-items: center; justify-content: center; gap: 0.45rem;
-      margin-bottom: 0.85rem;
-    }
-    .cupos-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #FC7342;
-      box-shadow: 0 0 0 0 rgba(252,115,66,0.6);
-      animation: cuposPulse 2s infinite;
-    }
-    @keyframes cuposPulse {
-      0%   { box-shadow: 0 0 0 0 rgba(252,115,66,0.55); }
-      70%  { box-shadow: 0 0 0 7px rgba(252,115,66,0); }
-      100% { box-shadow: 0 0 0 0 rgba(252,115,66,0); }
-    }
-    .cupos-label {
-      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.11em;
-      text-transform: uppercase; color: rgba(255,255,255,0.55);
-    }
-    .cupos-num-row {
-      display: flex; align-items: baseline; justify-content: center; gap: 0.5rem;
-      margin-bottom: 0.85rem;
-    }
-    .cupos-num {
-      font-size: 3.4rem; font-weight: 800; color: #FC7342;
-      letter-spacing: -0.03em; line-height: 1;
-    }
-    .cupos-unit {
-      font-size: 1.1rem; font-weight: 700; color: rgba(255,255,255,0.6);
-    }
-    .cupos-reason {
-      margin: 0; font-size: 0.75rem; line-height: 1.5;
-      color: rgba(255,255,255,0.5); text-align: center;
-    }
-
     .btn-back {
       background: none;
       border: none;
@@ -450,20 +398,6 @@
     /* ── Result pages ── */
     .result-page { display: none; }
     .result-page.active { display: block; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-    #page-thanks { width: 100%; }
-    #page-thanks.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
-
-    .result-icon {
-      width: 52px;
-      height: 52px;
-      background: rgba(252,115,66,0.12);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-    }
-    .result-icon svg { width: 26px; height: 26px; }
 
     .result-title {
       font-size: 1.6rem;
@@ -492,99 +426,6 @@
     }
     .confirm-check svg { width: 30px; height: 30px; }
 
-    .webinar-date-pill {
-      background: rgba(252, 115, 66, 0.1);
-      border: 1px solid rgba(252, 115, 66, 0.3);
-      border-radius: 99px;
-      padding: 0.65rem 1.25rem;
-      text-align: center;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--orange);
-      font-family: 'DM Mono', 'Courier New', monospace;
-      letter-spacing: 0.02em;
-      margin: 1.5rem 0;
-    }
-
-    .cal-section-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--subtle);
-      text-align: center;
-      margin-bottom: 0.85rem;
-    }
-
-    .cal-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      width: 100%;
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 1rem 1.1rem;
-      color: var(--white);
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-decoration: none;
-      cursor: pointer;
-      margin-bottom: 0.65rem;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .cal-btn:hover {
-      border-color: rgba(252,115,66,0.4);
-      background: rgba(252,115,66,0.05);
-    }
-    .cal-btn-icon {
-      font-size: 1.15rem;
-      color: var(--orange);
-      flex-shrink: 0;
-    }
-    .cal-btn-arrow {
-      margin-left: auto;
-      color: var(--subtle);
-      font-size: 1rem;
-    }
-
-    .btn-webinar {
-      display: block;
-      width: 100%;
-      background: var(--orange);
-      color: var(--white);
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: var(--r-sm);
-      padding: 0.85rem 1.5rem;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-webinar:hover {
-      background: var(--orange-h);
-      transform: translateY(-1px);
-    }
-
-
-    /* ── Disqualified ── */
-    .disq-badge {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(224,85,85,0.15);
-      color: #e05555;
-      border-radius: 99px;
-      padding: 0.2rem 0.65rem;
-      margin-bottom: 1rem;
-    }
-
     /* ── Divider ── */
     .divider {
       height: 1px;
@@ -598,7 +439,6 @@
     .comunidad-inner h2 { font-size: clamp(1.3rem,3vw,1.9rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin: 0.5rem 0 1.5rem; }
 
     /* ── Page thanks ── */
-    .thanks-header-card { max-width: 520px; width: 100%; text-align: center; margin-bottom: 2rem; }
     .thanks-videos-wrap { width: 100%; max-width: 520px; margin: 0 auto 2rem; padding: 0 1rem; box-sizing: border-box; }
     .thanks-videos-tag { font-family: 'DM Mono','Courier New',monospace; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; text-align: center; margin-bottom: 0.75rem; }
     .thanks-videos-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; margin-bottom: 1.25rem; line-height: 1.2; }
@@ -701,16 +541,7 @@
       .nav-row { flex-direction: column-reverse; gap: 0.75rem; align-items: stretch; }
       .nav-row .btn-primary { width: 100%; margin-top: 0; text-align: center; }
       .nav-row .btn-back { justify-content: center; }
-      .webinar-date-pill { font-size: 0.88rem; }
-      .cal-btn { font-size: 0.92rem; padding: 1rem; }
-
-      /* Page high */
-      #page-high { max-width: 100%; border-radius: 0; border-left: none; border-right: none; }
-
-      /* Page thanks */
-      .shell.thanks-active { padding-left: 0; padding-right: 0; }
-      #page-thanks { overflow-x: hidden; }
-      .thanks-header-card { max-width: 100%; border-radius: 0; border-left: none; border-right: none; padding: 1.5rem 1.25rem; }
+      /* Page thanks (page-low) */
       .thanks-videos-wrap { max-width: 100%; padding: 0 1.5rem; }
       .thanks-videos-list { width: min(300px, 78vw); margin: 0 auto; }
       .thanks-videos-title { font-size: 1rem; }
@@ -786,7 +617,7 @@
       </div>
       <div class="field">
         <label for="linkedin">Perfil de LinkedIn <span style="color:var(--subtle);font-weight:400">(opcional)</span></label>
-        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" />
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" autocomplete="url" inputmode="url" />
       </div>
       <button class="btn-primary" onclick="nextStep(1)">Continuar →</button>
     </div>
@@ -949,22 +780,6 @@
 
   </div><!-- /card -->
 
-  <!-- ── RESULTADO: Descalificado ── -->
-  <div class="card result-page" id="page-disqualified" style="text-align:center">
-    <div class="disq-badge">Lo sentimos</div>
-    <h2 class="result-title">En este momento no podemos ayudarte.</h2>
-    <p class="result-body">Nuestro programa requiere una inversión y entendemos que no siempre es el momento indicado.</p>
-
-    <div style="margin:1.75rem 0;padding:1.5rem 1.25rem;background:#1a0e08;border:1.5px solid #FC7342;border-radius:16px;">
-      <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FC7342;margin:0 0 0.6rem;font-family:var(--mono)">⏱ Pero espera</p>
-      <p style="font-size:1.15rem;font-weight:800;color:#fff;margin:0 0 0.4rem;line-height:1.3">7 días gratis, sin compromiso</p>
-      <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin:0;line-height:1.5">Entra al programa, explóralo sin compromiso y decides cuando estés listo/a.</p>
-    </div>
-
-    <a href="https://www.skool.com/newave" target="_blank" rel="noopener" style="display:block;text-decoration:none;text-align:center;background:#FC7342;color:#fff;font-weight:700;font-size:1rem;padding:1rem 1.5rem;border-radius:980px;margin-bottom:0.5rem;box-shadow:0 4px 20px rgba(252,115,66,0.4);">Conocer el programa gratis →</a>
-    <p style="font-size:0.72rem;color:var(--subtle);margin:0">Sin compromiso · Cancela cuando quieras</p>
-  </div>
-
   <!-- ── RESULTADO: Low Ticket — Webinar ── -->
   <div class="card result-page" id="page-low" style="text-align:center">
     <div class="confirm-check">
@@ -995,9 +810,9 @@
       <p class="thanks-videos-tag">Casos de éxito</p>
       <h3 class="thanks-videos-title">Lo que han logrado nuestros miembros</h3>
       <div class="thanks-videos-list">
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 1" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 2" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193762000?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 3" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
+        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 1" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
+        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 2" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
+        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193762000?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 3" loading="lazy" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
       </div>
     </div>
 
@@ -1010,18 +825,18 @@
           <button class="comunidad-arrow comunidad-prev" onclick="lowSlide(-1)">&#8249;</button>
           <div class="comunidad-track-wrap">
             <div class="comunidad-track" id="lowComunidadTrack">
-              <div class="comunidad-slide" onclick="lowModal('testimonials/rebe.png')"><img src="/testimonials/rebe.png" alt="Rebe" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/mariana.png')"><img src="/testimonials/mariana.png" alt="Mariana" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/sasha.png')"><img src="/testimonials/sasha.png" alt="Sasha" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/poncho.png')"><img src="/testimonials/poncho.png" alt="Poncho" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/diego.png')"><img src="/testimonials/diego.png" alt="Diego" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/kike.png')"><img src="/testimonials/kike.png" alt="Kike" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/dani.png')"><img src="/testimonials/dani.png" alt="Dani" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/luis.png')"><img src="/testimonials/luis.png" alt="Luis" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/lili.png')"><img src="/testimonials/lili.png" alt="Lili" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/fer.png')"><img src="/testimonials/fer.png" alt="Fer" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/majo.png')"><img src="/testimonials/majo.png" alt="Majo" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="lowModal('testimonials/bren.png')"><img src="/testimonials/bren.png" alt="Bren" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/rebe.png')"><img src="/testimonials/rebe.png" alt="Rebe" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/mariana.png')"><img src="/testimonials/mariana.png" alt="Mariana" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/sasha.png')"><img src="/testimonials/sasha.png" alt="Sasha" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/poncho.png')"><img src="/testimonials/poncho.png" alt="Poncho" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/diego.png')"><img src="/testimonials/diego.png" alt="Diego" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/kike.png')"><img src="/testimonials/kike.png" alt="Kike" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/dani.png')"><img src="/testimonials/dani.png" alt="Dani" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/luis.png')"><img src="/testimonials/luis.png" alt="Luis" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/lili.png')"><img src="/testimonials/lili.png" alt="Lili" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/fer.png')"><img src="/testimonials/fer.png" alt="Fer" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/majo.png')"><img src="/testimonials/majo.png" alt="Majo" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
+              <div class="comunidad-slide" onclick="lowModal('testimonials/bren.png')"><img src="/testimonials/bren.png" alt="Bren" class="comunidad-img" loading="lazy"/><div class="comunidad-hint">Toca para leer completo</div></div>
             </div>
           </div>
           <button class="comunidad-arrow comunidad-next" onclick="lowSlide(1)">&#8250;</button>
@@ -1036,168 +851,6 @@
 
   </div>
 
-  <!-- page-high eliminado: todos los planes van a page-low (Skool) -->
-  <div class="card result-page" id="page-high" style="display:none!important">
-    <div class="result-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#FC7342" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
-    </div>
-    <h2 class="result-title">Gracias por llenar el formulario, <span id="highNombre"></span></h2>
-    <p id="highMsg" class="result-body"></p>
-    <p class="result-body" style="margin-top:0.5rem">Los cupos del Plan Personalizado están llenos por ahora. Nuestro siguiente curso empieza el <strong>3 de agosto</strong>.</p>
-
-    <!-- Opción: apartar lugar agosto -->
-    <div style="margin-top:1rem;padding:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:16px;background:rgba(255,255,255,0.03);">
-      <p style="margin:0 0 0.5rem;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);">Apartar lugar para agosto</p>
-      <p class="result-body" style="margin:0 0 1rem;">Si quieres apartar tu lugar para nuestro siguiente curso el 3 de agosto, déjanos tus datos y nos comunicaremos contigo.</p>
-      <div id="waitlist-form">
-        <button onclick="reservarLugar()" style="display:inline-block;padding:0.75rem 1.75rem;background:transparent;color:#fff;font-weight:700;font-size:0.95rem;border-radius:999px;border:1.5px solid rgba(255,255,255,0.35);cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#FC7342'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Apartar mi lugar para el 3 de agosto</button>
-      </div>
-      <div id="waitlist-confirm" style="display:none;color:#22c55e;font-weight:600;font-size:0.95rem;margin-top:0.5rem;">
-        ✓ Listo, tu lugar está apartado. Te contactaremos antes del 3 de agosto.
-      </div>
-    </div>
-
-    <!-- Bloque: tomar acción hoy -->
-    <div style="margin-top:1.5rem;padding:1.5rem;border:1.5px solid rgba(252,115,66,0.4);border-radius:16px;background:rgba(252,115,66,0.06);text-align:left;">
-      <p style="margin:0 0 0.4rem;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FC7342;">¿Listo/a para tomar acción?</p>
-      <p style="margin:0 0 0.6rem;font-size:0.88rem;color:var(--muted);line-height:1.6;">Tenemos una modalidad con toda la metodología de NEWAVƎ: estrategias, herramientas y el paso a paso para conseguir tu trabajo remoto.</p>
-      <p style="margin:0 0 0.6rem;font-size:0.88rem;color:var(--muted);line-height:1.6;">Entrar te garantiza tu lugar al Plan Personalizado de agosto.</p>
-      <p style="margin:0 0 1rem;font-size:0.88rem;color:var(--white);font-weight:600;">Nos vemos dentro.</p>
-      <a href="https://www.skool.com/newave" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:0.65rem 1.5rem;background:#FC7342;color:#fff;font-weight:700;font-size:0.88rem;border-radius:999px;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Quiero empezar hoy →</a>
-    </div>
-
-    <!-- Videos de casos de éxito -->
-    <div class="thanks-videos-wrap" style="margin-top:2rem">
-      <p class="thanks-videos-tag">Casos de éxito</p>
-      <h3 class="thanks-videos-title">Lo que han logrado nuestros miembros</h3>
-      <div class="thanks-videos-list">
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 1" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 2" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
-        <div class="thanks-video-item"><div class="thanks-video-ratio"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" src="https://player.vimeo.com/video/1193762000?badge=0&autopause=0&player_id=0&app_id=58479" title="Caso de éxito 3" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div></div>
-      </div>
-    </div>
-
-    <!-- Carrusel comunidad -->
-    <section class="comunidad-section" style="width:100%">
-      <div class="comunidad-inner">
-        <span class="mono-tag dark">Nuestra comunidad</span>
-        <h2>Esto es lo que está viviendo la gente dentro de nuestro programa.</h2>
-        <div class="comunidad-carousel">
-          <button class="comunidad-arrow comunidad-prev" onclick="highSlide(-1)">&#8249;</button>
-          <div class="comunidad-track-wrap">
-            <div class="comunidad-track" id="highComunidadTrack">
-              <div class="comunidad-slide" onclick="highModal('testimonials/rebe.png')"><img src="/testimonials/rebe.png" alt="Rebe" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/mariana.png')"><img src="/testimonials/mariana.png" alt="Mariana" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/sasha.png')"><img src="/testimonials/sasha.png" alt="Sasha" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/poncho.png')"><img src="/testimonials/poncho.png" alt="Poncho" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/diego.png')"><img src="/testimonials/diego.png" alt="Diego" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/kike.png')"><img src="/testimonials/kike.png" alt="Kike" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/dani.png')"><img src="/testimonials/dani.png" alt="Dani" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/luis.png')"><img src="/testimonials/luis.png" alt="Luis" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/lili.png')"><img src="/testimonials/lili.png" alt="Lili" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/fer.png')"><img src="/testimonials/fer.png" alt="Fer" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/majo.png')"><img src="/testimonials/majo.png" alt="Majo" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="highModal('testimonials/bren.png')"><img src="/testimonials/bren.png" alt="Bren" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-            </div>
-          </div>
-          <button class="comunidad-arrow comunidad-next" onclick="highSlide(1)">&#8250;</button>
-        </div>
-        <div class="comunidad-dots" id="highComunidadDots"></div>
-      </div>
-    </section>
-
-    <div style="text-align:center;padding:2rem 0 1rem">
-      <p style="font-size:0.82rem;color:var(--subtle)">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
-    </div>
-
-  </div>
-
-  <!-- page-thanks eliminado -->
-  <div class="result-page" id="page-thanks" style="display:none!important">
-
-    <!-- Header -->
-    <div class="card thanks-header-card">
-      <div class="confirm-check">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-      </div>
-      <h2 class="result-title">¡Tu llamada está agendada, <span id="thanksNombre"></span>!</h2>
-      <p class="result-body" style="color:var(--white)">Te esperamos en la llamada. Mientras tanto, mira lo que está viviendo la gente dentro de nuestro programa.</p>
-    </div>
-
-    <!-- Videos de casos de éxito -->
-    <div class="thanks-videos-wrap">
-      <p class="thanks-videos-tag">Casos de éxito</p>
-      <h3 class="thanks-videos-title">Lo que han logrado nuestros miembros</h3>
-
-      <div class="thanks-videos-list">
-
-        <div class="thanks-video-item">
-          <div class="thanks-video-ratio">
-            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://player.vimeo.com/video/1193715932?badge=0&autopause=0&player_id=0&app_id=58479"
-              title="Caso de éxito 1" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-          </div>
-        </div>
-
-        <div class="thanks-video-item">
-          <div class="thanks-video-ratio">
-            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://player.vimeo.com/video/1193719516?badge=0&autopause=0&player_id=0&app_id=58479"
-              title="Caso de éxito 2" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-          </div>
-        </div>
-
-        <div class="thanks-video-item">
-          <div class="thanks-video-ratio">
-            <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-              src="https://player.vimeo.com/video/1193762000?badge=0&autopause=0&player_id=0&app_id=58479"
-              title="Caso de éxito 3" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Carrusel comunidad -->
-    <section class="comunidad-section" style="width:100%">
-      <div class="comunidad-inner">
-        <span class="mono-tag dark">Nuestra comunidad</span>
-        <h2>Esto es lo que está viviendo la gente dentro de nuestro programa.</h2>
-        <div class="comunidad-carousel">
-          <button class="comunidad-arrow comunidad-prev" onclick="thanksSlide(-1)">&#8249;</button>
-          <div class="comunidad-track-wrap">
-            <div class="comunidad-track" id="thanksComunidadTrack">
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/rebe.png')"><img src="/testimonials/rebe.png" alt="Rebe" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/mariana.png')"><img src="/testimonials/mariana.png" alt="Mariana" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/sasha.png')"><img src="/testimonials/sasha.png" alt="Sasha" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/poncho.png')"><img src="/testimonials/poncho.png" alt="Poncho" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/diego.png')"><img src="/testimonials/diego.png" alt="Diego" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/kike.png')"><img src="/testimonials/kike.png" alt="Kike" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/dani.png')"><img src="/testimonials/dani.png" alt="Dani" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/luis.png')"><img src="/testimonials/luis.png" alt="Luis" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/lili.png')"><img src="/testimonials/lili.png" alt="Lili" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/fer.png')"><img src="/testimonials/fer.png" alt="Fer" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/majo.png')"><img src="/testimonials/majo.png" alt="Majo" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-              <div class="comunidad-slide" onclick="thanksModal('testimonials/bren.png')"><img src="/testimonials/bren.png" alt="Bren" class="comunidad-img"/><div class="comunidad-hint">Toca para leer completo</div></div>
-            </div>
-          </div>
-          <button class="comunidad-arrow comunidad-next" onclick="thanksSlide(1)">&#8250;</button>
-        </div>
-        <div class="comunidad-dots" id="thanksComunidadDots"></div>
-      </div>
-    </section>
-
-    <div style="text-align:center;padding:2rem 0 1rem">
-      <p style="font-size:0.82rem;color:var(--subtle)">NEWAVƎ — Trabaja remoto. Gana en dólares.</p>
-    </div>
-
-  </div>
 
 </div><!-- /shell -->
 
@@ -1247,8 +900,10 @@
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5e11js0uCMFswJx7vRojZMV6dUB_9gML8B5TarLie5K1Ue7ZfILKVqfuVMiS2Fx-iA/exec';
 
   // ── Progress ──
+  // Cuenta el paso actual como avance (paso 1 = 17%, paso 6 = 100%): empezar
+  // en 0% desanima, y el paso en el que estás parado ya es progreso real.
   function updateProgress(step) {
-    const pct = Math.round(((step - 1) / TOTAL_STEPS) * 100);
+    const pct = Math.round((step / TOTAL_STEPS) * 100);
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressText').textContent = `Paso ${step} de ${TOTAL_STEPS}`;
     document.getElementById('progressPct').textContent = pct + '%';
@@ -1362,13 +1017,6 @@
 
   function prevStep(from) {
     if (from > 1) showStep(from - 1);
-  }
-
-  // ── Lista de espera agosto ──
-  function reservarLugar() {
-    // El usuario ya quedó registrado como 'high' al hacer submit — solo mostramos confirmación
-    document.getElementById('waitlist-form').style.display = 'none';
-    document.getElementById('waitlist-confirm').style.display = 'block';
   }
 
   // ── Submit ──
@@ -1548,9 +1196,6 @@
     document.getElementById('mainCard').style.display = 'none';
     document.getElementById('progressWrap').style.display = 'none';
 
-    if (answers.track === 'disqualified') {
-      show('page-disqualified');
-    } else {
       const nombre = answers.nombre.split(' ')[0];
       document.getElementById('lowNombre').textContent = nombre;
 
@@ -1584,55 +1229,11 @@
       btn.style.display = 'block';
 
       show('page-low');
-    }
   }
 
-  // ── Carrusel página de gracias — copia exacta de la landing ──
-  var thanksIdx = 0;
-  var thanksTotal = 0;
+  // ── Modal de testimonios (compartido con el carrusel de page-low) ──
   var thanksSlideList = [];
   var thanksModalIdx = 0;
-
-  function initThanksCarousel() {
-    const dots = document.getElementById('thanksComunidadDots');
-    if (!dots || dots.children.length) return;
-    const slideEls = document.querySelectorAll('#thanksComunidadTrack .comunidad-slide');
-    thanksTotal = slideEls.length;
-    for (var i = 0; i < thanksTotal; i++) {
-      var d = document.createElement('button');
-      d.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
-      d.setAttribute('data-i', i);
-      d.onclick = function() { thanksGoTo(parseInt(this.getAttribute('data-i'))); };
-      dots.appendChild(d);
-    }
-  }
-
-  function thanksGoTo(n) {
-    thanksIdx = n;
-    document.getElementById('thanksComunidadTrack').style.transform = 'translateX(-' + (100 * n) + '%)';
-    document.querySelectorAll('#thanksComunidadDots .comunidad-dot').forEach(function(d, i) {
-      d.classList.toggle('active', i === n);
-    });
-  }
-
-  function thanksSlide(dir) {
-    thanksGoTo((thanksIdx + dir + thanksTotal) % thanksTotal);
-  }
-
-  function buildThanksSlideList() {
-    thanksSlideList = Array.from(document.querySelectorAll('#thanksComunidadTrack .comunidad-slide')).map(function(el) {
-      return { src: el.querySelector('img').src, alt: el.querySelector('img').alt };
-    });
-  }
-
-  function thanksModal(src) {
-    buildThanksSlideList();
-    thanksModalIdx = thanksSlideList.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
-    if (thanksModalIdx < 0) thanksModalIdx = 0;
-    showThanksModalSlide(thanksModalIdx);
-    document.getElementById('thanksModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
 
   function showThanksModalSlide(n) {
     document.getElementById('thanksModalImg').src = thanksSlideList[n].src;
@@ -1640,6 +1241,7 @@
   }
 
   function thanksModalNav(dir) {
+    if (!thanksSlideList.length) return;
     thanksModalIdx = (thanksModalIdx + dir + thanksSlideList.length) % thanksSlideList.length;
     showThanksModalSlide(thanksModalIdx);
   }
@@ -1684,41 +1286,6 @@
     document.body.style.overflow = 'hidden';
   }
 
-  // ── Carrusel HIGH ──
-  var highIdx = 0, highTotal = 0, highSlideList = [], highModalIdx = 0;
-  function initHighCarousel() {
-    const dots = document.getElementById('highComunidadDots');
-    if (!dots || dots.children.length) return;
-    const slideEls = document.querySelectorAll('#highComunidadTrack .comunidad-slide');
-    highTotal = slideEls.length;
-    for (var i = 0; i < highTotal; i++) {
-      var d = document.createElement('button');
-      d.className = 'comunidad-dot' + (i === 0 ? ' active' : '');
-      d.setAttribute('data-i', i);
-      d.onclick = function() { highGoTo(parseInt(this.getAttribute('data-i'))); };
-      dots.appendChild(d);
-    }
-  }
-  function highGoTo(n) {
-    highIdx = n;
-    document.getElementById('highComunidadTrack').style.transform = 'translateX(-' + (100 * n) + '%)';
-    document.querySelectorAll('#highComunidadDots .comunidad-dot').forEach(function(d, i) { d.classList.toggle('active', i === n); });
-  }
-  function highSlide(dir) { highGoTo((highIdx + dir + highTotal) % highTotal); }
-  function highModal(src) {
-    highSlideList = Array.from(document.querySelectorAll('#highComunidadTrack .comunidad-slide')).map(function(el) {
-      return { src: el.querySelector('img').src, alt: el.querySelector('img').alt };
-    });
-    highModalIdx = highSlideList.findIndex(function(s) { return s.src.endsWith(src.split('/').pop()); });
-    if (highModalIdx < 0) highModalIdx = 0;
-    thanksSlideList = highSlideList;
-    thanksModalIdx = highModalIdx;
-    document.getElementById('thanksModalImg').src = thanksSlideList[thanksModalIdx].src;
-    document.getElementById('thanksModalImg').alt = thanksSlideList[thanksModalIdx].alt;
-    document.getElementById('thanksModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') thanksModalClose();
     if (e.key === 'ArrowRight') thanksModalNav(1);
@@ -1739,7 +1306,10 @@
     }, { passive: true });
     modal.addEventListener('click', function(e) { if (e.target === this) thanksModalClose(); });
 
-    var carouselTrack = document.getElementById('thanksComunidadTrack');
+    // Swipe táctil en el carrusel de testimonios de la página de gracias
+    // (page-low, la única visible) — antes estaba conectado a un carrusel
+    // de una página muerta y en móvil solo se podía navegar con las flechas.
+    var carouselTrack = document.getElementById('lowComunidadTrack');
     var cStartX = 0, cStartY = 0;
     carouselTrack.addEventListener('touchstart', function(e) {
       cStartX = e.touches[0].clientX; cStartY = e.touches[0].clientY;
@@ -1747,19 +1317,14 @@
     carouselTrack.addEventListener('touchend', function(e) {
       var dx = e.changedTouches[0].clientX - cStartX;
       var dy = e.changedTouches[0].clientY - cStartY;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) thanksSlide(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) lowSlide(dx < 0 ? 1 : -1);
     }, { passive: true });
   });
 
   function show(id) {
     document.querySelectorAll('.result-page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if (id === 'page-thanks') {
-      document.getElementById('app').classList.add('thanks-active');
-      initThanksCarousel();
-    }
     if (id === 'page-low') initLowCarousel();
-    if (id === 'page-high') initHighCarousel();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
