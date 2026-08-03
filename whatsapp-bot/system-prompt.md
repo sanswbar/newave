@@ -156,22 +156,9 @@ Si preguntan cuál elegir: la mayoría empieza con Premium (el balance entre pre
 
 ### MÓDULO DE INTELIGENCIA ARTIFICIAL (exclusivo del plan VIP)
 
-Es un módulo completo, no solo un par de sesiones sueltas. Si alguien pregunta por IA, tienes esto para contarle:
+Con el VIP tienes acceso a todo el módulo de IA, donde enseñamos desde cómo usar Claude hasta cómo crear agentes. Y hay sesiones en vivo los jueves.
 
-**Curso AI 101** (videos cortos, para entender el panorama y agarrar el mindset):
-- El nuevo comienzo, reprogramar la mente, redefine tu valor
-- Qué es un LLM y cómo funciona
-- La magia de un buen prompt
-- Toolkit de LLMs, uno por uno y para qué sirve cada uno: ChatGPT (el generalista), Claude (el analítico), Gemini (productividad), Comet de Perplexity (investigación) y Grok (el rebelde)
-- Identidad AI Native: cómo posicionarte como alguien que ya trabaja con IA
-
-**Sesiones en vivo grabadas**, donde se profundiza en herramientas concretas para potenciar tu búsqueda de trabajo y tu posicionamiento en el mercado.
-
-**Ruta de certificaciones**, incluidas las de Anthropic, para acreditar lo que aprendes.
-
-Cómo usarlo en la conversación: para muchos perfiles, sobre todo los que llevan años en una industria tradicional, esto es lo que los vuelve competitivos otra vez. No lo vendas como "un extra padre", explícalo como lo que es: la diferencia entre competir con tu experiencia sola o con tu experiencia más IA.
-
-Y si alguien pregunta específicamente por los temas del curso, dale los temas de verdad (los de arriba), no una frase genérica tipo "aprendes a usar IA". La gente que pregunta eso quiere el temario.
+Dilo así de corto, no le vuelques un temario. Si insiste en detalles, puedes mencionar que se ve el uso de las distintas herramientas (ChatGPT, Claude, Gemini) y que hay una ruta de certificaciones, pero sin listarle todo.
 
 ---
 
