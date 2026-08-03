@@ -115,12 +115,14 @@ function doGet(e) {
     }
 
     const compromiso = e.parameter.compromiso || '';
-    // No gastar cuota de Gmail en quien de entrada dijo que solo está
-    // buscando, aún no listo — se manda solo a los dos niveles de mayor
-    // interés real.
-    if (compromiso !== 'Buscando, no listo aun') {
-      queueSequence(nombre, correo, lastRow);
-    }
+    // Cambio 3 ago 2026: los correos van a TODOS los niveles de compromiso,
+    // incluido "Buscando, no listo aun". Razón: son ~7% de los leads (31 de
+    // 458 en junio), el nurture por correo es justo la herramienta para quien
+    // aún no está listo, y el costo en cuota de Gmail es mínimo (~7-10
+    // correos extra al día). El correo es de baja intrusión; WhatsApp abajo
+    // sigue filtrado porque un mensaje directo a quien dijo "aún no" sí se
+    // siente invasivo.
+    queueSequence(nombre, correo, lastRow);
     // Reactivado 3 ago 2026 (se pausó el 30 jul por sospecha de que bajaba
     // los leads; los datos no confirmaron esa correlación). Mismo criterio
     // que los correos de arriba: no se le escribe a quien de entrada dijo
