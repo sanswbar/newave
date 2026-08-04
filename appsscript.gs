@@ -212,6 +212,13 @@ function calcularMetricas() {
   const inicioSemana = new Date(inicioHoy.getTime() - 7 * 24 * 60 * 60 * 1000);
   const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
 
+  // El registro de clicks se implementó el 11 jul 2026 (commit 893f7b7). Los
+  // leads anteriores tienen la columna vacía por diseño, no porque no hayan
+  // dado click, así que se cuentan aparte para no diluir el porcentaje.
+  const INICIO_TRACKING_CLICKS = new Date(2026, 6, 11); // 11 jul 2026
+  let leadsConTrackingClick = 0;
+  let clicksDesdeTracking = 0;
+
   const total  = vacio();
   const hoy    = vacio();
   const semana = vacio();
@@ -245,6 +252,11 @@ function calcularMetricas() {
       if (fecha >= inicioHoy)    sumar(hoy, esTrial, dioClick);
       if (fecha >= inicioSemana) sumar(semana, esTrial, dioClick);
       if (fecha >= inicioMes)    sumar(mes, esTrial, dioClick);
+
+      if (fecha >= INICIO_TRACKING_CLICKS) {
+        leadsConTrackingClick++;
+        if (dioClick) clicksDesdeTracking++;
+      }
     }
 
     acumularSegmento(porCompromiso, compromiso || 'Sin dato', esTrial, dioClick);
@@ -276,6 +288,13 @@ function calcularMetricas() {
     },
     trialsPorCorreo: porCorreo,
     numerosTrial: numerosTrial,
+    // Base real para el % de clicks: solo los leads que llegaron cuando el
+    // registro de clicks ya existía.
+    tracking: {
+      clicksDesde: INICIO_TRACKING_CLICKS.toISOString(),
+      leadsDesdeTracking: leadsConTrackingClick,
+      clicksDesdeTracking: clicksDesdeTracking,
+    },
   };
 
   // Del estatus acumulado ("Correo enviado: email 3 | WhatsApp enviado")

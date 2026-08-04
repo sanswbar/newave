@@ -458,9 +458,19 @@
     const t = d.total || { leads: 0, clicks: 0, trials: 0 };
     if (!t.leads) return '<div class="m-seccion"><h3>Resultados</h3><div class="vacio-m">Sin leads todavía.</div></div>';
 
+    // El % de clicks va sobre los leads que llegaron cuando ese registro ya
+    // existía (11 jul 2026), no sobre el histórico completo: los anteriores
+    // tienen la columna vacía por diseño y lo diluirían.
+    const tr = d.tracking;
+    const baseClicks = tr && tr.leadsDesdeTracking ? tr.leadsDesdeTracking : t.leads;
+    const clicksReales = tr ? tr.clicksDesdeTracking : t.clicks;
+    const desde = tr && tr.clicksDesde
+      ? new Date(tr.clicksDesde).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })
+      : null;
+
     const medidas = [
       ['Leads',  t.leads,  'var(--paso-leads)',  'registros del formulario'],
-      ['Clicks', t.clicks, 'var(--paso-clicks)', pct(t.clicks, t.leads) + '% le dio a "Unirme ahora"'],
+      ['Clicks', t.clicks, 'var(--paso-clicks)', pct(clicksReales, baseClicks) + '% de los ' + baseClicks + ' leads medibles' + (desde ? ' (desde ' + desde + ')' : '')],
       ['Trials', t.trials, 'var(--paso-trials)', pct(t.trials, t.leads) + '% terminó entrando a Skool'],
     ];
 
@@ -490,10 +500,12 @@
       </div>
       <div class="embudo">${filas}</div>
       <div class="nota">
-        Los tres se miden sobre el total de leads, no uno sobre otro:
-        el <b style="color:var(--ink-2)">click</b> solo se marca si le dieron a "Unirme ahora" dentro del formulario,
-        y el <b style="color:var(--ink-2)">trial</b> lo marcas tú a mano cuando ves a alguien entrar a Skool.
-        ${masTrials ? `Hoy hay más trials (${t.trials}) que clicks (${t.clicks}): mucha gente llega a Skool por el correo, un anuncio o el link directo, sin pasar por ese botón.` : ''}
+        Estas no son etapas de un mismo camino. El <b style="color:var(--ink-2)">click</b> solo se marca
+        si le dieron a "Unirme ahora" dentro del formulario, y su porcentaje va sobre los leads
+        posteriores a ${desde || 'que existe ese registro'}, porque los anteriores tienen la columna vacía por diseño.
+        El <b style="color:var(--ink-2)">trial</b> lo marcas tú a mano cuando ves a alguien entrar a Skool,
+        sin importar por dónde llegó.
+        ${masTrials ? `<br><br>Por eso hay más trials (${t.trials}) que clicks (${t.clicks}): mucha gente llega a Skool por el correo, un anuncio o el link directo, sin pasar por ese botón.` : ''}
       </div>
     </div>`;
   }
