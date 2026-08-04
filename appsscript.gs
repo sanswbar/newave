@@ -15,10 +15,11 @@ const COL_NOMBRE     = 2;
 const COL_CORREO     = 3;
 const COL_ESTATUS    = 12; // Column L
 const COL_CLICK      = 13; // Column M — "Click a plan"
-// Columna N — cuántos correos había recibido la persona al marcarla como
-// trial. Se llena sola (ver registrarCorreoAlConvertir): al marcar "trial" a
-// mano se sobrescribe la columna Estatus y se pierde el "email N" que tenía,
-// así que este dato se deduce del tiempo transcurrido desde el registro.
+// Columna N — cuántos correos había recibido la persona cuando entró a Skool.
+// Se llena de dos formas: `onEdit` la calcula al marcar un trial nuevo, y
+// `calcularCorreoRealAlConvertir` la reconstruye para los viejos cruzando el
+// export de Skool. Vive aparte porque marcar "trial" a mano sobrescribe la
+// columna Estatus y borra el "email N" que estaba ahí.
 const COL_CORREO_AL_CONVERTIR = 14;
 
 // Email sequence delays (ms after signup)
@@ -862,4 +863,92 @@ function diagnostico() {
   Logger.log('Última fila del sheet: ' + lastRow);
   const rowData = sheet.getRange(lastRow, 1, 1, 13).getValues()[0];
   Logger.log('Datos última fila: ' + JSON.stringify(rowData));
+}
+const TRIALS_SKOOL = {
+  'vero.salinas.garza@gmail.com':1785830777, 'jmartingranja@gmail.com':1785823182, 'josecarlos100991@icloud.com':1785821717,
+  'richard310885@gmail.com':1785813653, 'melissa.cassiog@gmail.com':1785811107, 'regina.ardavin98@gmail.com':1785804191,
+  'nayeliivette@hotmail.com':1785802287, 'karolinmoya@gmail.com':1785723132, 'edbarrientosc17@gmail.com':1785638911,
+  'anahislegaspi@gmail.com':1785625793, 'andresfletcherg@gmail.com':1785617511, 'dafneballeza@outlook.com':1785578182,
+  'aaguioli@gmail.com':1785571896, 'jairberpos@gmail.com':1785553590, 'hectrdd@gmail.com':1785490642,
+  'jorgeandresnegretemorayta@gmail.com':1785393910, 'gerardores202@gmail.com':1785379675, 'jp_jasso@hotmail.com':1785372761,
+  'aguirre.somera@gmail.com':1785304087, 'nicole.abbud@hotmail.com':1785209392, 'al.mosqueradavid@gmail.com':1785198277,
+  'alvaropgordon@gmail.com':1785045164, 'sebmarmolejo12@gmail.com':1784932980, 'jromo.mgmt@gmail.com':1784864752,
+  'daniela.san@hotmail.es':1784760993, 'bettytrujillo@live.com':1784614865, 'gera.ledesma.ramos@gmail.com':1784614422,
+  'danielafocilnavarro@gmail.com':1784256785, 'andrepe26@gmail.com':1784178541, 'adrian.toledanog@gmail.com':1784177019,
+  'rocio.abad@icloud.com':1784146048, 'reginamujicaruiz@hotmail.com':1784098581, 'psnchzb@gmail.com':1784078098,
+  'fernandarasu@outlook.com':1784063319, 'diegogdelag@gmail.com':1783983305, 'leonardosuarezromero@gmail.com':1783930249,
+  'santirosetel@gmail.com':1783734027, 'avalosmezam@gmail.com':1783574268, 'mfgarciaochoa@gmail.com':1783570361,
+  'talledo.ricardo@gmail.com':1783544821, 'blanca.yocelyn@gmail.com':1783491513, 'janjanp78@gmail.com':1783386731,
+  'andrea.diazza444@gmail.com':1783381273, 'marianacaraveo1@gmail.com':1783299641, 'dianasoes@hotmail.com':1783119558,
+  'jportega145@gmail.com':1783063707, 'majozetunaa@gmail.com':1783052486, 'jhdealbaf@gmail.com':1782992563,
+  'anavaleriacastaneda@gmail.com':1782949586, 'lucichandrea@gmail.com':1782868632, 'ara.s.peralta@gmail.com':1782790414,
+  'blam1233@gmail.com':1782789580, 'canalespaloma@gmail.com':1782618571, 'sergiorojasbroker@gmail.com':1782540850,
+  'humandesignbypaola@gmail.com':1782536401, 'lucianasv001@gmail.com':1782469353, 'mildredp1526@gmail.com':1782357435,
+  'fer.lagunesgt@gmail.com':1782349618, 'victor.rezae@gmail.com':1782335545, 'cami12parra@gmail.com':1782328670,
+  'danielmartinezdecastroc@gmail.com':1782267761, 'paola.herediahernandez@gmail.com':1782259884, 'emanuel.martinez@outlook.com':1782180280,
+  'aldopancaaz@gmail.com':1782176090, 'drajenniferjackson@gmail.com':1782112062, 'jorgemenapicon@hotmail.com':1782082147,
+  'kmrescalera@gmail.com':1781936437, 'carmen.castrejon@proton.me':1781897039, 'brenrcarcao@gmail.com':1781772399,
+  'victormpartida@gmail.com':1781672131, 'raulgarsegovia@gmail.com':1781668532, 'asofia_lozano@hotmail.com':1781580142,
+  'jledesma4@live.com.mx':1781559282, 'annachie@gmail.com':1781509528, 'santoselav.96@gmail.com':1781410073,
+  'dannielafome@gmail.com':1781241430, 'dortegafrau@gmail.com':1781133160, 'janinehdzv@gmail.com':1781123107,
+  'danielajmzn@gmail.com':1781120194, 'luciana.barbag@gmail.com':1780998597, 'alexlopezfut99@gmail.com':1780995636,
+  'morettoaltamiranovaleria@outlook.com':1780956979, 'belen.pelop@gmail.com':1780730870, 'ortegakaryme@gmail.com':1780621582,
+  'gabslb81@gmail.com':1780556759, 'mejiacastillo696@gmail.com':1780556202, 'anaguayabas@gmail.com':1780486387,
+};
+
+// Calcula en qué correo iba REALMENTE cada persona al entrar a Skool,
+// cruzando la fecha de registro del sheet con la fecha de alta de Skool.
+// Sin deducir nada: son las dos fechas reales.
+function calcularCorreoRealAlConvertir() {
+  const sheet = getSheet(SHEET_NAME);
+  const lastRow = sheet.getLastRow();
+  const datos = sheet.getRange(2, 1, lastRow - 1, COL_CORREO_AL_CONVERTIR).getValues();
+
+  const conteo = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  let cruzados = 0, sinRegistro = 0;
+  const ejemplos = [];
+
+  // Del sheet: el registro más antiguo de cada correo (el original)
+  const registroPorCorreo = {};
+  datos.forEach(function (fila, i) {
+    const correo = (fila[COL_CORREO - 1] || '').toString().trim().toLowerCase();
+    const fecha = fila[COL_FECHA - 1];
+    if (!correo || !(fecha instanceof Date) || isNaN(fecha.getTime())) return;
+    if (!registroPorCorreo[correo] || fecha < registroPorCorreo[correo].fecha) {
+      registroPorCorreo[correo] = { fecha: fecha, filaIdx: i };
+    }
+  });
+
+  for (const correo in TRIALS_SKOOL) {
+    const reg = registroPorCorreo[correo];
+    if (!reg) { sinRegistro++; continue; }
+
+    const msTrial = TRIALS_SKOOL[correo] * 1000;
+    const transcurrido = msTrial - reg.fecha.getTime();
+    if (transcurrido < 0) { sinRegistro++; continue; }
+
+    const n = correosEnviadosAl(transcurrido);
+    conteo[n]++;
+    cruzados++;
+
+    sheet.getRange(reg.filaIdx + 2, COL_CORREO_AL_CONVERTIR).setValue(n);
+
+    if (ejemplos.length < 10) {
+      const horas = Math.round(transcurrido / 3600000 * 10) / 10;
+      ejemplos.push(correo.slice(0, 30) + '  ' + horas + 'h despues  -> correo ' + n);
+    }
+  }
+
+  Logger.log('=== EJEMPLOS ===');
+  ejemplos.forEach(function (e) { Logger.log(e); });
+  Logger.log('');
+  Logger.log('=== EN QUE CORREO IBAN AL ENTRAR A SKOOL ===');
+  const etiquetas = { 0: 'Sin correo aun', 1: 'Correo 1', 2: 'Correo 2', 3: 'Correo 3', 4: 'Correo 4', 5: 'Correo 5' };
+  for (let n = 0; n <= 5; n++) {
+    const pct = cruzados ? Math.round(conteo[n] / cruzados * 100) : 0;
+    Logger.log(etiquetas[n] + ': ' + conteo[n] + '  (' + pct + '%)  ' + '#'.repeat(Math.round(pct / 2)));
+  }
+  Logger.log('');
+  Logger.log('Cruzados con exito: ' + cruzados);
+  Logger.log('Sin registro en el sheet: ' + sinRegistro + ' (entraron por otra via)');
 }
