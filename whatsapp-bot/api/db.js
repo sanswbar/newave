@@ -97,7 +97,41 @@ async function guardarMensaje(numero, nombre, rol, contenido) {
   `;
 }
 
-// Lista de conversaciones (una fila por número), con el último mensaje y su hora.
+// Números que han tenido conversación con el bot, para cruzarlos contra los
+// leads del sheet y saber cuántos de los que convirtieron hablaron con él.
+async function numerosConConversacion() {
+  await asegurarTabla();
+  const { rows } = await sql`SELECT DISTINCT numero FROM mensajes;`;
+  return rows.map(r => r.numero);
+}
+
+// Conteos propios del bot para el dashboard.
+async function estadisticasBot() {
+  await asegurarTabla();
+  const { rows } = await sql`
+    SELECT
+      COUNT(DISTINCT numero)                                                      AS conversaciones,
+      COUNT(DISTINCT numero) FILTER (WHERE creado_en >= NOW() - INTERVAL '1 day')  AS ultimas_24h,
+      COUNT(DISTINCT numero) FILTER (WHERE creado_en >= NOW() - INTERVAL '7 days') AS ultimos_7d,
+      COUNT(*)                                                                     AS mensajes
+    FROM mensajes;
+  `;
+  const { rows: etq } = await sql`
+    SELECT etiqueta, COUNT(*) AS n FROM etiquetas WHERE etiqueta IS NOT NULL GROUP BY etiqueta;
+  `;
+  const etiquetas = {};
+  etq.forEach(r => { etiquetas[r.etiqueta] = Number(r.n); });
+
+  const r = rows[0] || {};
+  return {
+    conversaciones: Number(r.conversaciones || 0),
+    ultimas24h: Number(r.ultimas_24h || 0),
+    ultimos7d: Number(r.ultimos_7d || 0),
+    mensajes: Number(r.mensajes || 0),
+    etiquetas,
+  };
+}
+
 // Lista de conversaciones con su etiqueta. Si se pasa `busqueda`, filtra por
 // nombre, número o contenido de cualquier mensaje de esa conversación.
 async function listarConversaciones(busqueda) {
@@ -166,4 +200,4 @@ async function borrarConversacion(numero) {
   await sql`DELETE FROM mensajes WHERE numero = ${numero};`;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta };
+module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta, numerosConConversacion, estadisticasBot };

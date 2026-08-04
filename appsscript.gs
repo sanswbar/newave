@@ -56,6 +56,20 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // Métricas para el dashboard del bot. Va con clave porque devuelve
+    // información agregada del negocio, no algo que deba ser público.
+    if (e.parameter.action === 'metricas') {
+      const claveOk = PropertiesService.getScriptProperties().getProperty('DASHBOARD_PASSWORD');
+      if (!claveOk || e.parameter.clave !== claveOk) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'error', message: 'No autorizado' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify(calcularMetricas()))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     const track = e.parameter.track || '';
     const sheet = getSheet(SHEET_NAME);
 
@@ -179,6 +193,115 @@ function enviarLeadAlBot(datos) {
     }
   } catch (err) {
     console.error('enviarLeadAlBot falló: ' + err);
+  }
+}
+
+// Calcula el embudo (leads → click al plan → trial) por periodo y por
+// segmento, leyendo el sheet de Registros. Lo consume el dashboard del bot.
+function calcularMetricas() {
+  const sheet = getSheet(SHEET_NAME);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return { total: vacio(), hoy: vacio(), semana: vacio(), mes: vacio(), segmentos: {} };
+
+  // Una sola lectura del rango completo: pedir celda por celda sobre miles de
+  // filas es lentísimo en Apps Script.
+  const datos = sheet.getRange(2, 1, lastRow - 1, COL_CLICK).getValues();
+
+  const ahora = new Date();
+  const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+  const inicioSemana = new Date(inicioHoy.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+
+  const total  = vacio();
+  const hoy    = vacio();
+  const semana = vacio();
+  const mes    = vacio();
+  const porCompromiso = {};
+  const porIngles = {};
+  const porTrack = {};
+  // Cuántos correos había recibido cada quien al momento de convertir.
+  // Es el último correo ENVIADO antes del trial, no prueba de causalidad,
+  // pero sirve para ver en qué punto de la secuencia se concentran.
+  const porCorreo = { 'Sin correo aún': 0, 'Correo 1': 0, 'Correo 2': 0, 'Correo 3': 0, 'Correo 4': 0, 'Correo 5': 0 };
+  const numerosTrial = [];
+
+  for (let i = 0; i < datos.length; i++) {
+    const fila = datos[i];
+    const fecha      = fila[COL_FECHA - 1];
+    const ingles     = (fila[5]  || '').toString().trim();   // col 6
+    const compromiso = (fila[8]  || '').toString().trim();   // col 9
+    const track      = (fila[10] || '').toString().trim();   // col 11
+    const estatus    = (fila[COL_ESTATUS - 1] || '').toString().toLowerCase();
+    const click      = (fila[COL_CLICK - 1] || '').toString().trim();
+
+    // El estatus acumula notas separadas por " | " (correos, WhatsApp), así
+    // que se busca la palabra dentro, no una igualdad exacta.
+    const esTrial = estatus.indexOf('trial') !== -1 || estatus.indexOf('pago') !== -1;
+    const dioClick = click !== '';
+
+    sumar(total, esTrial, dioClick);
+
+    if (fecha instanceof Date && !isNaN(fecha.getTime())) {
+      if (fecha >= inicioHoy)    sumar(hoy, esTrial, dioClick);
+      if (fecha >= inicioSemana) sumar(semana, esTrial, dioClick);
+      if (fecha >= inicioMes)    sumar(mes, esTrial, dioClick);
+    }
+
+    acumularSegmento(porCompromiso, compromiso || 'Sin dato', esTrial, dioClick);
+    acumularSegmento(porIngles,     ingles     || 'Sin dato', esTrial, dioClick);
+    acumularSegmento(porTrack,      track      || 'Sin dato', esTrial, dioClick);
+
+    if (esTrial) {
+      const ultimo = ultimoCorreoEnviado(estatus);
+      const llave = ultimo === 0 ? 'Sin correo aún' : 'Correo ' + ultimo;
+      if (porCorreo[llave] !== undefined) porCorreo[llave]++;
+
+      // Solo el número normalizado, para que el bot pueda cruzar quién de
+      // los que convirtieron había hablado con él. Sin nombre ni correo.
+      const wa = normalizarNumero(fila[3] || '');
+      if (wa) numerosTrial.push(wa);
+    }
+  }
+
+  return {
+    actualizado: ahora.toISOString(),
+    total: total,
+    hoy: hoy,
+    semana: semana,
+    mes: mes,
+    segmentos: {
+      compromiso: porCompromiso,
+      ingles: porIngles,
+      track: porTrack,
+    },
+    trialsPorCorreo: porCorreo,
+    numerosTrial: numerosTrial,
+  };
+
+  // Del estatus acumulado ("Correo enviado: email 3 | WhatsApp enviado")
+  // saca el número más alto de correo enviado. 0 si no se le mandó ninguno.
+  function ultimoCorreoEnviado(estatus) {
+    let max = 0;
+    const re = /email\s*(\d)/g;
+    let m;
+    while ((m = re.exec(estatus)) !== null) {
+      const n = parseInt(m[1], 10);
+      if (n > max) max = n;
+    }
+    return max;
+  }
+
+  function vacio() { return { leads: 0, clicks: 0, trials: 0 }; }
+
+  function sumar(acc, esTrial, dioClick) {
+    acc.leads++;
+    if (dioClick) acc.clicks++;
+    if (esTrial)  acc.trials++;
+  }
+
+  function acumularSegmento(mapa, llave, esTrial, dioClick) {
+    if (!mapa[llave]) mapa[llave] = { leads: 0, clicks: 0, trials: 0 };
+    sumar(mapa[llave], esTrial, dioClick);
   }
 }
 

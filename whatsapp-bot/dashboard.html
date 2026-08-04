@@ -104,6 +104,36 @@
     padding: 0.3rem 0.7rem; font-size: 0.75rem; cursor: pointer; margin-left: auto;
   }
 
+  /* ── Pestañas y métricas ── */
+  #tabs { display: flex; gap: 0.4rem; padding: 0.75rem 1rem 0; border-bottom: 1px solid #222; }
+  .tab {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    color: #888; padding: 0.5rem 0.4rem 0.7rem; font-size: 0.85rem; cursor: pointer;
+  }
+  .tab.on { color: #fff; border-bottom-color: #FC7342; }
+  #vistaMetricas { display: none; flex: 1; overflow-y: auto; padding: 1.5rem; }
+  .m-seccion { margin-bottom: 2.5rem; max-width: 900px; }
+  .m-seccion h3 {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #666; margin: 0 0 0.9rem; font-weight: 600;
+  }
+  .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; }
+  .tarjeta { background: #16161a; border: 1px solid #222; border-radius: 10px; padding: 1rem; }
+  .t-num { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+  .t-label { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+  .t-extra { font-size: 0.72rem; color: #FC7342; margin-top: 0.35rem; }
+  table.m { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  table.m th {
+    text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: #666; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 1px solid #222;
+  }
+  table.m td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #18181b; }
+  table.m td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .barra { height: 5px; background: #222; border-radius: 3px; overflow: hidden; margin-top: 0.3rem; }
+  .barra span { display: block; height: 100%; background: #FC7342; }
+  #metricasError { color: #ff8a6b; font-size: 0.85rem; line-height: 1.6; max-width: 600px; }
+  .nota { color: #777; font-size: 0.75rem; margin-top: 0.6rem; line-height: 1.5; }
+
   @media (max-width: 900px) {
     #lead { display: none !important; }
   }
@@ -134,19 +164,28 @@
   </div>
 
   <div id="chat">
-    <div id="chatHeader">
-      <span id="chatHeaderText">Selecciona una conversación</span>
-      <div id="acciones" style="display:none">
-        <button class="tag buena" data-t="buena" onclick="etiquetar('buena')">Buena</button>
-        <button class="tag revisar" data-t="revisar" onclick="etiquetar('revisar')">Revisar</button>
-        <button class="tag convirtio" data-t="convirtio" onclick="etiquetar('convirtio')">Convirtió</button>
-        <button id="borrarBtn" onclick="borrarConversacionActiva()">Borrar</button>
+    <div id="tabs">
+      <button class="tab on" data-v="chats" onclick="verVista('chats')">Conversaciones</button>
+      <button class="tab" data-v="metricas" onclick="verVista('metricas')">Métricas</button>
+    </div>
+
+    <div id="vistaChats" style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div id="chatHeader">
+        <span id="chatHeaderText">Selecciona una conversación</span>
+        <div id="acciones" style="display:none">
+          <button class="tag buena" data-t="buena" onclick="etiquetar('buena')">Buena</button>
+          <button class="tag revisar" data-t="revisar" onclick="etiquetar('revisar')">Revisar</button>
+          <button class="tag convirtio" data-t="convirtio" onclick="etiquetar('convirtio')">Convirtió</button>
+          <button id="borrarBtn" onclick="borrarConversacionActiva()">Borrar</button>
+        </div>
+      </div>
+      <div id="chatWrap">
+        <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
+        <div id="lead"></div>
       </div>
     </div>
-    <div id="chatWrap">
-      <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
-      <div id="lead"></div>
-    </div>
+
+    <div id="vistaMetricas"></div>
   </div>
 </div>
 
@@ -318,6 +357,138 @@
     document.getElementById('lead').style.display = 'none';
     document.getElementById('chatBody').innerHTML = '<div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div>';
     cargarLista();
+  }
+
+  // ── Métricas ──────────────────────────────────────────────────────────
+
+  function verVista(v) {
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+    const chats = v === 'chats';
+    document.getElementById('vistaChats').style.display = chats ? 'flex' : 'none';
+    document.getElementById('vistaMetricas').style.display = chats ? 'none' : 'block';
+    document.getElementById('sidebar').style.display = chats ? 'flex' : 'none';
+    if (!chats) cargarMetricas();
+  }
+
+  async function cargarMetricas() {
+    const cont = document.getElementById('vistaMetricas');
+    cont.innerHTML = '<div style="color:#666">Cargando...</div>';
+
+    const resp = await fetch('/api/metricas?clave=' + encodeURIComponent(CLAVE));
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      cont.innerHTML = `<div id="metricasError">
+        <strong>No se pudieron cargar las métricas</strong><br>${escapeHtml(data.error || '')}
+        <div class="nota">Si dice que falta APPSCRIPT_METRICAS_URL, hay que configurar esa variable en Vercel con la URL de la implementación del Apps Script.</div>
+      </div>`;
+      return;
+    }
+
+    cont.innerHTML =
+      seccionEmbudo(data) +
+      seccionCorreos(data) +
+      seccionBot(data) +
+      seccionSegmentos(data);
+  }
+
+  function pct(a, b) { return b ? Math.round((a / b) * 100) : 0; }
+
+  function seccionEmbudo(d) {
+    const periodos = [['Hoy', d.hoy], ['7 días', d.semana], ['Este mes', d.mes], ['Total', d.total]];
+    const tarjetas = periodos.map(([label, p]) => {
+      if (!p) return '';
+      return `<div class="tarjeta">
+        <div class="t-num">${p.leads}</div>
+        <div class="t-label">${label}</div>
+        <div class="t-extra">${p.clicks} clicks · ${p.trials} trials</div>
+        <div class="barra"><span style="width:${pct(p.trials, p.leads)}%"></span></div>
+        <div class="t-label" style="margin-top:0.3rem">${pct(p.trials, p.leads)}% a trial</div>
+      </div>`;
+    }).join('');
+
+    const t = d.total || { leads: 0, clicks: 0, trials: 0 };
+    return `<div class="m-seccion">
+      <h3>Embudo</h3>
+      <div class="tarjetas">${tarjetas}</div>
+      <div class="nota">De ${t.leads} leads, ${t.clicks} dieron click al plan (${pct(t.clicks, t.leads)}%) y ${t.trials} empezaron trial (${pct(t.trials, t.leads)}%). De los que dieron click, convirtió el ${pct(t.trials, t.clicks)}%.</div>
+    </div>`;
+  }
+
+  function seccionCorreos(d) {
+    const m = d.trialsPorCorreo || {};
+    const orden = ['Sin correo aún', 'Correo 1', 'Correo 2', 'Correo 3', 'Correo 4', 'Correo 5'];
+    const total = orden.reduce((s, k) => s + (m[k] || 0), 0);
+    if (!total) return '';
+
+    const filas = orden.map(k => {
+      const n = m[k] || 0;
+      return `<tr>
+        <td>${k}</td>
+        <td class="num">${n}</td>
+        <td class="num">${pct(n, total)}%</td>
+        <td style="width:40%"><div class="barra"><span style="width:${pct(n, total)}%"></span></div></td>
+      </tr>`;
+    }).join('');
+
+    return `<div class="m-seccion">
+      <h3>En qué correo convierten</h3>
+      <table class="m">
+        <tr><th>Correos recibidos</th><th class="num">Trials</th><th class="num">%</th><th></th></tr>
+        ${filas}
+      </table>
+      <div class="nota">Es el último correo que se le había enviado cuando marcaste el trial, no prueba de que ese correo lo convenciera. Sirve para ver en qué punto de la secuencia se concentran.</div>
+    </div>`;
+  }
+
+  function seccionBot(d) {
+    const b = d.bot;
+    if (!b) return '';
+    const c = d.cruce || {};
+    const e = b.etiquetas || {};
+
+    return `<div class="m-seccion">
+      <h3>Bot de WhatsApp</h3>
+      <div class="tarjetas">
+        <div class="tarjeta"><div class="t-num">${b.ultimas24h}</div><div class="t-label">Conversaciones hoy</div></div>
+        <div class="tarjeta"><div class="t-num">${b.ultimos7d}</div><div class="t-label">Últimos 7 días</div></div>
+        <div class="tarjeta"><div class="t-num">${b.conversaciones}</div><div class="t-label">Total histórico</div><div class="t-extra">${b.mensajes} mensajes</div></div>
+        <div class="tarjeta">
+          <div class="t-num">${c.trialsQueHablaronConBot || 0}</div>
+          <div class="t-label">Trials que hablaron con el bot</div>
+          <div class="t-extra">de ${c.trialsConNumero || 0} trials con número</div>
+        </div>
+      </div>
+      <div class="nota">Etiquetadas: ${e.buena || 0} buenas · ${e.revisar || 0} por revisar · ${e.convirtio || 0} marcadas como convirtió.</div>
+    </div>`;
+  }
+
+  function seccionSegmentos(d) {
+    const segs = d.segmentos || {};
+    const titulos = { compromiso: 'Por nivel de compromiso', ingles: 'Por nivel de inglés', track: 'Por campaña (track)' };
+
+    return Object.keys(titulos).map(llave => {
+      const mapa = segs[llave];
+      if (!mapa || !Object.keys(mapa).length) return '';
+
+      const filas = Object.entries(mapa)
+        .sort((a, b) => b[1].leads - a[1].leads)
+        .map(([nombre, v]) => `<tr>
+          <td>${escapeHtml(nombre)}</td>
+          <td class="num">${v.leads}</td>
+          <td class="num">${v.clicks}</td>
+          <td class="num">${v.trials}</td>
+          <td class="num" style="color:${v.trials ? '#FC7342' : '#666'}">${pct(v.trials, v.leads)}%</td>
+        </tr>`).join('');
+
+      return `<div class="m-seccion">
+        <h3>${titulos[llave]}</h3>
+        <table class="m">
+          <tr><th>Segmento</th><th class="num">Leads</th><th class="num">Clicks</th><th class="num">Trials</th><th class="num">Conv.</th></tr>
+          ${filas}
+        </table>
+      </div>`;
+    }).join('');
   }
 
   function formatearHora(iso) {
