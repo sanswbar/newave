@@ -533,8 +533,19 @@
   function seccionCorreos(d) {
     const m = d.trialsPorCorreo || {};
     const orden = ['Sin correo aún', 'Correo 1', 'Correo 2', 'Correo 3', 'Correo 4', 'Correo 5'];
-    const total = orden.reduce((s, k) => s + (m[k] || 0), 0);
-    if (!total) return '';
+    const conDato = orden.reduce((s, k) => s + (m[k] || 0), 0);
+    const sinDato = m['Sin dato'] || 0;
+
+    // Antes de que el script capturara este dato, marcar "trial" a mano
+    // borraba el estatus y con él la información. Esos trials no tienen dato
+    // y decirlo es más honesto que repartirlos en categorías inventadas.
+    if (!conDato) {
+      return `<div class="m-seccion">
+        <div class="m-head"><h3>En qué correo convierten</h3></div>
+        <div class="vacio-m">Todavía sin datos. Se empieza a registrar a partir del próximo trial que marques.</div>
+        <div class="nota">Los ${sinDato} trials anteriores no tienen este dato: al marcarlos a mano se sobrescribía la columna Estatus, que era donde vivía. Ahora el script lo guarda aparte en cuanto marcas uno.</div>
+      </div>`;
+    }
 
     const max = Math.max(...orden.map(k => m[k] || 0));
     const filas = orden.map(k => {
@@ -542,14 +553,17 @@
       return `<div class="fila">
         <div><div class="f-nombre">${k}</div></div>
         <div class="f-barra"><span style="width:${max ? (n / max) * 100 : 0}%;background:var(--paso-trials)"></span></div>
-        <div class="f-pct" style="color:${n ? 'var(--ink)' : 'var(--ink-3)'}">${n} <span style="color:var(--ink-3);font-weight:400">· ${pct(n, total)}%</span></div>
+        <div class="f-pct" style="color:${n ? 'var(--ink)' : 'var(--ink-3)'}">${n} <span style="color:var(--ink-3);font-weight:400">· ${pct(n, conDato)}%</span></div>
       </div>`;
     }).join('');
 
     return `<div class="m-seccion">
-      <div class="m-head"><h3>En qué correo convierten</h3><span class="sub">${total} trials</span></div>
+      <div class="m-head"><h3>En qué correo convierten</h3><span class="sub">${conDato} trials con dato</span></div>
       <div class="filas">${filas}</div>
-      <div class="nota">Es el último correo que se le había enviado cuando marcaste el trial, no prueba de que ese correo lo convenciera. Sirve para ver en qué punto de la secuencia se concentran.</div>
+      <div class="nota">
+        Cuántos correos había recibido la persona cuando marcaste su trial. No prueba que ese correo la convenciera, pero sí muestra en qué punto de la secuencia se concentran.
+        ${sinDato ? `<br><br>Otros ${sinDato} trials no aparecen aquí: son anteriores a que el script guardara este dato.` : ''}
+      </div>
     </div>`;
   }
 

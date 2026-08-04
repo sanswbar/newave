@@ -15,6 +15,11 @@ const COL_NOMBRE     = 2;
 const COL_CORREO     = 3;
 const COL_ESTATUS    = 12; // Column L
 const COL_CLICK      = 13; // Column M — "Click a plan"
+// Columna N — cuántos correos había recibido la persona al marcarla como
+// trial. Se llena sola (ver registrarCorreoAlConvertir): al marcar "trial" a
+// mano se sobrescribe la columna Estatus y se pierde el "email N" que tenía,
+// así que este dato se deduce del tiempo transcurrido desde el registro.
+const COL_CORREO_AL_CONVERTIR = 14;
 
 // Email sequence delays (ms after signup)
 const EMAIL_DELAYS = {
@@ -205,7 +210,7 @@ function calcularMetricas() {
 
   // Una sola lectura del rango completo: pedir celda por celda sobre miles de
   // filas es lentísimo en Apps Script.
-  const datos = sheet.getRange(2, 1, lastRow - 1, COL_CLICK).getValues();
+  const datos = sheet.getRange(2, 1, lastRow - 1, COL_CORREO_AL_CONVERTIR).getValues();
 
   const ahora = new Date();
   const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
@@ -229,7 +234,7 @@ function calcularMetricas() {
   // Cuántos correos había recibido cada quien al momento de convertir.
   // Es el último correo ENVIADO antes del trial, no prueba de causalidad,
   // pero sirve para ver en qué punto de la secuencia se concentran.
-  const porCorreo = { 'Sin correo aún': 0, 'Correo 1': 0, 'Correo 2': 0, 'Correo 3': 0, 'Correo 4': 0, 'Correo 5': 0 };
+  const porCorreo = { 'Sin correo aún': 0, 'Correo 1': 0, 'Correo 2': 0, 'Correo 3': 0, 'Correo 4': 0, 'Correo 5': 0, 'Sin dato': 0 };
   const numerosTrial = [];
 
   for (let i = 0; i < datos.length; i++) {
@@ -264,9 +269,17 @@ function calcularMetricas() {
     acumularSegmento(porTrack,      track      || 'Sin dato', esTrial, dioClick);
 
     if (esTrial) {
-      const ultimo = ultimoCorreoEnviado(estatus);
-      const llave = ultimo === 0 ? 'Sin correo aún' : 'Correo ' + ultimo;
-      if (porCorreo[llave] !== undefined) porCorreo[llave]++;
+      // La columna N la llena onEdit al marcar el trial. Si está vacía, es un
+      // trial de antes de esa mecánica y no hay dato — se cuenta aparte en vez
+      // de meterlo en "Sin correo aún", que significaría otra cosa.
+      const registrado = fila[COL_CORREO_AL_CONVERTIR - 1];
+      if (registrado === '' || registrado === null || registrado === undefined) {
+        porCorreo['Sin dato']++;
+      } else {
+        const n = parseInt(registrado, 10);
+        const llave = n === 0 ? 'Sin correo aún' : 'Correo ' + n;
+        if (porCorreo[llave] !== undefined) porCorreo[llave]++;
+      }
 
       // Solo el número normalizado, para que el bot pueda cruzar quién de
       // los que convirtieron había hablado con él. Sin nombre ni correo.
@@ -297,19 +310,6 @@ function calcularMetricas() {
     },
   };
 
-  // Del estatus acumulado ("Correo enviado: email 3 | WhatsApp enviado")
-  // saca el número más alto de correo enviado. 0 si no se le mandó ninguno.
-  function ultimoCorreoEnviado(estatus) {
-    let max = 0;
-    const re = /email\s*(\d)/g;
-    let m;
-    while ((m = re.exec(estatus)) !== null) {
-      const n = parseInt(m[1], 10);
-      if (n > max) max = n;
-    }
-    return max;
-  }
-
   function vacio() { return { leads: 0, clicks: 0, trials: 0 }; }
 
   function sumar(acc, esTrial, dioClick) {
@@ -322,6 +322,50 @@ function calcularMetricas() {
     if (!mapa[llave]) mapa[llave] = { leads: 0, clicks: 0, trials: 0 };
     sumar(mapa[llave], esTrial, dioClick);
   }
+}
+
+// Se dispara al editar el sheet. Cuando se marca una fila como "trial",
+// calcula cuántos correos de la secuencia ya habían salido y lo guarda en la
+// columna N, antes de que ese dato se pierda para siempre.
+//
+// Se deduce del tiempo transcurrido desde el registro (los correos salen en
+// tiempos fijos) en vez de leerlo del estatus, porque marcar el trial a mano
+// sobrescribe esa celda y borra el "Correo enviado: email N" que tenía.
+function onEdit(e) {
+  try {
+    if (!e || !e.range) return;
+    const sheet = e.range.getSheet();
+    if (sheet.getName() !== SHEET_NAME) return;
+    if (e.range.getColumn() !== COL_ESTATUS) return;
+
+    const fila = e.range.getRow();
+    if (fila < 2) return;
+
+    const valor = (e.range.getValue() || '').toString().toLowerCase();
+    if (valor.indexOf('trial') === -1 && valor.indexOf('pago') === -1) return;
+
+    // Si ya se registró antes, no pisarlo (por si se re-edita la celda)
+    const celdaDestino = sheet.getRange(fila, COL_CORREO_AL_CONVERTIR);
+    if (celdaDestino.getValue() !== '') return;
+
+    const fechaRegistro = sheet.getRange(fila, COL_FECHA).getValue();
+    if (!(fechaRegistro instanceof Date) || isNaN(fechaRegistro.getTime())) return;
+
+    celdaDestino.setValue(correosEnviadosAl(Date.now() - fechaRegistro.getTime()));
+  } catch (err) {
+    // Nunca romper la edición del sheet por esto
+    console.error('onEdit falló: ' + err);
+  }
+}
+
+// Cuántos correos de la secuencia ya habían salido tras X ms del registro.
+// Nota: es cuántos se ENVIARON, no cuántos se abrieron o leyeron.
+function correosEnviadosAl(transcurridoMs) {
+  let n = 0;
+  for (let i = 1; i <= 5; i++) {
+    if (transcurridoMs >= EMAIL_DELAYS[i]) n = i;
+  }
+  return n;
 }
 
 function registrarClick(correo) {
