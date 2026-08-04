@@ -449,26 +449,29 @@
 
   function pct(a, b) { return b ? Math.round((a / b) * 100) : 0; }
 
-  // El embudo se lee como embudo: un renglón por paso, ancho proporcional al
-  // paso anterior, para que la caída entre etapas se vea de un vistazo.
+  // OJO: click y trial NO son pasos consecutivos del mismo camino. El click
+  // solo se registra si la persona presiona "Unirme ahora" DENTRO del
+  // formulario; a Skool se puede llegar por correo, anuncio o link directo sin
+  // pasar por ahí. Por eso puede haber más trials que clicks, y por eso esto
+  // se muestra como dos medidas del mismo total y no como un embudo.
   function seccionEmbudo(d) {
     const t = d.total || { leads: 0, clicks: 0, trials: 0 };
-    if (!t.leads) return '<div class="m-seccion"><h3>Embudo</h3><div class="vacio-m">Sin leads todavía.</div></div>';
+    if (!t.leads) return '<div class="m-seccion"><h3>Resultados</h3><div class="vacio-m">Sin leads todavía.</div></div>';
 
-    const pasos = [
-      ['Leads',  t.leads,  'var(--paso-leads)',  ''],
-      ['Clicks', t.clicks, 'var(--paso-clicks)', pct(t.clicks, t.leads) + '% de los leads'],
-      ['Trials', t.trials, 'var(--paso-trials)', pct(t.trials, t.clicks) + '% de los clicks · ' + pct(t.trials, t.leads) + '% del total'],
+    const medidas = [
+      ['Leads',  t.leads,  'var(--paso-leads)',  'registros del formulario'],
+      ['Clicks', t.clicks, 'var(--paso-clicks)', pct(t.clicks, t.leads) + '% le dio a "Unirme ahora"'],
+      ['Trials', t.trials, 'var(--paso-trials)', pct(t.trials, t.leads) + '% terminó entrando a Skool'],
     ];
 
-    const filas = pasos.map(([label, n, color, nota]) => `
+    const filas = medidas.map(([label, n, color, nota]) => `
       <div class="paso">
         <div class="paso-label">${label}</div>
         <div class="paso-barra">
           <div class="paso-fill" style="width:${Math.max(pct(n, t.leads), 4)}%;background:${color}">
             <span class="paso-num">${n}</span>
           </div>
-          ${nota ? `<span class="paso-pct">${nota}</span>` : ''}
+          <span class="paso-pct">${nota}</span>
         </div>
       </div>`).join('');
 
@@ -476,12 +479,22 @@
       ? new Date(d.actualizado).toLocaleString('es-MX', { hour: '2-digit', minute: '2-digit' })
       : '';
 
+    // Cuando hay más trials que clicks queda claro que mucha gente entra sin
+    // pasar por el botón del formulario. Vale la pena decirlo, no esconderlo.
+    const masTrials = t.trials > t.clicks;
+
     return `<div class="m-seccion">
       <div class="m-head">
-        <h3>Embudo — histórico</h3>
+        <h3>Resultados — histórico</h3>
         ${cuando ? `<span class="sub">actualizado ${cuando}</span>` : ''}
       </div>
       <div class="embudo">${filas}</div>
+      <div class="nota">
+        Los tres se miden sobre el total de leads, no uno sobre otro:
+        el <b style="color:var(--ink-2)">click</b> solo se marca si le dieron a "Unirme ahora" dentro del formulario,
+        y el <b style="color:var(--ink-2)">trial</b> lo marcas tú a mano cuando ves a alguien entrar a Skool.
+        ${masTrials ? `Hoy hay más trials (${t.trials}) que clicks (${t.clicks}): mucha gente llega a Skool por el correo, un anuncio o el link directo, sin pasar por ese botón.` : ''}
+      </div>
     </div>`;
   }
 
