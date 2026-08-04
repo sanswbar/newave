@@ -512,6 +512,54 @@ function processQueue() {
     }
     props.deleteProperty(key);
   }
+
+  // Al final de cada corrida: ¿lleva el sheet demasiado sin leads nuevos?
+  vigilarSilencioDeLeads();
+}
+
+// ─── WATCHDOG: alerta si el sheet se queda en silencio ────────────────────
+// El 30 jul 2026 el registro de leads se cortó a las 2 PM y nadie se dio
+// cuenta hasta el día siguiente. Esto corre en cada pasada de processQueue
+// (cada 5 min) y manda un correo de alerta si lleva demasiado sin entrar un
+// lead nuevo. No detecta pérdidas sueltas (un lead fallido entre muchos que
+// sí entraron); para eso, comparar form_submit de GA4 contra las filas del
+// sheet del mismo día.
+const SILENCIO_UMBRAL_MS   = 5 * 60 * 60 * 1000; // 5 h sin leads = alerta
+const SILENCIO_REALERTA_MS = 6 * 60 * 60 * 1000; // re-alertar máx cada 6 h
+
+function vigilarSilencioDeLeads() {
+  try {
+    const sheet = getSheet(SHEET_NAME);
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) return;
+
+    const fecha = sheet.getRange(lastRow, COL_FECHA).getValue();
+    if (!(fecha instanceof Date) || isNaN(fecha.getTime())) return;
+
+    const silencio = Date.now() - fecha.getTime();
+    if (silencio < SILENCIO_UMBRAL_MS) return;
+
+    // No repetir la alerta en cada corrida mientras dure el silencio
+    const props = PropertiesService.getScriptProperties();
+    const ultima = Number(props.getProperty('ultima_alerta_silencio') || 0);
+    if (Date.now() - ultima < SILENCIO_REALERTA_MS) return;
+
+    const horas = Math.round((silencio / 3600000) * 10) / 10;
+    GmailApp.sendEmail(
+      FROM_EMAIL,
+      'Sin leads nuevos en el sheet desde hace ' + horas + ' horas',
+      'El último registro en "' + SHEET_NAME + '" es de: ' + fecha + '\n\n' +
+      'Puede ser tráfico bajo real, pero si las campañas están activas, revisa en orden:\n' +
+      '1. GA4 -> Eventos -> form_submit: ¿hay submits recientes que no llegaron al sheet?\n' +
+      '2. Apps Script -> Ejecuciones: ¿doGet está marcando errores?\n' +
+      '3. Meta Ads Manager: ¿las campañas siguen entregando?\n\n' +
+      '(Alerta automática del watchdog en processQueue. Se repite máximo cada 6 horas mientras siga el silencio.)'
+    );
+    props.setProperty('ultima_alerta_silencio', String(Date.now()));
+  } catch (err) {
+    // El watchdog jamás debe tumbar processQueue: si falla, solo se loguea.
+    console.error('vigilarSilencioDeLeads falló: ' + err);
+  }
 }
 
 // Appends a note to the Estatus cell instead of overwriting it, so the
