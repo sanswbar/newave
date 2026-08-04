@@ -441,10 +441,47 @@
     cont.innerHTML = '<div class="m-wrap">' +
       seccionEmbudo(data) +
       seccionPeriodos(data) +
+      seccionVelocidad(data) +
       seccionCorreos(data) +
       seccionBot(data) +
       seccionSegmentos(data) +
       '</div>';
+  }
+
+  // Cuánto tardan en decidirse. Separado de "en qué correo convierten" porque
+  // responde otra pregunta: el promedio esconde que son dos públicos, unos que
+  // entran el mismo día y otros que necesitan días de seguimiento.
+  function seccionVelocidad(d) {
+    const v = d.trialsPorVelocidad;
+    if (!v) return '';
+    const orden = ['El mismo día', 'En 1-2 días', 'Después de 4+ días'];
+    const total = orden.reduce((s, k) => s + (v[k] || 0), 0);
+    if (!total) return '';
+
+    const colores = ['var(--paso-trials)', 'var(--paso-clicks)', 'var(--paso-leads)'];
+    const filas = orden.map((k, i) => {
+      const n = v[k] || 0;
+      const p = pct(n, total);
+      return `<div class="fila">
+        <div><div class="f-nombre">${k}</div></div>
+        <div class="f-barra"><span style="width:${p}%;background:${colores[i]}"></span></div>
+        <div class="f-pct">${n} <span style="color:var(--ink-3);font-weight:400">· ${p}%</span></div>
+      </div>`;
+    }).join('');
+
+    const rapido = pct(v['El mismo día'] || 0, total);
+    const lento = pct(v['Después de 4+ días'] || 0, total);
+
+    return `<div class="m-seccion">
+      <div class="m-head"><h3>Qué tan rápido se deciden</h3><span class="sub">${total} trials</span></div>
+      <div class="filas">${filas}</div>
+      <div class="nota">
+        Son dos públicos distintos: ${rapido}% entra el mismo día que se registra (ya venían decididos)
+        y ${lento}% tarda más de 4 días, o sea que convierte gracias a la secuencia de correos.
+        Por eso el promedio de "en qué correo convierten" puede engañar: acortar la secuencia
+        costaría los que necesitan tiempo.
+      </div>
+    </div>`;
   }
 
   function pct(a, b) { return b ? Math.round((a / b) * 100) : 0; }
@@ -527,6 +564,11 @@
     return `<div class="m-seccion">
       <h3>Leads por periodo</h3>
       <div class="periodos">${tarjetas}</div>
+      <div class="nota">
+        Los trials son los que están marcados a mano en la columna Estatus del sheet, así que
+        este número va atrás de la realidad hasta que marcas los del día. Si Skool muestra más,
+        el que manda es Skool.
+      </div>
     </div>`;
   }
 

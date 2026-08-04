@@ -236,6 +236,7 @@ function calcularMetricas() {
   // Es el último correo ENVIADO antes del trial, no prueba de causalidad,
   // pero sirve para ver en qué punto de la secuencia se concentran.
   const porCorreo = { 'Sin correo aún': 0, 'Correo 1': 0, 'Correo 2': 0, 'Correo 3': 0, 'Correo 4': 0, 'Correo 5': 0, 'Sin dato': 0 };
+  const porVelocidad = { 'El mismo día': 0, 'En 1-2 días': 0, 'Después de 4+ días': 0 };
   const numerosTrial = [];
 
   for (let i = 0; i < datos.length; i++) {
@@ -280,6 +281,15 @@ function calcularMetricas() {
         const n = parseInt(registrado, 10);
         const llave = n === 0 ? 'Sin correo aún' : 'Correo ' + n;
         if (porCorreo[llave] !== undefined) porCorreo[llave]++;
+
+        // Cuánto tardaron en decidirse. El promedio de "en qué correo
+        // convierten" esconde que son dos públicos distintos: unos entran el
+        // mismo día y otros necesitan días de acompañamiento (el 3 ago fue
+        // casi mitad y mitad). Sin este corte, la cola larga parece
+        // despreciable y no lo es.
+        if (n <= 1)      porVelocidad['El mismo día']++;
+        else if (n <= 3) porVelocidad['En 1-2 días']++;
+        else             porVelocidad['Después de 4+ días']++;
       }
 
       // Solo el número normalizado, para que el bot pueda cruzar quién de
@@ -301,6 +311,7 @@ function calcularMetricas() {
       track: porTrack,
     },
     trialsPorCorreo: porCorreo,
+    trialsPorVelocidad: porVelocidad,
     numerosTrial: numerosTrial,
     // Base real para el % de clicks: solo los leads que llegaron cuando el
     // registro de clicks ya existía.
