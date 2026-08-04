@@ -524,8 +524,12 @@ function processQueue() {
 // lead nuevo. No detecta pérdidas sueltas (un lead fallido entre muchos que
 // sí entraron); para eso, comparar form_submit de GA4 contra las filas del
 // sheet del mismo día.
-const SILENCIO_UMBRAL_MS   = 5 * 60 * 60 * 1000; // 5 h sin leads = alerta
-const SILENCIO_REALERTA_MS = 6 * 60 * 60 * 1000; // re-alertar máx cada 6 h
+// Umbral de 16 h: el silencio nocturno normal es de ~14 h (últimos leads
+// ~8 PM, se reanudan ~9-10 AM), así que 5 h alarmaría en falso cada
+// madrugada. Con 16 h las noches nunca alarman y un corte real de mediodía
+// avisa a la mañana siguiente.
+const SILENCIO_UMBRAL_MS   = 16 * 60 * 60 * 1000; // 16 h sin leads = alerta
+const SILENCIO_REALERTA_MS = 6 * 60 * 60 * 1000;  // re-alertar máx cada 6 h
 
 function vigilarSilencioDeLeads() {
   try {
