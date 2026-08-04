@@ -33,7 +33,34 @@ async function asegurarTabla() {
       creado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `;
+
+  // Etiquetas del dashboard para marcar cómo salió cada conversación
+  // (buena / revisar / convirtió). Tabla aparte para no tocar `leads`, que
+  // la escribe Apps Script: aquí solo escribe el dashboard.
+  await sql`
+    CREATE TABLE IF NOT EXISTS etiquetas (
+      numero TEXT PRIMARY KEY,
+      etiqueta TEXT,
+      actualizado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
   tablaLista = true;
+}
+
+// Marca una conversación. Pasar etiqueta null o '' la quita.
+async function guardarEtiqueta(numero, etiqueta) {
+  await asegurarTabla();
+  if (!etiqueta) {
+    await sql`DELETE FROM etiquetas WHERE numero = ${numero};`;
+    return;
+  }
+  await sql`
+    INSERT INTO etiquetas (numero, etiqueta)
+    VALUES (${numero}, ${etiqueta})
+    ON CONFLICT (numero) DO UPDATE SET
+      etiqueta = EXCLUDED.etiqueta,
+      actualizado_en = NOW();
+  `;
 }
 
 // Guarda (o actualiza) los datos del formulario de un lead. Si la persona
@@ -71,18 +98,52 @@ async function guardarMensaje(numero, nombre, rol, contenido) {
 }
 
 // Lista de conversaciones (una fila por número), con el último mensaje y su hora.
-async function listarConversaciones() {
+// Lista de conversaciones con su etiqueta. Si se pasa `busqueda`, filtra por
+// nombre, número o contenido de cualquier mensaje de esa conversación.
+async function listarConversaciones(busqueda) {
   await asegurarTabla();
-  const { rows } = await sql`
-    SELECT DISTINCT ON (numero)
-      numero,
-      nombre,
-      contenido AS ultimo_mensaje,
-      rol AS ultimo_rol,
-      creado_en AS ultima_actividad
-    FROM mensajes
-    ORDER BY numero, creado_en DESC;
-  `;
+
+  const termino = (busqueda || '').trim();
+  let rows;
+
+  if (termino) {
+    const patron = `%${termino}%`;
+    // El filtro va sobre la conversación completa (por eso el IN), no solo
+    // sobre el último mensaje: buscar "precio" debe encontrar a quien lo
+    // preguntó hace 20 mensajes, no solo si fue lo último que dijo.
+    ({ rows } = await sql`
+      SELECT DISTINCT ON (m.numero)
+        m.numero,
+        m.nombre,
+        m.contenido AS ultimo_mensaje,
+        m.rol AS ultimo_rol,
+        m.creado_en AS ultima_actividad,
+        e.etiqueta
+      FROM mensajes m
+      LEFT JOIN etiquetas e ON e.numero = m.numero
+      WHERE m.numero IN (
+        SELECT DISTINCT numero FROM mensajes
+        WHERE contenido ILIKE ${patron}
+           OR nombre ILIKE ${patron}
+           OR numero ILIKE ${patron}
+      )
+      ORDER BY m.numero, m.creado_en DESC;
+    `);
+  } else {
+    ({ rows } = await sql`
+      SELECT DISTINCT ON (m.numero)
+        m.numero,
+        m.nombre,
+        m.contenido AS ultimo_mensaje,
+        m.rol AS ultimo_rol,
+        m.creado_en AS ultima_actividad,
+        e.etiqueta
+      FROM mensajes m
+      LEFT JOIN etiquetas e ON e.numero = m.numero
+      ORDER BY m.numero, m.creado_en DESC;
+    `);
+  }
+
   rows.sort((a, b) => new Date(b.ultima_actividad) - new Date(a.ultima_actividad));
   return rows;
 }
@@ -105,4 +166,4 @@ async function borrarConversacion(numero) {
   await sql`DELETE FROM mensajes WHERE numero = ${numero};`;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead };
+module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta };

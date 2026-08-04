@@ -22,30 +22,90 @@
     background: #FC7342; color: #fff; font-weight: 600; cursor: pointer;
   }
   #app { display: none; width: 100%; height: 100%; }
+
+  /* ── Lista de conversaciones ── */
   #sidebar {
-    width: 320px; border-right: 1px solid #222; overflow-y: auto; flex-shrink: 0;
+    width: 320px; border-right: 1px solid #222; flex-shrink: 0;
+    display: flex; flex-direction: column;
   }
-  #sidebar h1 { font-size: 0.95rem; padding: 1rem; margin: 0; border-bottom: 1px solid #222; }
+  #sidebarTop { padding: 1rem; border-bottom: 1px solid #222; }
+  #sidebarTop h1 { font-size: 0.95rem; margin: 0 0 0.75rem; display: flex; align-items: center; }
+  #buscador {
+    width: 100%; padding: 0.5rem 0.7rem; border-radius: 8px;
+    border: 1px solid #2a2a2f; background: #16161a; color: #eee; font-size: 0.85rem;
+  }
+  #buscador::placeholder { color: #666; }
+  #filtros { display: flex; gap: 0.3rem; margin-top: 0.6rem; flex-wrap: wrap; }
+  .filtro {
+    background: none; border: 1px solid #2a2a2f; color: #999; border-radius: 20px;
+    padding: 0.2rem 0.65rem; font-size: 0.72rem; cursor: pointer;
+  }
+  .filtro.on { border-color: #FC7342; color: #FC7342; }
+  #listaConversaciones { flex: 1; overflow-y: auto; }
   .conv-item {
     padding: 0.85rem 1rem; border-bottom: 1px solid #1a1a1d; cursor: pointer;
   }
   .conv-item:hover { background: #17171a; }
   .conv-item.active { background: #1f1f23; }
-  .conv-nombre { font-weight: 600; font-size: 0.9rem; }
+  .conv-nombre { font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
   .conv-numero { font-size: 0.75rem; color: #888; margin-top: 2px; }
   .conv-preview { font-size: 0.8rem; color: #aaa; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .conv-hora { font-size: 0.7rem; color: #666; margin-top: 4px; }
-  #chat { flex: 1; display: flex; flex-direction: column; }
-  #chatHeader { padding: 1rem; border-bottom: 1px solid #222; font-weight: 600; }
+  .punto { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .punto.buena { background: #4ade80; }
+  .punto.revisar { background: #fbbf24; }
+  .punto.convirtio { background: #FC7342; }
+  #vacio { padding: 2rem 1rem; text-align: center; color: #666; font-size: 0.85rem; }
+
+  /* ── Chat ── */
+  #chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  #chatHeader {
+    padding: 0.85rem 1rem; border-bottom: 1px solid #222;
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+  }
+  #chatHeaderText { font-weight: 600; font-size: 0.9rem; }
+  #acciones { margin-left: auto; display: flex; gap: 0.35rem; align-items: center; }
+  .tag {
+    background: none; border: 1px solid #2a2a2f; color: #999; border-radius: 20px;
+    padding: 0.25rem 0.7rem; font-size: 0.73rem; cursor: pointer;
+  }
+  .tag:hover { border-color: #444; color: #ccc; }
+  .tag.on.buena { border-color: #4ade80; color: #4ade80; }
+  .tag.on.revisar { border-color: #fbbf24; color: #fbbf24; }
+  .tag.on.convirtio { border-color: #FC7342; color: #FC7342; }
+  #borrarBtn {
+    background: none; border: 1px solid #3a2020; color: #a55; border-radius: 6px;
+    padding: 0.25rem 0.6rem; font-size: 0.73rem; cursor: pointer;
+  }
+  #borrarBtn:hover { border-color: #a33; color: #f88; }
+  #chatWrap { flex: 1; display: flex; min-height: 0; }
   #chatBody { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
   #chatEmpty { margin: auto; color: #666; }
   .msg { max-width: 70%; padding: 0.6rem 0.9rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; white-space: pre-wrap; }
   .msg.user { align-self: flex-start; background: #1f1f23; }
   .msg.assistant { align-self: flex-end; background: #FC7342; color: #fff; }
   .msg-hora { font-size: 0.65rem; color: #888; margin-top: 3px; }
+
+  /* ── Panel del lead ── */
+  #lead {
+    width: 260px; border-left: 1px solid #222; padding: 1.25rem 1rem;
+    overflow-y: auto; flex-shrink: 0; display: none;
+  }
+  #lead h2 {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #666; margin: 0 0 1rem; font-weight: 600;
+  }
+  .campo { margin-bottom: 1rem; }
+  .campo-label { font-size: 0.68rem; color: #777; text-transform: uppercase; letter-spacing: 0.05em; }
+  .campo-valor { font-size: 0.85rem; color: #e8e8e8; margin-top: 0.2rem; line-height: 1.45; }
+  #leadVacio { color: #666; font-size: 0.8rem; line-height: 1.5; }
   #refreshBtn {
     background: none; border: 1px solid #333; color: #ccc; border-radius: 6px;
-    padding: 0.3rem 0.7rem; font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem;
+    padding: 0.3rem 0.7rem; font-size: 0.75rem; cursor: pointer; margin-left: auto;
+  }
+
+  @media (max-width: 900px) {
+    #lead { display: none !important; }
   }
 </style>
 </head>
@@ -60,21 +120,42 @@
 
 <div id="app">
   <div id="sidebar">
-    <h1>Conversaciones <button id="refreshBtn" onclick="cargarLista()">Actualizar</button></h1>
+    <div id="sidebarTop">
+      <h1>Conversaciones <button id="refreshBtn" onclick="cargarLista()">Actualizar</button></h1>
+      <input id="buscador" placeholder="Buscar nombre, número o texto..." />
+      <div id="filtros">
+        <button class="filtro on" data-f="todas" onclick="filtrar('todas')">Todas</button>
+        <button class="filtro" data-f="buena" onclick="filtrar('buena')">Buenas</button>
+        <button class="filtro" data-f="revisar" onclick="filtrar('revisar')">Revisar</button>
+        <button class="filtro" data-f="convirtio" onclick="filtrar('convirtio')">Convirtió</button>
+      </div>
+    </div>
     <div id="listaConversaciones"></div>
   </div>
+
   <div id="chat">
     <div id="chatHeader">
       <span id="chatHeaderText">Selecciona una conversación</span>
-      <button id="borrarBtn" onclick="borrarConversacionActiva()" style="display:none;float:right;background:none;border:1px solid #a33;color:#f88;border-radius:6px;padding:0.25rem 0.6rem;font-size:0.75rem;cursor:pointer">Borrar conversación</button>
+      <div id="acciones" style="display:none">
+        <button class="tag buena" data-t="buena" onclick="etiquetar('buena')">Buena</button>
+        <button class="tag revisar" data-t="revisar" onclick="etiquetar('revisar')">Revisar</button>
+        <button class="tag convirtio" data-t="convirtio" onclick="etiquetar('convirtio')">Convirtió</button>
+        <button id="borrarBtn" onclick="borrarConversacionActiva()">Borrar</button>
+      </div>
     </div>
-    <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
+    <div id="chatWrap">
+      <div id="chatBody"><div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div></div>
+      <div id="lead"></div>
+    </div>
   </div>
 </div>
 
 <script>
   let CLAVE = '';
   let activo = null;
+  let etiquetaActiva = null;
+  let filtroActual = 'todas';
+  let conversaciones = [];
 
   function entrar() {
     CLAVE = document.getElementById('clave').value;
@@ -86,8 +167,27 @@
     if (e.key === 'Enter') entrar();
   });
 
+  // Espera a que dejes de teclear antes de pegarle a la DB, si no se dispara
+  // una consulta por cada letra.
+  let debounce;
+  document.getElementById('buscador').addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(cargarLista, 300);
+  });
+
+  function filtrar(f) {
+    filtroActual = f;
+    document.querySelectorAll('.filtro').forEach(b => {
+      b.classList.toggle('on', b.dataset.f === f);
+    });
+    pintarLista();
+  }
+
   async function cargarLista() {
-    const resp = await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE));
+    const q = document.getElementById('buscador').value.trim();
+    const url = '/api/conversaciones?clave=' + encodeURIComponent(CLAVE) +
+                (q ? '&q=' + encodeURIComponent(q) : '');
+    const resp = await fetch(url);
     if (resp.status === 401) {
       document.getElementById('loginError').style.display = 'block';
       return;
@@ -96,15 +196,30 @@
     document.getElementById('app').style.display = 'flex';
 
     const data = await resp.json();
+    conversaciones = data.conversaciones || [];
+    pintarLista();
+  }
+
+  function pintarLista() {
     const cont = document.getElementById('listaConversaciones');
     cont.innerHTML = '';
 
-    data.conversaciones.forEach(c => {
+    const visibles = filtroActual === 'todas'
+      ? conversaciones
+      : conversaciones.filter(c => c.etiqueta === filtroActual);
+
+    if (!visibles.length) {
+      cont.innerHTML = '<div id="vacio">Nada por aquí</div>';
+      return;
+    }
+
+    visibles.forEach(c => {
       const div = document.createElement('div');
       div.className = 'conv-item' + (c.numero === activo ? ' active' : '');
       div.onclick = () => abrirConversacion(c.numero, c.nombre);
+      const punto = c.etiqueta ? `<span class="punto ${c.etiqueta}"></span>` : '';
       div.innerHTML = `
-        <div class="conv-nombre">${escapeHtml(c.nombre || 'Sin nombre')}</div>
+        <div class="conv-nombre">${punto}${escapeHtml(c.nombre || 'Sin nombre')}</div>
         <div class="conv-numero">${escapeHtml(c.numero)}</div>
         <div class="conv-preview">${c.ultimo_rol === 'assistant' ? '🤖 ' : ''}${escapeHtml(c.ultimo_mensaje)}</div>
         <div class="conv-hora">${formatearHora(c.ultima_actividad)}</div>
@@ -115,10 +230,14 @@
 
   async function abrirConversacion(numero, nombre) {
     activo = numero;
-    cargarLista();
+    const conv = conversaciones.find(c => c.numero === numero);
+    etiquetaActiva = conv ? conv.etiqueta : null;
+    pintarLista();
 
     document.getElementById('chatHeaderText').textContent = (nombre || 'Sin nombre') + ' — ' + numero;
-    document.getElementById('borrarBtn').style.display = 'inline-block';
+    document.getElementById('acciones').style.display = 'flex';
+    pintarEtiquetas();
+
     const resp = await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE) + '&numero=' + encodeURIComponent(numero));
     const data = await resp.json();
 
@@ -131,6 +250,57 @@
       body.appendChild(div);
     });
     body.scrollTop = body.scrollHeight;
+
+    pintarLead(data.lead);
+  }
+
+  function pintarLead(lead) {
+    const panel = document.getElementById('lead');
+    panel.style.display = 'block';
+
+    if (!lead) {
+      panel.innerHTML = '<h2>Del formulario</h2><div id="leadVacio">Sin datos. Escribió por WhatsApp sin haber llenado el formulario, o lo llenó antes de que se conectara el registro.</div>';
+      return;
+    }
+
+    const campos = [
+      ['A qué se dedica', lead.trabajo],
+      ['Por qué busca remoto', lead.razon],
+      ['Inglés', lead.ingles],
+      ['Qué tan listo está', lead.compromiso],
+    ].filter(([, v]) => v);
+
+    panel.innerHTML = '<h2>Del formulario</h2>' + (campos.length
+      ? campos.map(([label, valor]) => `
+          <div class="campo">
+            <div class="campo-label">${label}</div>
+            <div class="campo-valor">${escapeHtml(valor)}</div>
+          </div>`).join('')
+      : '<div id="leadVacio">El registro existe pero sin datos.</div>');
+  }
+
+  function pintarEtiquetas() {
+    document.querySelectorAll('.tag').forEach(b => {
+      b.classList.toggle('on', b.dataset.t === etiquetaActiva);
+    });
+  }
+
+  async function etiquetar(etiqueta) {
+    if (!activo) return;
+    // Volver a picarle a la etiqueta que ya tiene la quita.
+    const nueva = etiquetaActiva === etiqueta ? null : etiqueta;
+
+    await fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ numero: activo, etiqueta: nueva }),
+    });
+
+    etiquetaActiva = nueva;
+    const conv = conversaciones.find(c => c.numero === activo);
+    if (conv) conv.etiqueta = nueva;
+    pintarEtiquetas();
+    pintarLista();
   }
 
   async function borrarConversacionActiva() {
@@ -142,8 +312,10 @@
     });
 
     activo = null;
+    etiquetaActiva = null;
     document.getElementById('chatHeaderText').textContent = 'Selecciona una conversación';
-    document.getElementById('borrarBtn').style.display = 'none';
+    document.getElementById('acciones').style.display = 'none';
+    document.getElementById('lead').style.display = 'none';
     document.getElementById('chatBody').innerHTML = '<div id="chatEmpty">Elige un lead de la izquierda para ver el chat</div>';
     cargarLista();
   }
