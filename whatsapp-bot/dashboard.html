@@ -674,9 +674,16 @@
         </div>`;
       }).join('');
 
+      // La fuente necesita explicación: solo se puede identificar Google Ads
+      // (por el gclid que agrega a sus clics). Todo lo demás cae en una bolsa.
+      const nota = llave === 'fuente'
+        ? `<div class="nota">El porcentaje es la conversión a trial de cada fuente. Solo se puede identificar Google Ads, porque agrega un parámetro propio a cada clic de sus anuncios. "Meta, orgánico o directo" junta todo lo demás: anuncios de Instagram, link de la bio, búsquedas en Google sin pagar, correos y quien escribe la dirección directo. Empieza a contar desde el 11 ago 2026, así que los leads anteriores caen todos en esa bolsa.</div>`
+        : '';
+
       return `<div class="m-seccion">
         <div class="m-head"><h3>${titulos[llave]}</h3><span class="sub">ordenado por conversión a trial</span></div>
         <div class="filas">${filas}</div>
+        ${nota}
       </div>`;
     }).join('');
   }
