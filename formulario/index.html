@@ -1098,6 +1098,26 @@
     }
   }
 
+  // Devuelve el gclid de Google Ads si el lead llegó por un anuncio suyo.
+  //
+  // Se guarda en sessionStorage la primera vez porque el formulario son 6
+  // pasos y la persona puede recargar o navegar; la URL con el gclid solo
+  // existe al entrar. Envuelto en try/catch porque sessionStorage truena en
+  // modo privado de algunos navegadores, y esto NUNCA debe impedir el
+  // registro del lead.
+  function obtenerGclid() {
+    try {
+      const enUrl = new URLSearchParams(location.search).get('gclid');
+      if (enUrl) {
+        sessionStorage.setItem('nw_gclid', enUrl);
+        return enUrl;
+      }
+      return sessionStorage.getItem('nw_gclid') || '';
+    } catch (err) {
+      return '';
+    }
+  }
+
   function sendToSheets() {
     if (APPS_SCRIPT_URL === 'TU_APPS_SCRIPT_URL_AQUI') return;
 
@@ -1111,7 +1131,10 @@
       razon:      answers.razon,
       compromiso: answers.compromiso,
       inversion:  answers.inversion,
-      track:      answers.track
+      track:      answers.track,
+      // Google agrega ?gclid=... a cada clic de sus anuncios. Si viene, el
+      // lead llegó por Google Ads; si no, por Meta, orgánico o directo.
+      gclid:      obtenerGclid()
     });
 
     const url = APPS_SCRIPT_URL + '?' + params.toString();

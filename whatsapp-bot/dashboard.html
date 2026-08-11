@@ -651,7 +651,7 @@
 
   function seccionSegmentos(d) {
     const segs = d.segmentos || {};
-    const titulos = { compromiso: 'Por nivel de compromiso', ingles: 'Por nivel de inglés', track: 'Por campaña' };
+    const titulos = { compromiso: 'Por nivel de compromiso', ingles: 'Por nivel de inglés', track: 'Por campaña', fuente: 'Por fuente' };
 
     return Object.keys(titulos).map(llave => {
       const mapa = segs[llave];
