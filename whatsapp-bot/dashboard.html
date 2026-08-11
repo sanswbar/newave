@@ -651,7 +651,9 @@
 
   function seccionSegmentos(d) {
     const segs = d.segmentos || {};
-    const titulos = { compromiso: 'Por nivel de compromiso', ingles: 'Por nivel de inglés', track: 'Por campaña', fuente: 'Por fuente' };
+    // "fuente" va primero: es el corte más accionable ahora que corren Google
+    // Ads y Meta en paralelo. Los demás son perfil del lead, no canal.
+    const titulos = { fuente: 'Por fuente', compromiso: 'Por nivel de compromiso', ingles: 'Por nivel de inglés', track: 'Por campaña' };
 
     return Object.keys(titulos).map(llave => {
       const mapa = segs[llave];
