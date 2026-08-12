@@ -7,46 +7,99 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080a0d" />
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18059012003"></script>
+  <!-- ─────────────────────────────────────────────────────────────────────
+       TRACKING DIFERIDO (12 ago 2026)
+
+       POR QUÉ: el 99.9% del tráfico entra desde el navegador interno de
+       Instagram en móvil, casi siempre con datos móviles. Antes, GTM, Clarity
+       y el Meta Pixel se descargaban en el <head> ANTES de pintar contenido:
+       tres dominios más de DNS + TLS en el camino crítico. En 4G con una barra
+       de señal, eso dejaba la página en blanco hasta que el timeout (más
+       agresivo en el WebView de Instagram que en Safari) la mataba. El 12 ago
+       el CPR se triplicó por esto.
+
+       QUÉ CAMBIÓ: los stubs de gtag y fbq se definen de inmediato (son solo
+       colas en memoria, no piden red), así que cualquier evento disparado
+       antes de que carguen los scripts se encola y se envía después. Los
+       scripts reales se cargan hasta que la página ya pintó.
+
+       IMPORTANTE si tocas esto: los stubs tienen que quedar aquí arriba. El
+       tracking de CTA de más abajo hace `typeof gtag === 'function'` — si el
+       stub no existe cuando alguien da click rapidísimo, ese click se pierde.
+       Encolar es justo lo que evita perderlo.
+
+       Se quitó el ID AW-18059012003: era una cuenta de Google Ads huérfana que
+       no corresponde a la cuenta activa (617-759-4262), así que descargaba un
+       script y no reportaba a ningún lado.
+       ───────────────────────────────────────────────────────────────────── -->
   <script>
+    // Stubs: encolan eventos sin tocar la red. Los scripts reales llegan después.
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'AW-18059012003');
     gtag('config', 'AW-17772404542');
     gtag('config', 'G-8V4T3G3XKK');
-  </script>
-  <!-- End Google tag -->
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WNMFCN55');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "w4yu713wbg");
-  </script>
-  <!-- End Microsoft Clarity -->
-  <!-- Meta Pixel Code -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '2100703077340387');
-  fbq('track', 'PageView');
+
+    !function(f,b,e,v,n){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window,document);
+    fbq('init', '2100703077340387');
+    fbq('track', 'PageView');
+
+    // Clarity ya define su propia cola (c[a]=c[a]||function(){...}) antes de
+    // pedir el script, así que aquí solo se replica esa parte.
+    window.clarity = window.clarity || function(){(window.clarity.q=window.clarity.q||[]).push(arguments)};
+
+    // Carga real de los scripts, una vez que el contenido ya se pintó.
+    // requestIdleCallback espera a que el navegador esté ocioso; el setTimeout
+    // es el fallback para Safari/iOS, que no lo soporta en versiones viejas.
+    // El evento 'load' garantiza que nada de esto compita con el render.
+    (function() {
+      var yaCargado = false;
+      function cargarTracking() {
+        if (yaCargado) return;
+        yaCargado = true;
+
+        function meterScript(src) {
+          try {
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = src;
+            document.head.appendChild(s);
+          } catch (err) {
+            console.error('No se pudo cargar ' + src, err);
+          }
+        }
+
+        // Cada uno por separado: si un dominio está caído o bloqueado, los
+        // otros dos siguen cargando.
+        meterScript('https://www.googletagmanager.com/gtag/js?id=AW-17772404542');
+        meterScript('https://connect.facebook.net/en_US/fbevents.js');
+        meterScript('https://www.clarity.ms/tag/w4yu713wbg');
+
+        // GTM se inyecta con su snippet propio para que dataLayer/gtm.start
+        // queden como el contenedor los espera.
+        try {
+          window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+          meterScript('https://www.googletagmanager.com/gtm.js?id=GTM-WNMFCN55');
+        } catch (err) {
+          console.error('GTM falló:', err);
+        }
+      }
+
+      if (document.readyState === 'complete') {
+        cargarTracking();
+      } else {
+        window.addEventListener('load', cargarTracking);
+      }
+      // Red de seguridad: si 'load' nunca dispara porque una imagen o iframe
+      // se quedó colgado en 4G, el tracking igual entra a los 4 segundos.
+      setTimeout(cargarTracking, 4000);
+    })();
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=2100703077340387&ev=PageView&noscript=1"
   /></noscript>
-  <!-- End Meta Pixel Code -->
   <meta name="facebook-domain-verification" content="6uyj8lcj2igjugkptz9jh7uq86b4n2" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
@@ -67,9 +120,14 @@
   <meta name="twitter:description" content="La metodología para conseguir trabajo remoto con empresas internacionales, pagado en dólares. Más de 500 casos documentados desde 2020 en México y LATAM." />
   <meta name="twitter:image" content="https://www.newaveacademy.com/images/og-image.png" />
   <link rel="canonical" href="https://www.newaveacademy.com" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <!-- Fuentes self-hosted (12 ago 2026). Antes esto eran dos dominios más
+       (fonts.googleapis.com + fonts.gstatic.com) y una hoja BLOQUEANTE de
+       renderizado: hasta que no llegaba, no se pintaba un solo pixel. En 4G
+       lento era la principal causa de la pantalla en blanco desde Instagram.
+       Ahora salen del mismo dominio, con font-display:swap para que el texto
+       aparezca de inmediato con la fuente del sistema. Ver fonts/fonts.css. -->
+  <link rel="preload" href="fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="fonts/fonts.css" />
   <link rel="icon" type="image/png" href="images/NEWAVEISO.png" />
   <link rel="stylesheet" href="styles3.css" />
   <script type="application/ld+json">

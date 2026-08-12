@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8V4T3G3XKK"></script>
+  <!-- Google tag (gtag.js) — DIFERIDO (12 ago 2026)
+       Mismo motivo que en la landing: en 4G lento desde el WebView de
+       Instagram, pedir googletagmanager.com antes de pintar dejaba la página
+       en blanco. Aquí pesa todavía más, porque este es el paso donde se
+       registra el lead: si el formulario no pinta, el lead se pierde.
+       El stub de gtag queda definido de inmediato, así que `form_step_view` y
+       `form_submit` se encolan aunque el script real aún no haya llegado.
+       OJO: esto NO toca sendToSheets(), que sigue siendo la primera llamada
+       de submitForm() y no depende de gtag para nada. -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-8V4T3G3XKK');
+
+    (function() {
+      var ya = false;
+      function cargarGtag() {
+        if (ya) return;
+        ya = true;
+        try {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-8V4T3G3XKK';
+          document.head.appendChild(s);
+        } catch (err) {
+          console.error('gtag no cargó:', err);
+        }
+      }
+      if (document.readyState === 'complete') cargarGtag();
+      else window.addEventListener('load', cargarGtag);
+      setTimeout(cargarGtag, 4000);
+    })();
   </script>
   <!-- End Google tag -->
   <meta charset="UTF-8" />
@@ -24,10 +50,16 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://www.newaveacademy.com/images/og-formulario.png" />
   <link rel="icon" type="image/png" href="../images/NEWAVEISO.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/css/intlTelInput.css" />
+  <!-- Fuentes self-hosted (12 ago 2026): antes eran dos dominios más y una
+       hoja bloqueante de renderizado. Ver ../fonts/fonts.css. -->
+  <link rel="preload" href="../fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <!-- CSS de intl-tel-input: se carga SIN bloquear el render. El truco de
+       media="print" + onload hace que el navegador lo baje con prioridad baja
+       y lo aplique al llegar. Si jsdelivr está lento o caído (pasa en 4G), el
+       formulario se pinta igual y sigue siendo usable: el campo de teléfono
+       ya tiene fallback a input crudo más abajo. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/css/intlTelInput.css" media="print" onload="this.media='all'" />
   <style>
     :root {
       --bg:           #080a0d;
@@ -875,16 +907,28 @@
   <button class="comunidad-modal-nav comunidad-modal-next" onclick="thanksModalNav(1)">&#8250;</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/intlTelInput.min.js"></script>
+<!-- intl-tel-input con defer (12 ago 2026): antes era un <script> bloqueante
+     de un CDN externo. En 4G lento eso frenaba TODO el JS del formulario que
+     viene abajo, incluido el registro del lead. Con defer, el navegador sigue
+     parseando y el formulario queda usable aunque jsdelivr tarde o no llegue:
+     el campo de teléfono cae al input crudo, que ya estaba contemplado. -->
+<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@23/build/js/intlTelInput.min.js"></script>
 <script>
   // ── intl-tel-input init ──
   // Si la librería (CDN externo) no cargó, itiInstance queda undefined y
   // validateStep(1) usa el fallback del input crudo — no debe romper nada más.
+  //
+  // Con defer, la librería puede llegar DESPUÉS de DOMContentLoaded, así que
+  // ya no basta con inicializar ahí: se intenta en ambos momentos y una
+  // bandera evita inicializar dos veces (eso duplicaría el selector de país).
   let itiInstance;
-  document.addEventListener('DOMContentLoaded', function () {
+  let itiYaIniciado = false;
+  function initIntlTel() {
+    if (itiYaIniciado) return;
     try {
       const input = document.getElementById('whatsapp');
       if (input && typeof window.intlTelInput === 'function') {
+        itiYaIniciado = true;
         itiInstance = window.intlTelInput(input, {
           initialCountry: 'mx',
           preferredCountries: ['mx', 'co', 'ar', 'us', 'es', 've', 'pe', 'cl', 'ec', 'bo'],
@@ -895,7 +939,11 @@
     } catch (err) {
       console.error('intl-tel-input no cargó, usando fallback de input crudo:', err);
     }
-  });
+  }
+  // Cuando el script defer termina de ejecutarse ya disparó su propio load,
+  // así que window 'load' es el momento seguro para el segundo intento.
+  window.addEventListener('load', initIntlTel);
+  document.addEventListener('DOMContentLoaded', initIntlTel);
 
   // ── State ──
   const answers = {
