@@ -79,24 +79,32 @@ a   { text-decoration: none; color: inherit; }
 /* ── ANIMATION ──
    Sutil a propósito: con 28px/0.72s el contenido "brincaba" a su lugar
    mientras bajabas la página (reportado como saltos en móvil). Menos
-   distancia, menos duración y delays cortos = mismo pulido sin brinco. */
-[data-animate] {
+   distancia, menos duración y delays cortos = mismo pulido sin brinco.
+
+   El contenido es visible por defecto. Ocultarlo para animarlo requiere
+   que el JS haya puesto .js-anim en <html>, y eso solo pasa si el
+   IntersectionObserver quedó realmente armado. Si el JS tarda, truena o
+   no corre (datos móviles lentos, WebView de Instagram), no se oculta
+   nada y la página se lee igual: el hero entero vive bajo data-animate,
+   así que la regla al revés dejaba la pantalla en blanco con todo el
+   HTML ya descargado. La animación es un extra, nunca un requisito. */
+.js-anim [data-animate] {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1);
 }
-[data-animate].visible {
+.js-anim [data-animate].visible {
   opacity: 1;
   transform: translateY(0);
 }
-[data-animate][data-delay="1"] { transition-delay: 0.04s; }
-[data-animate][data-delay="2"] { transition-delay: 0.08s; }
-[data-animate][data-delay="3"] { transition-delay: 0.12s; }
-[data-animate][data-delay="4"] { transition-delay: 0.16s; }
+.js-anim [data-animate][data-delay="1"] { transition-delay: 0.04s; }
+.js-anim [data-animate][data-delay="2"] { transition-delay: 0.08s; }
+.js-anim [data-animate][data-delay="3"] { transition-delay: 0.12s; }
+.js-anim [data-animate][data-delay="4"] { transition-delay: 0.16s; }
 
 /* Quien pide menos movimiento en su sistema, lo recibe sin animación */
 @media (prefers-reduced-motion: reduce) {
-  [data-animate] { opacity: 1; transform: none; transition: none; }
+  .js-anim [data-animate] { opacity: 1; transform: none; transition: none; }
 }
 
 /* ── MONO LABEL ── */

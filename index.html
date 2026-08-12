@@ -968,7 +968,15 @@
       /* SCROLL ANIMATIONS
          rootMargin extiende la zona de disparo 120px por debajo del viewport:
          el elemento empieza a animarse ANTES de asomar en pantalla, así el
-         movimiento ocurre fuera de la vista y no se percibe como salto. */
+         movimiento ocurre fuera de la vista y no se percibe como salto.
+
+         El orden importa y no es cosmético: el CSS solo oculta [data-animate]
+         cuando <html> tiene .js-anim, y esa clase se pone AQUÍ, una línea
+         antes de armar el observer. Así, si el JS no llega a este punto, el
+         contenido nunca se oculta. Antes era al revés — el CSS ocultaba de
+         entrada y el JS revelaba — y como el hero entero está bajo
+         data-animate, cualquier retraso del JS en datos móviles dejaba la
+         pantalla en blanco con el HTML completo detrás. */
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(el => {
@@ -978,11 +986,18 @@
             }
           });
         }, { threshold: 0, rootMargin: '0px 0px 120px 0px' });
+
+        document.documentElement.classList.add('js-anim');
         document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
-      } else {
-        // Sin soporte: mostrar todo directo, sin animación
-        document.querySelectorAll('[data-animate]').forEach(el => el.classList.add('visible'));
+
+        /* Red de seguridad: si algo impide que el observer dispare, a los 3s
+           se revela todo. Más vale contenido sin animación que sin contenido. */
+        setTimeout(function () {
+          document.querySelectorAll('[data-animate]:not(.visible)').forEach(el => el.classList.add('visible'));
+        }, 3000);
       }
+      /* Sin IntersectionObserver no se hace nada: al no ponerse .js-anim,
+         el contenido ya está visible por CSS. */
     } catch (err) { console.error('Scroll animations fallaron:', err); }
 
 
