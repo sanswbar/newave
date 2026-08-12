@@ -21,6 +21,12 @@ const COL_CLICK      = 13; // Column M — "Click a plan"
 // export de Skool. Vive aparte porque marcar "trial" a mano sobrescribe la
 // columna Estatus y borra el "email N" que estaba ahí.
 const COL_CORREO_AL_CONVERTIR = 14;
+// Columna O — de dónde vino el lead. Por ahora solo distingue Google Ads del
+// resto: el formulario manda el `gclid` que Google agrega a cada clic de sus
+// anuncios. Si viene vacío, el lead llegó por Meta, orgánico o directo (eso ya
+// se sabe por otras vías). Va al FINAL a propósito: las columnas 12, 13 y 14
+// están hardcodeadas por número y meter una en medio rompería el registro.
+const COL_FUENTE = 15;
 
 // Email sequence delays (ms after signup)
 const EMAIL_DELAYS = {
@@ -121,6 +127,12 @@ function doGet(e) {
       } else {
         sheet.appendRow(row);
         lastRow = sheet.getLastRow();
+
+        // La fuente se escribe aparte del array `row` porque las columnas 13 y
+        // 14 (click y correo al convertir) se llenan después, no al registrar.
+        // Si se metiera en el array caería en la 13 y pisaría el click.
+        const gclid = (e.parameter.gclid || '').toString().trim();
+        if (gclid) sheet.getRange(lastRow, COL_FUENTE).setValue('Google Ads');
       }
     } finally {
       lock.releaseLock();
@@ -211,7 +223,7 @@ function calcularMetricas() {
 
   // Una sola lectura del rango completo: pedir celda por celda sobre miles de
   // filas es lentísimo en Apps Script.
-  const datos = sheet.getRange(2, 1, lastRow - 1, COL_CORREO_AL_CONVERTIR).getValues();
+  const datos = sheet.getRange(2, 1, lastRow - 1, COL_FUENTE).getValues();
 
   const ahora = new Date();
   const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
@@ -232,6 +244,10 @@ function calcularMetricas() {
   const porCompromiso = {};
   const porIngles = {};
   const porTrack = {};
+  // De dónde vino el lead. Solo distingue Google Ads del resto: la columna se
+  // llena con el gclid que Google agrega a sus clics. "Otras fuentes" junta
+  // Meta, orgánico y directo, que ya se distinguen por otras vías.
+  const porFuente = {};
   // Cuántos correos había recibido cada quien al momento de convertir.
   // Es el último correo ENVIADO antes del trial, no prueba de causalidad,
   // pero sirve para ver en qué punto de la secuencia se concentran.
@@ -247,6 +263,7 @@ function calcularMetricas() {
     const track      = (fila[10] || '').toString().trim();   // col 11
     const estatus    = (fila[COL_ESTATUS - 1] || '').toString().toLowerCase();
     const click      = (fila[COL_CLICK - 1] || '').toString().trim();
+    const fuente     = (fila[COL_FUENTE - 1] || '').toString().trim();
 
     // El estatus acumula notas separadas por " | " (correos, WhatsApp), así
     // que se busca la palabra dentro, no una igualdad exacta.
@@ -269,6 +286,7 @@ function calcularMetricas() {
     acumularSegmento(porCompromiso, compromiso || 'Sin dato', esTrial, dioClick);
     acumularSegmento(porIngles,     ingles     || 'Sin dato', esTrial, dioClick);
     acumularSegmento(porTrack,      track      || 'Sin dato', esTrial, dioClick);
+    acumularSegmento(porFuente,     fuente     || 'Meta, orgánico o directo', esTrial, dioClick);
 
     if (esTrial) {
       // La columna N la llena onEdit al marcar el trial. Si está vacía, es un
@@ -309,6 +327,7 @@ function calcularMetricas() {
       compromiso: porCompromiso,
       ingles: porIngles,
       track: porTrack,
+      fuente: porFuente,
     },
     trialsPorCorreo: porCorreo,
     trialsPorVelocidad: porVelocidad,
@@ -356,6 +375,11 @@ function onEdit(e) {
     const valor = (e.range.getValue() || '').toString().toLowerCase();
     if (valor.indexOf('trial') === -1 && valor.indexOf('pago') === -1) return;
 
+    // Encola el correo de onboarding. Va ANTES del registro de la columna N a
+    // propósito: ese bloque hace return si la celda ya tiene valor, y eso
+    // impediría encolar cuando se re-edita el estatus.
+    queueOnboarding(sheet, fila);
+
     // Si ya se registró antes, no pisarlo (por si se re-edita la celda)
     const celdaDestino = sheet.getRange(fila, COL_CORREO_AL_CONVERTIR);
     if (celdaDestino.getValue() !== '') return;
@@ -367,6 +391,57 @@ function onEdit(e) {
   } catch (err) {
     // Nunca romper la edición del sheet por esto
     console.error('onEdit falló: ' + err);
+  }
+}
+
+// ─── ONBOARDING: correo para quien ya entró al trial ──────────────────────
+//
+// Distinto de la secuencia de 5 correos (`seq_`), que es para leads que NO
+// entraron. Este arranca cuando se marca "Trial" en la columna L y busca una
+// sola cosa: que la persona se presente en la comunidad y conteste el DM de
+// Jaime, porque de ahí él la encamina. Firmado por Jaime, que es quien da el
+// seguimiento dentro de la plataforma.
+//
+// Empieza con UN correo a propósito. Si funciona, agregar un segundo es
+// copiar el bloque de sendOnboarding1 y añadir la entrada al mapa de delays.
+const ONBOARDING_DELAYS = {
+  1: 60 * 60 * 1000,   // 1 h después de marcar el trial
+};
+
+const POST_BIENVENIDA_URL = 'https://www.skool.com/newave/welcome-introduce-yourself-share-a-pic-of-your-workspace';
+
+// Encola el correo de onboarding para la fila marcada como trial.
+//
+// Idempotente: la marca `onb_hecho_<fila>` evita que re-editar la celda de
+// estatus vuelva a encolar y la persona reciba el correo dos veces. La marca
+// NO se borra al enviarse, justamente para que siga bloqueando reenvíos.
+//
+// Nota sobre triggers simples: onEdit no puede llamar a GmailApp (requiere
+// autorización). Por eso aquí solo se escribe en Script Properties, que sí
+// está permitido, y processQueue —que corre con un trigger instalable— es
+// quien manda el correo.
+function queueOnboarding(sheet, fila) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const marca = 'onb_hecho_' + fila;
+    if (props.getProperty(marca)) return; // ya se encoló para esta fila
+
+    const nombre = (sheet.getRange(fila, COL_NOMBRE).getValue() || '').toString().trim();
+    const correo = (sheet.getRange(fila, COL_CORREO).getValue() || '').toString().trim();
+    if (!correo) return;
+
+    const now = Date.now();
+    props.setProperty('onb_' + fila + '_1', JSON.stringify({
+      emailNum: 1,
+      nombre:   nombre,
+      correo:   correo,
+      row:      fila,
+      dueAt:    now + ONBOARDING_DELAYS[1],
+    }));
+    props.setProperty(marca, String(now));
+  } catch (err) {
+    // Nunca romper la edición del sheet por esto
+    console.error('queueOnboarding falló: ' + err);
   }
 }
 
@@ -586,6 +661,47 @@ function processQueue() {
       if (data.row) agregarEstatus(sheet, data.row, 'Error WhatsApp: ' + (err.message || err));
     }
     props.deleteProperty(key);
+  }
+
+  // Cola de onboarding (quien ya entró al trial). Comparte el tope de
+  // MAX_POR_CORRIDA con la secuencia normal para no golpear la cuota de Gmail
+  // en una sola pasada.
+  const sendersOnb = { 1: sendOnboarding1 };
+
+  for (const key in allProps) {
+    if (sinCuotaGmail) break;
+    if (key.indexOf('onb_') !== 0) continue;
+    if (key.indexOf('onb_hecho_') === 0) continue; // marca de control, no es cola
+    if (enviados >= MAX_POR_CORRIDA) break;
+
+    let data;
+    try {
+      data = JSON.parse(allProps[key]);
+    } catch (err) {
+      props.deleteProperty(key);
+      continue;
+    }
+    if (now < data.dueAt) continue; // aún no toca
+
+    if (!data.correo || !sendersOnb[data.emailNum]) {
+      props.deleteProperty(key);
+      continue;
+    }
+
+    try {
+      sendersOnb[data.emailNum](data.nombre, data.correo);
+      enviados++;
+      props.deleteProperty(key);
+      Logger.log('[onboarding] enviado correo ' + data.emailNum + ' a fila ' + data.row);
+    } catch (err) {
+      const msg = err.message || '';
+      if (msg.indexOf('too many times') !== -1 || msg.indexOf('Límite') !== -1) {
+        break; // sin cuota: se reintenta en la siguiente corrida, no se borra
+      }
+      // Otro error: se descarta para no atorar la cola con un envío imposible
+      Logger.log('[onboarding] ERROR correo ' + data.emailNum + ' a ' + data.correo + ': ' + msg);
+      props.deleteProperty(key);
+    }
   }
 
   // Al final de cada corrida: ¿lleva el sheet demasiado sin leads nuevos?
@@ -819,6 +935,27 @@ function sendEmail5(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
+// ─── ONBOARDING 1 — 1 hora después de marcar el trial ─────────────────────
+
+function sendOnboarding1(nombre, correo) {
+  const firstName = nombre.split(' ')[0] || '';
+  const subject = 'Te escribí por Newave';
+
+  const html = `
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
+  <p style="margin:0 0 16px">Hola${firstName ? ' ' + firstName : ''},</p>
+  <p style="margin:0 0 16px">Ya estás dentro de Newave. Qué bueno tenerte por acá.</p>
+  <p style="margin:0 0 16px">Te mandé un mensaje directo en la plataforma. Contéstame ahí y te ayudo con lo que necesites.</p>
+  <p style="margin:0 0 16px">Mientras tanto, preséntate en el post de bienvenida. Así te conocemos y entendemos qué estás buscando.</p>
+  <p style="margin:0 0 16px">Tres líneas bastan. De dónde eres, a qué te dedicas, y qué estás buscando.</p>
+  <p style="margin:0 0 16px">Preséntate aquí: <a href="${POST_BIENVENIDA_URL}">Post de bienvenida</a></p>
+  <p style="margin:0 0 16px">Presentarte es el primer paso. Ahí empieza el proceso.</p>
+  <p style="margin:0">Jaime</p>
+</div>`;
+
+  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
+}
+
 // ─── SHEET SETUP ──────────────────────────────────────────────────────────
 
 function getSheet(name) {
@@ -826,10 +963,16 @@ function getSheet(name) {
   let sheet = ss.getSheetByName(name);
   if (!sheet) {
     sheet = ss.insertSheet(name);
+    // Deben coincidir con los del sheet real y en el mismo orden: COL_ESTATUS
+    // (12), COL_CLICK (13), COL_CORREO_AL_CONVERTIR (14) y COL_FUENTE (15)
+    // están hardcodeadas por número. Este bloque solo corre si la hoja no
+    // existe, pero si algún día se recrea, el orden tiene que quedar igual.
     const headers = [
       'Fecha', 'Nombre', 'Correo', 'WhatsApp', 'LinkedIn',
       'Inglés', 'Trabajo actual', 'Razón del cambio',
-      'Nivel de compromiso', 'Capacidad de inversión', 'Track', 'Estatus', 'Click a plan',
+      'Nivel de compromiso', 'Capacidad de inversión',
+      'Track (low/high/disqualified)', 'Estatus', 'Click a Skool (Si /No) ',
+      'En que correo convirtieron', 'Fuente',
     ];
     const headerRow = sheet.getRange(1, 1, 1, headers.length);
     headerRow.setValues([headers]);
