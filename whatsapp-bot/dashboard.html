@@ -137,6 +137,20 @@
   .m-head h3 { margin: 0; }
   .m-head .sub { font-size: 0.75rem; color: var(--ink-3); }
 
+  /* ── Bloques: agrupan varias secciones bajo un mismo tema ──
+     Sin esto todas las secciones se leen al mismo nivel y a partir de 6 ya
+     no se distingue qué responde cada una. El título del bloque va grande y
+     en color de tinta fuerte, al revés que los h3 de sección (chicos, gris,
+     en mayúsculas), para que la jerarquía se lea de un vistazo. */
+  .m-bloque { margin-bottom: 3.5rem; }
+  .m-bloque + .m-bloque { border-top: 1px solid var(--linea); padding-top: 2.5rem; }
+  .m-bloque-head { margin-bottom: 1.75rem; }
+  .m-bloque-head h2 {
+    font-size: 1.15rem; font-weight: 600; color: var(--ink);
+    margin: 0 0 0.3rem; letter-spacing: -0.01em;
+  }
+  .m-bloque-head p { font-size: 0.82rem; color: var(--ink-3); margin: 0; max-width: 60ch; }
+
   /* ── Embudo: un renglón por paso, ancho proporcional ── */
   /* El ancho reservado a la derecha evita que la nota de % se corte cuando
      la barra es corta (el caso de Trials, que es el paso más angosto). */
@@ -442,14 +456,38 @@
       return;
     }
 
+    // Agrupadas en tres bloques por la pregunta que responden. Con 6 secciones
+    // sueltas ya no se distinguía qué era qué.
     cont.innerHTML = '<div class="m-wrap">' +
-      seccionEmbudo(data) +
-      seccionPeriodos(data) +
-      seccionVelocidad(data) +
-      seccionCorreos(data) +
-      seccionBot(data) +
-      seccionSegmentos(data) +
+      bloque(
+        'Cuánta gente entra',
+        'Del formulario a Skool, y cómo se mueve el volumen por periodo.',
+        seccionEmbudo(data) + seccionPeriodos(data)
+      ) +
+      bloque(
+        'Cómo y cuándo convierten',
+        'Qué tan rápido se deciden, en qué punto de la secuencia de correos entran, y cuántos habían hablado con el bot.',
+        seccionVelocidad(data) + seccionCorreos(data) + seccionBot(data)
+      ) +
+      bloque(
+        'Quién convierte mejor',
+        'Los mismos leads cortados por fuente y por perfil. El porcentaje siempre es conversión a trial, no volumen.',
+        seccionSegmentos(data)
+      ) +
       '</div>';
+  }
+
+  // Envuelve varias secciones bajo un título común. Si el contenido viene
+  // vacío (sin datos todavía), el bloque no se pinta.
+  function bloque(titulo, descripcion, contenido) {
+    if (!contenido.trim()) return '';
+    return `<div class="m-bloque">
+      <div class="m-bloque-head">
+        <h2>${titulo}</h2>
+        <p>${descripcion}</p>
+      </div>
+      ${contenido}
+    </div>`;
   }
 
   // Cuánto tardan en decidirse. Separado de "en qué correo convierten" porque
