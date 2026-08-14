@@ -45,6 +45,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet sitemap.xml; then
             git add sitemap.xml
-            git commit -m "chore: regenerate sitemap.xml"
+            # El `-- sitemap.xml` es obligatorio: sin él, el commit arrastra
+            # cualquier otro archivo que estuviera en el índice y este job
+            # termina subiendo versiones viejas de index.html o del formulario.
+            # Pasó tres veces (3, 11 y 13 ago 2026) y una de ellas revirtió
+            # cambios reales sin que git marcara conflicto.
+            git commit -m "chore: regenerate sitemap.xml" -- sitemap.xml
+
+            # El checkout es del commit que disparó el workflow. Si alguien
+            # subió algo mientras esto corría, hacer push directo empujaría
+            # el árbol viejo encima. El rebase reconcilia antes de empujar.
+            git pull --rebase origin main
             git push
           fi
