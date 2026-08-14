@@ -1115,12 +1115,28 @@
       console.error('GA4 form_submit falló:', err);
     }
 
+    // El mismo evento se manda por dos vías: el pixel del navegador (abajo) y
+    // Conversions API desde el servidor (/api/meta-capi). Meta los deduplica
+    // por event_id + event_name, así que este id tiene que ser EL MISMO en las
+    // dos. Si no coinciden, Meta cuenta la conversión dos veces y las campañas
+    // optimizan sobre números inflados.
+    const eventId = generarEventId();
+
+    // Los hashes se calculan una sola vez y se reusan en ambas vías. Van fuera
+    // del try del pixel porque CAPI los necesita aunque fbq no exista (que es
+    // justo el caso que CAPI viene a cubrir: bloqueadores, ATT, webview de IG).
+    let emHash, phHash;
+    try {
+      emHash = answers.correo ? await sha256Hex(answers.correo.trim().toLowerCase()) : undefined;
+      phHash = answers.whatsapp ? await sha256Hex(answers.whatsapp.replace(/[^\d]/g, '')) : undefined;
+    } catch (err) {
+      console.error('Hasheo de Advanced Matching falló, continuando sin hash:', err);
+    }
+
     try {
       if (typeof fbq === 'function') {
         // Advanced Matching: sube el Event Match Quality hasheando email/teléfono.
         try {
-          const emHash = answers.correo ? await sha256Hex(answers.correo.trim().toLowerCase()) : undefined;
-          const phHash = answers.whatsapp ? await sha256Hex(answers.whatsapp.replace(/[^\d]/g, '')) : undefined;
           fbq('init', '2100703077340387', { em: emHash, ph: phHash });
         } catch (err) {
           console.error('Advanced Matching falló, continuando sin hash:', err);
@@ -1128,10 +1144,18 @@
         fbq('track', 'CompleteRegistration', {
           content_name: 'Formulario Newave',
           status: answers.compromiso === 'Listo para tomar accion'
-        });
+        }, { eventID: eventId });
       }
     } catch (err) {
       console.error('Meta Pixel CompleteRegistration falló:', err);
+    }
+
+    // Conversions API. Aislado en su propio try/catch y sin await: el registro
+    // del lead ya ocurrió arriba y la navegación a Skool no debe esperar esto.
+    try {
+      enviarCapi(eventId, emHash, phHash);
+    } catch (err) {
+      console.error('Meta CAPI falló:', err);
     }
 
     // Si showResult() truena, el botón no puede quedarse muerto en
@@ -1144,6 +1168,61 @@
       btn.disabled = false;
       btn.textContent = textoOriginal;
     }
+  }
+
+  // ID único por submit. Lo comparten el pixel del navegador y Conversions
+  // API para que Meta deduplique y cuente UNA conversión, no dos.
+  function generarEventId() {
+    try {
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+    } catch (err) { /* sigue al respaldo */ }
+    // Respaldo para navegadores viejos: no necesita ser criptográfico, solo
+    // irrepetible entre submits.
+    return 'nw-' + Date.now() + '-' + Math.random().toString(36).slice(2, 11);
+  }
+
+  // Lee una cookie por nombre. Sirve para _fbc y _fbp, que Meta pone en el
+  // navegador y son de las señales que más suben el Event Match Quality.
+  function leerCookie(nombre) {
+    try {
+      const m = document.cookie.match('(^|;)\\s*' + nombre + '\\s*=\\s*([^;]+)');
+      return m ? m.pop() : undefined;
+    } catch (err) {
+      return undefined;
+    }
+  }
+
+  // Manda el evento a Conversions API vía nuestra función serverless.
+  //
+  // El servidor ve la IP real y el user agent, que el navegador no puede
+  // reportar de forma confiable. Por eso este camino captura conversiones que
+  // el pixel pierde (bloqueadores, iOS/ATT, webview de Instagram).
+  //
+  // keepalive: la petición sobrevive a la navegación a Skool, igual que
+  // sendToSheets. Sin esto se cortaría a medio camino en la mayoría de casos.
+  function enviarCapi(eventId, emHash, phHash) {
+    const payload = {
+      event_id: eventId,
+      event_name: 'CompleteRegistration',
+      event_source_url: location.href,
+      em: emHash,
+      ph: phHash,
+      fbc: leerCookie('_fbc'),
+      fbp: leerCookie('_fbp'),
+      content_name: 'Formulario Newave',
+      status: answers.compromiso === 'Listo para tomar accion',
+    };
+
+    fetch('/api/meta-capi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(err => {
+      // Falla en silencio a propósito: el lead ya está registrado y esto es
+      // solo señal para Meta. Nunca debe afectar lo que ve la persona.
+      console.error('CAPI no se pudo enviar:', err);
+    });
   }
 
   // Devuelve el gclid de Google Ads si el lead llegó por un anuncio suyo.
