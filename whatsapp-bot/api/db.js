@@ -200,4 +200,55 @@ async function borrarConversacion(numero) {
   await sql`DELETE FROM mensajes WHERE numero = ${numero};`;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta, numerosConConversacion, estadisticasBot };
+// ─── LOCK POR CONVERSACIÓN ────────────────────────────────────────────────
+//
+// Cada mensaje de WhatsApp entra como una invocación serverless distinta. Si
+// alguien manda dos mensajes seguidos rápido, las dos se ejecutan en paralelo
+// y ninguna ve la respuesta de la otra: el bot contesta dos veces.
+//
+// Pasó cuatro veces en producción. En un caso se presentó DOS VECES como
+// asesora en la misma conversación; en otro mandó dos diagnósticos técnicos
+// que se contradecían entre sí.
+//
+// Una variable en memoria no sirve: las invocaciones pueden caer en instancias
+// distintas. El lock tiene que estar donde ambas lo vean, o sea en Postgres.
+//
+// Se usa un advisory lock, que no necesita tabla y se libera solo si la
+// conexión muere. `pg_try_advisory_lock` NO espera: si otra invocación ya lo
+// tiene, devuelve false de inmediato y quien llama decide qué hacer.
+async function intentarLockConversacion(numero) {
+  try {
+    // El lock necesita un entero. Se deriva del número con un hash simple y
+    // estable; da igual si dos números distintos colisionan de vez en cuando,
+    // el peor caso es que uno espere un turno.
+    const clave = hashNumero(numero);
+    const { rows } = await sql`SELECT pg_try_advisory_lock(${clave}) AS ok;`;
+    return rows[0]?.ok === true;
+  } catch (err) {
+    // Si el lock falla (DB caída, etc.) se deja pasar. Es mejor arriesgar un
+    // mensaje duplicado que dejar a la persona sin respuesta.
+    console.error('[lock] No se pudo tomar el lock, continuando:', err);
+    return true;
+  }
+}
+
+async function liberarLockConversacion(numero) {
+  try {
+    await sql`SELECT pg_advisory_unlock(${hashNumero(numero)});`;
+  } catch (err) {
+    console.error('[lock] No se pudo liberar el lock:', err);
+  }
+}
+
+// Hash determinista a entero de 32 bits con signo, que es lo que acepta
+// pg_try_advisory_lock.
+function hashNumero(numero) {
+  let h = 0;
+  const s = String(numero);
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  }
+  return h;
+}
+
+module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta, numerosConConversacion, estadisticasBot, intentarLockConversacion, liberarLockConversacion };

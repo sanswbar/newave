@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { guardarMensaje, obtenerConversacion, obtenerLead } = require('./db');
+const { guardarMensaje, obtenerConversacion, obtenerLead, intentarLockConversacion, liberarLockConversacion } = require('./db');
 
 // ─── CONFIG (todo vive en variables de entorno de Vercel, NO en el código) ───
 const VERIFY_TOKEN   = process.env.VERIFY_TOKEN;          // el que tú inventes para verificar el webhook
@@ -78,9 +78,25 @@ module.exports = async function handler(req, res) {
       // Marca como leído y muestra "escribiendo..." mientras se genera la respuesta
       await marcarComoLeido(message.id);
 
-      const reply = await generarRespuesta(from, text, name);
-      await esperarComoHumano(reply);
-      await enviarWhatsApp(from, reply);
+      // Un solo mensaje a la vez por conversación. Si la persona manda dos
+      // seguidos rápido, la segunda invocación no contesta: guarda el mensaje
+      // para que quede en el historial y deja que la primera responda a todo
+      // junto. Sin esto el bot contesta dos veces sin verse a sí mismo.
+      const tengoElLock = await intentarLockConversacion(from);
+      if (!tengoElLock) {
+        console.log(`[lock] ${from} ya tiene una respuesta en curso, solo se guarda el mensaje`);
+        await guardarMensaje(from, name, 'user', text)
+          .catch(err => console.error('[DB] Error guardando mensaje en paralelo:', err));
+        return res.status(200).send('ok');
+      }
+
+      try {
+        const reply = await generarRespuesta(from, text, name);
+        await esperarComoHumano(reply);
+        await enviarWhatsApp(from, reply);
+      } finally {
+        await liberarLockConversacion(from);
+      }
 
       return res.status(200).send('ok');
     } catch (err) {
@@ -125,7 +141,11 @@ async function generarRespuesta(from, text, name) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-5',
-      max_tokens: 800,
+      // 1200 y no 800: con 800 se truncaron respuestas reales a media frase.
+      // No hace que los mensajes sean más largos (de eso se encarga el
+      // prompt, que pide mensajes de 1-3 líneas), solo evita el corte cuando
+      // alguien manda varias preguntas juntas y la respuesta legítima crece.
+      max_tokens: 1200,
       system: systemFull,
       messages: trimmed,
     }),
@@ -147,14 +167,46 @@ async function generarRespuesta(from, text, name) {
     console.error('[Claude] Respuesta sin bloque de texto:', JSON.stringify(data));
   }
 
-  const reply = textBlock?.text?.trim()
+  let reply = textBlock?.text?.trim()
     || 'Perdón, tuve un problemita. ¿Me lo repites? 🙏';
+
+  // Respuesta cortada a media frase por el límite de tokens. Pasó dos veces
+  // en producción y las dos se cortaron JUSTO antes del link ("...los 7 días
+  // son gratis, puedes entrar y"). Una de esas personas nunca volvió a
+  // escribir: el mensaje incompleto mata la conversación.
+  //
+  // Se recorta a la última frase completa y, si el modelo ya venía hablando
+  // del trial, se cierra con el link para no dejarla sin siguiente paso.
+  if (data?.stop_reason === 'max_tokens') {
+    console.error('[Claude] Respuesta truncada por max_tokens. Original:', reply);
+    reply = recortarAFraseCompleta(reply);
+    if (!reply.includes(SKOOL_LINK)) {
+      reply += `\n\nAquí puedes entrar a los 7 días gratis: ${SKOOL_LINK}`;
+    }
+  }
 
   // Guarda la respuesta del bot en el historial
   history.push({ role: 'assistant', content: reply });
   guardarMensaje(from, name, 'assistant', reply).catch(err => console.error('[DB] Error guardando mensaje assistant:', err));
 
   return reply;
+}
+
+// Corta el texto en la última frase que quedó completa. Si no encuentra
+// ningún cierre de frase, devuelve el original: es mejor mandar algo cortado
+// que mandar vacío.
+function recortarAFraseCompleta(texto) {
+  const cierres = ['. ', '! ', '? ', '.\n', '!\n', '?\n'];
+  let corte = -1;
+  for (const c of cierres) {
+    corte = Math.max(corte, texto.lastIndexOf(c));
+  }
+  // También considera el caso de que termine justo en el signo, sin espacio
+  const ultimoChar = texto.trimEnd().slice(-1);
+  if ('.!?'.includes(ultimoChar)) return texto.trimEnd();
+
+  if (corte === -1) return texto;
+  return texto.slice(0, corte + 1).trim();
 }
 
 // Lo que la persona escribió en el formulario, para que el bot no pregunte
