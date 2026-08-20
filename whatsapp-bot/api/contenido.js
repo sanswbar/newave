@@ -259,32 +259,70 @@ async function generarPuntos(item) {
   const cuerpo = await traerTexto(item.url) || item.resumen || '';
   if (cuerpo.length < 200) return null;
 
-  const prompt = `Eres parte del equipo de Newave Academy, un programa que ayuda a profesionales de México y LATAM a conseguir trabajo remoto con empresas internacionales. Escribes en el "Learning Spot" de la comunidad, donde se comparte contenido que vale la pena.
+  const prompt = `Escribes en el "Learning Spot" de Newave Academy, la comunidad de un programa que ayuda a profesionales de México y LATAM a conseguir trabajo remoto con empresas internacionales.
 
 Este es el contenido a comentar:
 
 FUENTE: ${item.fuente} (${item.tipo})
 TÍTULO: ${item.titulo}
+LINK: ${item.url}
 
 CONTENIDO:
 ${cuerpo.slice(0, 12000)}
 
-Escribe DOS cosas, separadas por la línea "---":
+Escribe el post completo, imitando esta estructura y esta voz. Este es un post real de Santiago, úsalo como modelo:
 
-1. Dos o tres puntos concretos de lo que dice el contenido. Lo que de verdad se dijo, con el detalle específico: cifras, ejemplos, frases textuales si las hay. Nada de generalidades tipo "habla sobre la importancia de la disciplina". Cada punto en un párrafo corto de 2-3 líneas.
+---
+Qué tal! Les dejo una recomendación de la semana que escuché y me gustó mucho.
 
-2. Un párrafo de por qué le sirve a alguien que está buscando trabajo remoto. Concreto, aterrizado a su situación.
+Es un episodio de The Knowledge Project con Mario Harik, CEO de XPO.
+
+Hubo varias cosas que me llamaron la atención, pero una en particular: en sus reuniones, los líderes hablan al final.
+
+Por qué? Porque si el jefe habla primero, automáticamente condiciona lo que van a decir los demás. Incluso comenta que cuando todos están de acuerdo demasiado rápido, le preocupa porque probablemente nadie está retando la idea.
+
+También habla mucho de feedback. Él trata de nunca hacerlo subjetivo, siempre llevarlo a datos. Y en vez de esperar al típico review anual, prefiere dar feedback constantemente.
+
+Otra que me gustó mucho fue sobre delegar:
+
+Dile a la gente qué tiene que hacer, pero no cómo hacerlo.
+
+Porque si les dices exactamente cómo, estás limitando el resultado a tu propia forma de pensar.
+
+Creo que varias de estas ideas aplican muchísimo para los que trabajan o quieren trabajar remoto. En equipos internacionales se valora mucho que puedas pensar por tu cuenta, cuestionar ideas y no necesitar que te digan exactamente cómo hacer todo.
+
+Les dejo el episodio porque vale mucho la pena:
+
+${item.url}
+
+Con cuál se identifican más?
+---
+
+FÍJATE EN LO QUE HACE ESE POST:
+- Abre diciendo que lo consumió de verdad ("escuché y me gustó mucho"), no anunciando un tema.
+- Dice qué es y de quién en una línea corta.
+- Jerarquiza en vez de listar: "hubo varias cosas, pero una en particular".
+- Explica el MECANISMO, no solo el qué. Usa "Por qué?" y contesta.
+- Pone la idea más potente sola en su línea, sin adornos.
+- Cierra tendiendo un puente concreto a alguien que busca trabajo remoto.
+- Termina con una pregunta abierta que invita a comentar.
 
 REGLAS DE ESCRITURA:
-- Español de México. Nada de "vosotros", "ordenador", "vale", ni voseo argentino.
+- Español de México. Nada de "vosotros", "ordenador", "vale", ni voseo.
 - Cercano pero NO coloquial. Prohibidas: "chamba", "la neta", "chido", "ahorita", "te late", "órale". Esto lo lee gente que pagó por el programa.
-- Sin guiones largos (—). Usa punto y seguido o coma.
-- Un solo signo de interrogación o exclamación, el de cierre, sin el de apertura. Así: "Ustedes qué opinan?" no "¿Ustedes qué opinan?".
+- Sin guiones largos. Punto y seguido o coma.
+- Un solo signo de interrogación o exclamación, el de cierre, sin el de apertura. Así: "Por qué?" y "Qué tal!".
 - Sin markdown. Nada de asteriscos, títulos ni listas con guiones.
-- Sin frases de coach motivacional ni lenguaje de vendedor.
-- Si el contenido está en inglés, escribe en español pero puedes citar frases textuales en inglés cuando valga la pena.
+- Párrafos cortos, de 1 a 3 líneas. Línea en blanco entre cada uno.
+- Nada de lenguaje de coach ni de vendedor.
+- Si el contenido está en inglés, escribe en español. Puedes citar frases textuales en inglés cuando valga la pena.
 
-Devuelve SOLO los puntos y el párrafo, sin encabezados ni explicaciones tuyas.`;
+CONTENIDO DEL POST:
+- Dos o tres ideas concretas de lo que dice, con el detalle real: cifras, ejemplos, frases textuales. Nada de generalidades tipo "habla sobre la importancia de la disciplina".
+- El puente al final tiene que ser específico, no genérico. Conecta la idea con algo que de verdad le sirva a alguien buscando trabajo remoto.
+- Incluye el link antes de la pregunta final, como en el modelo.
+
+Devuelve SOLO el post, desde el saludo hasta la pregunta final. Sin encabezados, sin explicaciones tuyas, sin comillas alrededor.`;
 
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -296,7 +334,7 @@ Devuelve SOLO los puntos y el párrafo, sin encabezados ni explicaciones tuyas.`
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 1200,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }],
       }),
     });

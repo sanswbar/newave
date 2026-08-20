@@ -1239,36 +1239,57 @@
 
   let CONT_TEXTOS = null;
 
-  function otroBorrador() {
+  // Pide a Claude que lo escriba de nuevo. Cada versión sale distinta
+  // porque el modelo elige otras ideas del contenido y las ordena diferente.
+  async function otroBorrador() {
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Escribiendo...';
     CONT_TEXTOS = null;
+    try {
+      const resp = await fetch('/api/contenido?clave=' + encodeURIComponent(CLAVE), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ELEGIDO),
+      });
+      const d = await resp.json();
+      if (d.ok && d.puntos) PUNTOS = d.puntos;
+    } catch (err) {
+      console.error('No se pudo regenerar:', err);
+    }
+    btn.disabled = false;
+    btn.textContent = original;
     const cont = document.getElementById('vacPost');
     if (cont) cont.textContent = armarBorrador();
   }
 
   function armarBorrador() {
     const it = ELEGIDO;
+
+    // Claude ya devuelve el post completo, con la voz de Santiago. Si falla
+    // la lectura del contenido, queda el esqueleto para escribirlo a mano.
+    if (PUNTOS) {
+      return `TÍTULO: ${it.titulo}\n${'─'.repeat(50)}\n\n${PUNTOS}`;
+    }
+
     if (!CONT_TEXTOS) {
       const al = a => a[Math.floor(Math.random() * a.length)];
       CONT_TEXTOS = { ap: al(CONT_APERTURAS), ci: al(CONT_CIERRES) };
     }
-
     const que = it.tipo === 'podcast' ? 'este episodio'
               : it.tipo === 'ensayo'  ? 'este artículo'
               : 'esto';
-
-    const cuerpo = PUNTOS || `[Aquí van 2 o 3 puntos concretos de lo que dice, con detalle real.]
-
-[Y por qué le sirve a alguien que está buscando trabajo remoto.]`;
 
     return `TÍTULO: ${it.titulo}
 ${'─'.repeat(50)}
 
 ${CONT_TEXTOS.ap} ${que} de ${it.fuente}.
 
-${it.titulo}
-${it.url}
+[No se pudo leer el contenido. Escribe aquí 2 o 3 ideas concretas y el
+puente a alguien que busca trabajo remoto.]
 
-${cuerpo}
+${it.url}
 
 ${CONT_TEXTOS.ci}`;
   }
