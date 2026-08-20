@@ -932,12 +932,18 @@
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    let out = `${TEXTOS.saludo}\n\n${TEXTOS.intro}\n`;
+    // Cada vacante en UNA sola línea, con guion al inicio.
+    //
+    // Skool convierte cada salto de línea en un párrafo con su propio
+    // espaciado, así que separar el puesto del link en dos líneas dejaba el
+    // post larguísimo y con huecos. Con todo en una línea el post queda
+    // compacto y el link sigue siendo clickeable.
+    let out = `${TEXTOS.saludo}\n${TEXTOS.intro}\n`;
 
     for (const [cat, items] of Object.entries(porCat)) {
       out += `\n${cat}\n`;
       for (const c of items) {
-        out += `${c.dataset.emp} - ${c.dataset.tit}\n${c.dataset.url}\n`;
+        out += `- ${c.dataset.emp} - ${c.dataset.tit}: ${c.dataset.url}\n`;
       }
     }
 
