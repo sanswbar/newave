@@ -968,7 +968,7 @@
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    let html = `<p>${escapeHtml(TEXTOS.saludo)}</p><p>${escapeHtml(TEXTOS.intro)}</p>`;
+    let html = `<p>${escapeHtml(TEXTOS.saludo)}</p><p><br></p><p>${escapeHtml(TEXTOS.intro)}</p>`;
 
     for (const [cat, items] of Object.entries(porCat)) {
       // Párrafo vacío antes de cada categoría: dentro de una lista los
