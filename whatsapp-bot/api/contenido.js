@@ -250,6 +250,49 @@ async function traerTexto(url) {
   }
 }
 
+
+
+// Le pide al modelo que lo deje en 5 bloques, conservando el hilo. Se hace
+// en una segunda llamada porque en la primera, escribiendo, no logra
+// respetar el límite: se entusiasma con las ideas.
+async function reescribirCorto(texto, key) {
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: `Este post quedó largo. Déjalo en 5 bloques como máximo, contando todo lo que va separado por línea en blanco.
+
+Reglas:
+- Conserva el link y la pregunta final tal cual.
+- Quédate con la idea más interesante y desarróllala bien. Si caben dos, mejor, pero no las metas a la fuerza.
+- Si citas una frase, el contexto tiene que quedar en el mismo bloque o en el de junto. No dejes párrafos colgando que empiecen con "Lo dice porque" sin decir qué dice.
+- No cambies el tono ni el estilo. Solo acorta.
+- Devuelve SOLO el post, sin explicaciones.
+
+POST:
+${texto}`,
+        }],
+      }),
+    });
+    const d = await r.json();
+    if (!r.ok) return null;
+    const b = Array.isArray(d.content) ? d.content.find(x => x.type === 'text') : null;
+    return b?.text?.trim() || null;
+  } catch (err) {
+    console.error('[contenido] reescribirCorto falló:', err);
+    return null;
+  }
+}
+
 // Escribe los puntos del post con Claude, en la voz del Learning Spot.
 async function generarPuntos(item) {
   const key = process.env.ANTHROPIC_API_KEY;
@@ -284,10 +327,7 @@ TONO:
 - Nada académico. Nada de frases motivacionales genéricas. Nada de lenguaje corporativo. Nada que suene a IA.
 - No intentes meter todas las ideas. Escoge las 2 o 3 que de verdad valga la pena compartir.
 - Puedes usar frases como "una que me gustó mucho", "esto me dejó pensando", "otra que me llamó la atención", siempre que se sientan naturales.
-- **MÁXIMO 5 BLOQUES DE TEXTO EN TODO EL POST.** Un bloque es cualquier cosa separada por línea en blanco: cuenta el saludo, cada idea, la frase destacada si la pones, la línea del link y la pregunta final. Todo suma.
-  Estructura que cabe en 5: (1) qué es y de quién, (2) primera idea, (3) segunda idea, (4) el link, (5) la pregunta.
-  Si quieres destacar una frase en su propia línea, ese es uno de los cinco bloques, así que te queda espacio para una sola idea desarrollada.
-  Antes de responder, CUENTA los bloques. Si son más de 5, quita ideas hasta que quepan. Es una recomendación rápida, no un ensayo.
+- **CORTO: máximo 2 ideas y 200 palabras en total.** Es una recomendación rápida que le mandas a unos amigos, no un ensayo. Si dudas entre incluir una tercera idea o no, déjala fuera.
 - Párrafos cortos, pero NO pongas cada oración en un renglón diferente.
 - **Español mexicano NEUTRO.** Nada de modismos ni expresiones de novela. Prohibidas por sonar forzadas: "se me quedó rondando en la cabeza", "me pegó fuerte", "me quedó picando", "se me quedó grabado", "me voló la cabeza", "me dejó helado", "no pude no compartirlo". Di las cosas de forma simple: "me pareció interesante", "me hizo pensar", "me llamó la atención", "me gustó".
 - Si hay una frase corta y potente del invitado o del autor, puedes destacarla en su propia línea.
