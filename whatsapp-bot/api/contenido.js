@@ -8,7 +8,7 @@
 // porque se nota que alguien de verdad consumió el contenido; el texto
 // definitivo lo escribe una persona con su propia reacción.
 
-const FUENTES = [
+const FUENTES_COMUNIDAD = [
   // ── Founders y mentalidad emprendedora ──
   { nombre: 'Founders', tipo: 'podcast', tema: 'founders',
     url: 'https://feeds.megaphone.fm/DSLLC6297708582' },
@@ -43,6 +43,44 @@ const FUENTES = [
   { nombre: 'Remote.co', tipo: 'artículo', tema: 'remoto',
     url: 'https://remote.co/feed' },
 ];
+
+
+// Fuentes para Santiago, distintas a las de la comunidad: liderazgo,
+// crecimiento de comunidades y growth, para mejorar Newave como negocio.
+const FUENTES_SANTIAGO = [
+  { nombre: "Lenny's Newsletter", tipo: 'ensayo', tema: 'growth',
+    url: 'https://www.lennysnewsletter.com/feed' },
+  { nombre: 'Andrew Chen', tipo: 'ensayo', tema: 'growth',
+    url: 'https://andrewchen.com/feed/' },
+  { nombre: 'Creator Science', tipo: 'ensayo', tema: 'comunidad',
+    url: 'https://creatorscience.com/feed' },
+  { nombre: "Seth Godin", tipo: 'ensayo', tema: 'liderazgo',
+    url: 'https://seths.blog/feed/' },
+  { nombre: 'Derek Sivers', tipo: 'ensayo', tema: 'liderazgo',
+    url: 'https://sive.rs/en.atom' },
+  { nombre: 'A Smart Bear', tipo: 'ensayo', tema: 'growth',
+    url: 'https://longform.asmartbear.com/index.xml' },
+  { nombre: 'Farnam Street', tipo: 'ensayo', tema: 'liderazgo',
+    url: 'https://fs.blog/feed/' },
+  { nombre: 'My First Million', tipo: 'podcast', tema: 'growth',
+    url: 'https://feeds.megaphone.fm/HS2300184645' },
+];
+
+// Lo que le sirve a Santiago para crecer Newave
+const RELEVANTE_SANTIAGO = {
+  alto: [
+    'community', 'comunidad', 'membership', 'retention', 'churn',
+    'onboarding', 'engagement', 'cohort', 'creator', 'audience',
+    'growth loop', 'referral', 'word of mouth', 'pricing',
+    'leadership', 'managing', 'team', 'culture', 'hiring',
+    'course', 'cohort-based', 'newsletter growth', 'funnel',
+  ],
+  medio: [
+    'growth', 'marketing', 'customer', 'user', 'product',
+    'strategy', 'business', 'revenue', 'saas', 'subscription',
+    'brand', 'content', 'distribution', 'acquisition',
+  ],
+};
 
 // Palabras que hacen que un contenido valga para esta comunidad. Se puntúa
 // por coincidencias: mientras más señales, más arriba aparece.
@@ -141,7 +179,7 @@ async function traerFeed(fuente) {
   }
 }
 
-function puntuar(item) {
+function puntuar(item, palabras = RELEVANTE) {
   const texto = `${item.titulo} ${item.resumen}`.toLowerCase();
 
   for (const d of DESCARTA) {
@@ -151,8 +189,8 @@ function puntuar(item) {
   // La relevancia manda. Antes la fecha pesaba tanto que subía episodios
   // recientes de inversión por encima de un ensayo bueno sobre carrera.
   let p = 0;
-  for (const k of RELEVANTE.alto)  if (texto.includes(k)) p += 5;
-  for (const k of RELEVANTE.medio) if (texto.includes(k)) p += 2;
+  for (const k of palabras.alto)  if (texto.includes(k)) p += 5;
+  for (const k of palabras.medio) if (texto.includes(k)) p += 2;
 
   // Sin ninguna señal de relevancia no entra, por muy reciente que sea
   if (p === 0) return -1;
@@ -312,7 +350,7 @@ module.exports = async function handler(req, res) {
     for (const i of conPuntaje) {
       porFuente[i.fuente] = (porFuente[i.fuente] || 0) + 1;
       if (porFuente[i.fuente] <= 2) seleccion.push(i);
-      if (seleccion.length >= 20) break;
+      if (seleccion.length >= tope) break;
     }
 
     return res.status(200).json({

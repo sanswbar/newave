@@ -129,6 +129,57 @@
   #vistaMetricas { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
   #vistaVacantes { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
   #vistaContenido { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+  #vistaInicio { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+
+  /* ── Inicio ── */
+  .ini-wrap { max-width: 940px; }
+  .ini-saludo { font-size: 1.4rem; font-weight: 600; margin: 0 0 0.3rem; letter-spacing: -0.02em; }
+  .ini-fecha { font-size: 0.82rem; color: var(--ink-3); margin: 0 0 2.25rem; }
+  .ini-titulo {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-3); font-weight: 600; margin: 0 0 0.9rem;
+  }
+  .ini-bloque { margin-bottom: 2.5rem; }
+
+  /* Cosas que necesitan atención */
+  .ini-alertas { display: flex; flex-direction: column; gap: 0.5rem; }
+  .ini-alerta {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.85rem 1rem; border-radius: 7px;
+    border: 1px solid var(--linea); background: var(--superficie);
+    cursor: pointer; font-size: 0.88rem;
+  }
+  .ini-alerta:hover { border-color: #FC7342; }
+  .ini-alerta.ok { cursor: default; color: var(--ink-3); }
+  .ini-alerta.ok:hover { border-color: var(--linea); }
+  .ini-alerta b { color: #FC7342; font-variant-numeric: tabular-nums; }
+
+  /* Pulso */
+  .ini-pulso { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; }
+  .ini-metrica {
+    border: 1px solid var(--linea); border-radius: 7px; padding: 1rem;
+    background: var(--superficie);
+  }
+  .ini-m-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+  .ini-m-num { font-size: 1.7rem; font-weight: 700; margin-top: 0.35rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .ini-m-delta { font-size: 0.75rem; margin-top: 0.2rem; font-variant-numeric: tabular-nums; }
+  .ini-m-delta.sube { color: #4ade80; }
+  .ini-m-delta.baja { color: #f87171; }
+  .ini-m-delta.igual { color: var(--ink-3); }
+
+  /* Acciones */
+  .ini-acciones { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+  /* Artículos para Santiago */
+  .ini-articulo {
+    display: block; padding: 0.85rem 1rem; border-radius: 7px;
+    border: 1px solid var(--linea); margin-bottom: 0.55rem;
+    text-decoration: none; color: inherit;
+  }
+  .ini-articulo:hover { border-color: #FC7342; background: var(--superficie); }
+  .ini-a-fuente { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #FC7342; }
+  .ini-a-tit { font-size: 0.9rem; font-weight: 600; margin-top: 0.25rem; line-height: 1.4; }
+  .ini-a-res { font-size: 0.78rem; color: var(--ink-3); margin-top: 0.25rem; line-height: 1.5; }
 
   /* ── Contenido ── */
   .cont-item {
@@ -287,7 +338,8 @@
 
   <div id="chat">
     <div id="tabs">
-      <button class="tab on" data-v="chats" onclick="verVista('chats')">Conversaciones</button>
+      <button class="tab on" data-v="inicio" onclick="verVista('inicio')">Inicio</button>
+      <button class="tab" data-v="chats" onclick="verVista('chats')">Conversaciones</button>
       <button class="tab" data-v="metricas" onclick="verVista('metricas')">Métricas</button>
       <button class="tab" data-v="vacantes" onclick="verVista('vacantes')">Vacantes</button>
       <button class="tab" data-v="contenido" onclick="verVista('contenido')">Contenido</button>
@@ -312,6 +364,7 @@
     <div id="vistaMetricas"></div>
     <div id="vistaVacantes"></div>
     <div id="vistaContenido"></div>
+    <div id="vistaInicio"></div>
   </div>
 </div>
 
@@ -359,6 +412,7 @@
     }
     document.getElementById('login').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
+    verVista('inicio');
 
     const data = await resp.json();
     conversaciones = data.conversaciones || [];
@@ -489,11 +543,13 @@
 
   function verVista(v) {
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+    document.getElementById('vistaInicio').style.display   = v === 'inicio'   ? 'block' : 'none';
     document.getElementById('vistaChats').style.display    = v === 'chats'    ? 'flex'  : 'none';
     document.getElementById('vistaMetricas').style.display = v === 'metricas' ? 'block' : 'none';
     document.getElementById('vistaVacantes').style.display = v === 'vacantes' ? 'block' : 'none';
     document.getElementById('vistaContenido').style.display = v === 'contenido' ? 'block' : 'none';
     document.getElementById('sidebar').style.display       = v === 'chats'    ? 'flex'  : 'none';
+    if (v === 'inicio') cargarInicio();
     if (v === 'metricas') cargarMetricas();
     if (v === 'vacantes') pintarVacantes();
     if (v === 'contenido') pintarContenido();
@@ -1228,6 +1284,168 @@ ${CONT_TEXTOS.ci}`;
       setTimeout(() => { btn.textContent = original; }, 1800);
     } catch (err) {
       alert('No se pudo copiar. Selecciona el texto y cópialo a mano.');
+    }
+  }
+
+
+  // ── Inicio ────────────────────────────────────────────────────────────
+  //
+  // Portada del dashboard. No repite lo que ya está en Métricas: aquí va
+  // solo lo accionable (qué necesita atención hoy), el pulso de la semana
+  // comparado con la anterior, y lectura para Santiago.
+
+  let INICIO_CARGADO = false;
+
+  async function cargarInicio() {
+    if (INICIO_CARGADO) return;
+    const cont = document.getElementById('vistaInicio');
+
+    const hora = new Date().getHours();
+    const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+    const fecha = new Date().toLocaleDateString('es-MX', {
+      weekday: 'long', day: 'numeric', month: 'long',
+    });
+
+    cont.innerHTML = `
+      <div class="ini-wrap">
+        <h1 class="ini-saludo">${saludo}, Santiago</h1>
+        <p class="ini-fecha">${fecha.charAt(0).toUpperCase() + fecha.slice(1)}</p>
+        <div id="iniAtencion" class="ini-bloque"></div>
+        <div id="iniPulso" class="ini-bloque"></div>
+        <div class="ini-bloque">
+          <h2 class="ini-titulo">Publicar en la comunidad</h2>
+          <div class="ini-acciones">
+            <button class="vac-btn" onclick="verVista('vacantes')">Buscar vacantes</button>
+            <button class="vac-btn sec" onclick="verVista('contenido')">Buscar contenido</button>
+          </div>
+        </div>
+        <div id="iniLectura" class="ini-bloque"></div>
+      </div>`;
+
+    INICIO_CARGADO = true;
+    // Cada bloque carga por su cuenta: el de lectura tarda más y no debe
+    // bloquear a los otros.
+    cargarAtencionYPulso();
+    cargarLectura();
+  }
+
+  async function cargarAtencionYPulso() {
+    const at = document.getElementById('iniAtencion');
+    const pu = document.getElementById('iniPulso');
+    at.innerHTML = '<h2 class="ini-titulo">Necesita tu atención</h2><div style="color:var(--ink-3);font-size:0.85rem">Revisando...</div>';
+
+    try {
+      const [rc, rm] = await Promise.all([
+        fetch('/api/conversaciones?clave=' + encodeURIComponent(CLAVE)),
+        fetch('/api/metricas?clave=' + encodeURIComponent(CLAVE)),
+      ]);
+      const convs = await rc.json();
+      const met = await rm.json();
+
+      // ── Necesita tu atención ──
+      const lista = Array.isArray(convs) ? convs : (convs.conversaciones || []);
+      const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+
+      // Conversaciones donde el último mensaje es de la persona: el bot no
+      // contestó o quedó algo en el aire.
+      const sinResponder = lista.filter(c => c.ultimo_rol === 'user');
+      // Marcadas para revisar
+      const paraRevisar = lista.filter(c => c.etiqueta === 'revisar');
+      // Actividad de hoy
+      const deHoy = lista.filter(c => {
+        const d = new Date(c.ultima_actividad);
+        return !isNaN(d) && d >= hoy;
+      });
+
+      const alertas = [];
+      if (sinResponder.length) {
+        alertas.push(`<div class="ini-alerta" onclick="verVista('chats')">
+          <b>${sinResponder.length}</b> ${sinResponder.length === 1 ? 'conversación quedó' : 'conversaciones quedaron'} con el último mensaje sin responder</div>`);
+      }
+      if (paraRevisar.length) {
+        alertas.push(`<div class="ini-alerta" onclick="verVista('chats')">
+          <b>${paraRevisar.length}</b> ${paraRevisar.length === 1 ? 'marcada' : 'marcadas'} para revisar</div>`);
+      }
+      if (deHoy.length) {
+        alertas.push(`<div class="ini-alerta" onclick="verVista('chats')">
+          <b>${deHoy.length}</b> ${deHoy.length === 1 ? 'conversación con actividad' : 'conversaciones con actividad'} hoy</div>`);
+      }
+      if (!alertas.length) {
+        alertas.push('<div class="ini-alerta ok">Nada pendiente por ahora</div>');
+      }
+
+      at.innerHTML = `<h2 class="ini-titulo">Necesita tu atención</h2>
+        <div class="ini-alertas">${alertas.join('')}</div>`;
+
+      // ── Pulso de la semana ──
+      if (met.status === 'error') {
+        pu.innerHTML = '';
+        return;
+      }
+      const s = met.semana || {};
+      const m = met.mes || {};
+      // Aproximación de la semana anterior: lo del mes menos esta semana,
+      // repartido entre las semanas que van del mes. No es exacto, pero da
+      // la referencia que hace legible el número de esta semana.
+      const semanasDelMes = Math.max(1, Math.ceil(new Date().getDate() / 7) - 1);
+      const prev = {
+        leads:  semanasDelMes ? Math.round((m.leads - s.leads) / semanasDelMes) : 0,
+        clicks: semanasDelMes ? Math.round((m.clicks - s.clicks) / semanasDelMes) : 0,
+        trials: semanasDelMes ? Math.round((m.trials - s.trials) / semanasDelMes) : 0,
+      };
+
+      const tarjeta = (label, valor, anterior) => {
+        let delta = '';
+        if (anterior > 0) {
+          const p = Math.round(((valor - anterior) / anterior) * 100);
+          const clase = p > 4 ? 'sube' : p < -4 ? 'baja' : 'igual';
+          const signo = p > 0 ? '+' : '';
+          delta = `<div class="ini-m-delta ${clase}">${signo}${p}% vs semana anterior</div>`;
+        }
+        return `<div class="ini-metrica">
+          <div class="ini-m-label">${label}</div>
+          <div class="ini-m-num">${valor ?? 0}</div>
+          ${delta}
+        </div>`;
+      };
+
+      const conv = s.leads ? Math.round((s.trials / s.leads) * 1000) / 10 : 0;
+
+      pu.innerHTML = `<h2 class="ini-titulo">Últimos 7 días</h2>
+        <div class="ini-pulso">
+          ${tarjeta('Leads', s.leads, prev.leads)}
+          ${tarjeta('Clicks a Skool', s.clicks, prev.clicks)}
+          ${tarjeta('Trials', s.trials, prev.trials)}
+          <div class="ini-metrica">
+            <div class="ini-m-label">Conversión</div>
+            <div class="ini-m-num">${conv}%</div>
+            <div class="ini-m-delta igual">histórico ${met.total?.leads ? Math.round((met.total.trials / met.total.leads) * 1000) / 10 : 0}%</div>
+          </div>
+        </div>`;
+    } catch (err) {
+      at.innerHTML = '<h2 class="ini-titulo">Necesita tu atención</h2><div style="color:var(--ink-3);font-size:0.85rem">No se pudo cargar</div>';
+    }
+  }
+
+  async function cargarLectura() {
+    const el = document.getElementById('iniLectura');
+    el.innerHTML = '<h2 class="ini-titulo">Para leer</h2><div style="color:var(--ink-3);font-size:0.85rem">Buscando...</div>';
+    try {
+      const r = await fetch('/api/contenido?clave=' + encodeURIComponent(CLAVE) + '&para=santiago&tope=3');
+      const d = await r.json();
+      if (!d.ok || !d.items?.length) {
+        el.innerHTML = '';
+        return;
+      }
+      el.innerHTML = `<h2 class="ini-titulo">Para leer</h2>` +
+        d.items.slice(0, 3).map(i => `
+          <a class="ini-articulo" href="${escapeHtml(i.url)}" target="_blank" rel="noopener">
+            <div class="ini-a-fuente">${escapeHtml(i.fuente)}</div>
+            <div class="ini-a-tit">${escapeHtml(i.titulo)}</div>
+            <div class="ini-a-res">${escapeHtml((i.resumen || '').slice(0, 150))}${i.resumen && i.resumen.length > 150 ? '...' : ''}</div>
+          </a>`).join('');
+    } catch (err) {
+      el.innerHTML = '';
     }
   }
 
