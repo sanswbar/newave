@@ -932,17 +932,21 @@
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    let out = `${TEXTOS.saludo}\n\n${TEXTOS.intro}\n`;
+    // Doble salto de línea entre TODO. El editor de Skool colapsa los saltos
+    // sencillos (\n) y deja el post como un párrafo corrido, pero sí respeta
+    // el doble como separación de párrafo. Copiar HTML tampoco funcionó: el
+    // editor ignora el formato del portapapeles y se queda con el texto.
+    const bloques = [TEXTOS.saludo, TEXTOS.intro];
 
     for (const [cat, items] of Object.entries(porCat)) {
-      out += `\n${cat}\n`;
+      bloques.push(cat);
       for (const c of items) {
-        out += `${c.dataset.emp} - ${c.dataset.tit}\n${c.dataset.url}\n`;
+        bloques.push(`${c.dataset.emp} - ${c.dataset.tit}\n${c.dataset.url}`);
       }
     }
 
-    out += `\n${TEXTOS.cierre}`;
-    return out.trim();
+    bloques.push(TEXTOS.cierre);
+    return bloques.join('\n\n');
   }
 
   // Copia el post conservando los saltos de línea.
