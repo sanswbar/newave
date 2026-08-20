@@ -120,7 +120,8 @@ async function traerFeed(fuente) {
         url = m ? m[1] : '';
       }
       const fecha = extraer(b, 'pubDate') || extraer(b, 'published') || extraer(b, 'updated');
-      const desc = extraer(b, 'description') || extraer(b, 'summary') || extraer(b, 'content');
+      const desc = extraer(b, 'content:encoded') || extraer(b, 'description')
+                || extraer(b, 'summary') || extraer(b, 'content');
 
       return {
         fuente: fuente.nombre,
@@ -129,7 +130,7 @@ async function traerFeed(fuente) {
         titulo: extraer(b, 'title'),
         url,
         fecha,
-        resumen: desc.slice(0, 600),
+        resumen: desc.slice(0, 2500),
       };
     }).filter(x => x.titulo && x.url);
   } catch (err) {
@@ -172,10 +173,125 @@ function puntuar(item) {
   return p;
 }
 
+
+// Baja el artículo y saca el texto. El resumen del feed suele ser un párrafo
+// de marketing; para escribir puntos concretos hace falta el contenido real.
+async function traerTexto(url) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const r = await fetch(url, {
+      signal: ctrl.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; NewaveBot/1.0)' },
+    });
+    if (!r.ok) return '';
+    const html = await r.text();
+
+    // Fuera lo que no es contenido
+    let t = html
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<nav[\s\S]*?<\/nav>/gi, ' ')
+      .replace(/<footer[\s\S]*?<\/footer>/gi, ' ')
+      .replace(/<header[\s\S]*?<\/header>/gi, ' ');
+
+    // Si hay <article> o <main>, quedarse solo con eso
+    const art = t.match(/<article[\s\S]*?<\/article>/i) || t.match(/<main[\s\S]*?<\/main>/i);
+    if (art) t = art[0];
+
+    return limpiar(t).slice(0, 14000);
+  } catch (err) {
+    console.error(`[contenido] no se pudo leer ${url}: ${err.message}`);
+    return '';
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+// Escribe los puntos del post con Claude, en la voz del Learning Spot.
+async function generarPuntos(item) {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return null;
+
+  // El artículo completo si se puede bajar; si no, lo que traiga el feed
+  const cuerpo = await traerTexto(item.url) || item.resumen || '';
+  if (cuerpo.length < 200) return null;
+
+  const prompt = `Eres parte del equipo de Newave Academy, un programa que ayuda a profesionales de México y LATAM a conseguir trabajo remoto con empresas internacionales. Escribes en el "Learning Spot" de la comunidad, donde se comparte contenido que vale la pena.
+
+Este es el contenido a comentar:
+
+FUENTE: ${item.fuente} (${item.tipo})
+TÍTULO: ${item.titulo}
+
+CONTENIDO:
+${cuerpo.slice(0, 12000)}
+
+Escribe DOS cosas, separadas por la línea "---":
+
+1. Dos o tres puntos concretos de lo que dice el contenido. Lo que de verdad se dijo, con el detalle específico: cifras, ejemplos, frases textuales si las hay. Nada de generalidades tipo "habla sobre la importancia de la disciplina". Cada punto en un párrafo corto de 2-3 líneas.
+
+2. Un párrafo de por qué le sirve a alguien que está buscando trabajo remoto. Concreto, aterrizado a su situación.
+
+REGLAS DE ESCRITURA:
+- Español de México. Nada de "vosotros", "ordenador", "vale", ni voseo argentino.
+- Cercano pero NO coloquial. Prohibidas: "chamba", "la neta", "chido", "ahorita", "te late", "órale". Esto lo lee gente que pagó por el programa.
+- Sin guiones largos (—). Usa punto y seguido o coma.
+- Un solo signo de interrogación o exclamación, el de cierre, sin el de apertura. Así: "Ustedes qué opinan?" no "¿Ustedes qué opinan?".
+- Sin markdown. Nada de asteriscos, títulos ni listas con guiones.
+- Sin frases de coach motivacional ni lenguaje de vendedor.
+- Si el contenido está en inglés, escribe en español pero puedes citar frases textuales en inglés cuando valga la pena.
+
+Devuelve SOLO los puntos y el párrafo, sin encabezados ni explicaciones tuyas.`;
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    const d = await r.json();
+    if (!r.ok) {
+      console.error('[contenido] Claude:', r.status, JSON.stringify(d).slice(0, 300));
+      return null;
+    }
+    const bloque = Array.isArray(d.content) ? d.content.find(b => b.type === 'text') : null;
+    return bloque?.text?.trim() || null;
+  } catch (err) {
+    console.error('[contenido] generarPuntos falló:', err);
+    return null;
+  }
+}
+
 module.exports = async function handler(req, res) {
   const clave = req.query?.clave;
   if (!clave || clave !== process.env.DASHBOARD_PASSWORD) {
     return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  // Modo "escribe los puntos de este": recibe el item elegido y devuelve
+  // el texto listo, en vez de buscar contenido nuevo.
+  if (req.method === 'POST') {
+    try {
+      const item = req.body;
+      if (!item?.url || !item?.titulo) {
+        return res.status(400).json({ error: 'Falta el item' });
+      }
+      const puntos = await generarPuntos(item);
+      return res.status(200).json({ ok: !!puntos, puntos });
+    } catch (err) {
+      console.error('[contenido] POST:', err);
+      return res.status(200).json({ ok: false, error: err.message });
+    }
   }
 
   try {

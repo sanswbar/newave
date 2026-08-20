@@ -1058,6 +1058,7 @@
 
   let CONTENIDO = null;
   let ELEGIDO = null;
+  let PUNTOS = null;
 
   function pintarContenido() {
     const cont = document.getElementById('vistaContenido');
@@ -1116,8 +1117,10 @@
     cont.innerHTML = html;
   }
 
-  function elegirContenido(i) {
+  async function elegirContenido(i) {
     ELEGIDO = CONTENIDO.items[i];
+    PUNTOS = null;
+    CONT_TEXTOS = null;
     document.querySelectorAll('.cont-item').forEach((el, n) =>
       el.classList.toggle('on', n === i));
 
@@ -1126,7 +1129,30 @@
     cont.innerHTML = `
       <div class="vac-head" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--linea)">
         <h2>Borrador del post</h2>
-        <p>Un punto de partida. Métele tu reacción y lo que a ti te movió: estos posts funcionan porque se nota que alguien de verdad lo consumió.</p>
+        <p style="color:#FC7342">Leyendo el contenido y escribiendo los puntos...</p>
+      </div>`;
+
+    // Claude lee el artículo o el episodio y escribe los puntos concretos.
+    // Tarda unos segundos porque baja el contenido completo, no solo el
+    // resumen del feed (que casi siempre es un párrafo de marketing).
+    try {
+      const resp = await fetch('/api/contenido?clave=' + encodeURIComponent(CLAVE), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ELEGIDO),
+      });
+      const d = await resp.json();
+      if (d.ok && d.puntos) PUNTOS = d.puntos;
+    } catch (err) {
+      console.error('No se pudieron generar los puntos:', err);
+    }
+
+    cont.innerHTML = `
+      <div class="vac-head" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--linea)">
+        <h2>Borrador del post</h2>
+        <p>${PUNTOS
+          ? 'Los puntos salieron del contenido real. Revísalos, cámbiales lo que quieras y métele tu reacción.'
+          : 'No se pudo leer el contenido completo. Los puntos los tienes que escribir tú.'}</p>
         <div class="vac-acciones">
           <button class="vac-btn" onclick="copiarContenido()">Copiar borrador</button>
           <button class="vac-btn sec" onclick="otroBorrador()">Otra versión</button>
@@ -1174,9 +1200,9 @@
               : it.tipo === 'ensayo'  ? 'este artículo'
               : 'esto';
 
-    // El resumen del feed sirve como base para los puntos, pero hay que
-    // reescribirlo: viene en inglés y en tono de marketing.
-    const resumen = (it.resumen || '').slice(0, 400);
+    const cuerpo = PUNTOS || `[Aquí van 2 o 3 puntos concretos de lo que dice, con detalle real.]
+
+[Y por qué le sirve a alguien que está buscando trabajo remoto.]`;
 
     return `TÍTULO: ${it.titulo}
 ${'─'.repeat(50)}
@@ -1186,23 +1212,16 @@ ${CONT_TEXTOS.ap} ${que} de ${it.fuente}.
 ${it.titulo}
 ${it.url}
 
-[Aquí va lo tuyo: 2 o 3 puntos que te movieron. Sé concreto, con lo que
-de verdad dijeron, no generalidades.]
+${cuerpo}
 
-[Y por qué le sirve a alguien que está buscando trabajo remoto.]
-
-${CONT_TEXTOS.ci}
-
-${'─'.repeat(50)}
-DE QUÉ TRATA (del feed, para que no tengas que abrirlo):
-${resumen || 'Sin descripción en el feed. Abre el original.'}`;
+${CONT_TEXTOS.ci}`;
   }
 
   async function copiarContenido() {
     const btn = event.target;
     const original = btn.textContent;
     // Solo la parte del post, sin las notas de referencia
-    const texto = armarBorrador().split('─'.repeat(50))[1].trim();
+    const texto = armarBorrador().split('─'.repeat(50)).slice(1).join('').trim();
     try {
       await navigator.clipboard.writeText(texto);
       btn.textContent = 'Copiado';
