@@ -820,6 +820,7 @@
         <p>${d.total} vacantes seleccionadas de ${d.candidatas} candidatas, sobre ${d.revisadas} revisadas. Las que dicen México o LATAM van primero. Desmarca las que no sirvan y copia el post.</p>
         <div class="vac-acciones">
           <button class="vac-btn" onclick="copiarPost()">Copiar post</button>
+          <button class="vac-btn sec" onclick="copiarTitulo()">Copiar título</button>
           <button class="vac-btn sec" onclick="otroMensaje()">Otro mensaje</button>
           <button class="vac-btn sec" onclick="VACANTES=null;pintarVacantes()">Buscar de nuevo</button>
           <span class="vac-loc" id="vacConteo"></span>
@@ -867,7 +868,9 @@
     const el = document.getElementById('vacConteo');
     if (el) el.textContent = n + (n === 1 ? ' vacante seleccionada' : ' vacantes seleccionadas');
     const post = document.getElementById('vacPost');
-    if (post) post.textContent = armarPost();
+    if (post) {
+      post.textContent = `TÍTULO: ${TEXTOS ? TEXTOS.titulo : ''}\n${'─'.repeat(40)}\n\n${armarPost()}`;
+    }
   }
 
   // Variantes del texto del post. Publicando cada semana, el mismo mensaje
@@ -891,6 +894,14 @@
     'Van las vacantes de la semana. Recuerden revisar bien la descripción antes de aplicar y ajustar su perfil a lo que están pidiendo.',
   ];
 
+  const TITULOS = [
+    'Vacantes de la Semana 💻',
+    'Nuevas vacantes remotas 💻',
+    'Vacantes de esta semana 💻',
+    'Lo que salió esta semana 💻',
+    'Vacantes remotas abiertas 💻',
+  ];
+
   const CIERRES = [
     'Mucho éxito a todos. Cualquier duda sobre cómo aplicar, la vemos en las sesiones.',
     'Si alguna les interesa y quieren que revisemos su aplicación, escriban en la comunidad.',
@@ -904,7 +915,7 @@
 
   function elegirTextos() {
     const al = a => a[Math.floor(Math.random() * a.length)];
-    TEXTOS = { saludo: al(SALUDOS), intro: al(INTROS), cierre: al(CIERRES) };
+    TEXTOS = { titulo: al(TITULOS), saludo: al(SALUDOS), intro: al(INTROS), cierre: al(CIERRES) };
   }
 
   function otroMensaje() {
@@ -934,15 +945,56 @@
     return out.trim();
   }
 
+  // Copia el post conservando los saltos de línea.
+  //
+  // El editor de Skool pega el texto plano como un solo párrafo corrido: los
+  // \n se pierden y quedan las 10 vacantes en un bloque ilegible. La salida
+  // es ponerlo también como HTML con <br> reales, que Skool sí respeta. El
+  // navegador ofrece los dos formatos y el destino toma el que entiende.
   async function copiarPost() {
+    const btn = event.target;
+    const original = btn.textContent;
+    const texto = armarPost();
+
+    const html = texto
+      .split('\n')
+      .map(l => l.trim() === '' ? '<br>' : escapeHtml(l))
+      .join('<br>');
+
     try {
-      await navigator.clipboard.writeText(armarPost());
-      const btn = event.target;
-      const original = btn.textContent;
+      if (navigator.clipboard.write && window.ClipboardItem) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html':  new Blob([html],  { type: 'text/html' }),
+            'text/plain': new Blob([texto], { type: 'text/plain' }),
+          }),
+        ]);
+      } else {
+        await navigator.clipboard.writeText(texto);
+      }
       btn.textContent = 'Copiado';
       setTimeout(() => { btn.textContent = original; }, 1800);
     } catch (err) {
-      alert('No se pudo copiar. Selecciona el texto de abajo y cópialo a mano.');
+      // Respaldo para navegadores que no dejan escribir HTML al portapapeles
+      try {
+        await navigator.clipboard.writeText(texto);
+        btn.textContent = 'Copiado (texto)';
+        setTimeout(() => { btn.textContent = original; }, 1800);
+      } catch (e) {
+        alert('No se pudo copiar. Selecciona el texto de abajo y cópialo a mano.');
+      }
+    }
+  }
+
+  async function copiarTitulo() {
+    const btn = event.target;
+    const original = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(TEXTOS.titulo);
+      btn.textContent = 'Copiado';
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    } catch (err) {
+      alert('Título: ' + TEXTOS.titulo);
     }
   }
 
