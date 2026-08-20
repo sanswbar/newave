@@ -923,7 +923,7 @@
     actualizarConteo();
   }
 
-  function armarPost(paraCopiar = false) {
+  function armarPost() {
     if (!TEXTOS) elegirTextos();
 
     const porCat = {};
@@ -932,23 +932,19 @@
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    // Skool convierte CUALQUIER salto de línea en un párrafo nuevo con su
-    // propio margen, así que el post salía con huecos enormes entre cada
-    // vacante. El separador de línea suave (U+2028) es un salto que los
-    // editores respetan DENTRO del mismo párrafo, sin margen: es lo que hace
-    // Shift+Enter cuando escribes a mano.
-    //
-    // Solo se usa al copiar. En el preview del dashboard se usa \n normal
-    // porque ahí sí se ve bien y es más fácil de leer.
-    const SALTO = paraCopiar ? '\u2028' : '\n';
-
-    const bloques = [`${TEXTOS.saludo}${SALTO}${TEXTOS.intro}`];
+    // Nota sobre el formato: Skool convierte cada salto de línea en un
+    // párrafo con su propio margen, así que el post siempre queda con
+    // espacio entre líneas. Se probó con doble salto, con HTML en el
+    // portapapeles y con U+2028 (line separator); ninguno lo evita — el
+    // U+2028 es peor, Skool lo ignora y deja todo corrido en una línea.
+    // Es una limitación del editor, no del texto.
+    const bloques = [`${TEXTOS.saludo}\n${TEXTOS.intro}`];
 
     for (const [cat, items] of Object.entries(porCat)) {
       const lineas = items.map(c =>
         `- ${c.dataset.emp} - ${c.dataset.tit}: ${c.dataset.url}`
       );
-      bloques.push([cat, ...lineas].join(SALTO));
+      bloques.push([cat, ...lineas].join('\n'));
     }
 
     bloques.push(TEXTOS.cierre);
@@ -964,7 +960,7 @@
   async function copiarPost() {
     const btn = event.target;
     const original = btn.textContent;
-    const texto = armarPost(true);
+    const texto = armarPost();
 
     const html = texto
       .split('\n')
