@@ -335,12 +335,19 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  // ?para=santiago trae liderazgo/comunidad/growth en vez de contenido para
+  // publicar. Son audiencias distintas y por eso son fuentes distintas.
+  const paraSantiago = req.query?.para === 'santiago';
+  const fuentes  = paraSantiago ? FUENTES_SANTIAGO : FUENTES_COMUNIDAD;
+  const palabras = paraSantiago ? RELEVANTE_SANTIAGO : RELEVANTE;
+  const tope     = Number(req.query?.tope) || 20;
+
   try {
-    const listas = await Promise.all(FUENTES.map(traerFeed));
+    const listas = await Promise.all(fuentes.map(traerFeed));
     const todos = listas.flat();
 
     const conPuntaje = todos
-      .map(i => ({ ...i, puntaje: puntuar(i) }))
+      .map(i => ({ ...i, puntaje: puntuar(i, palabras) }))
       .filter(i => i.puntaje > 0)
       .sort((a, b) => b.puntaje - a.puntaje);
 
