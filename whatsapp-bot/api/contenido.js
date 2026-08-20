@@ -284,7 +284,10 @@ TONO:
 - Nada académico. Nada de frases motivacionales genéricas. Nada de lenguaje corporativo. Nada que suene a IA.
 - No intentes meter todas las ideas. Escoge las 2 o 3 que de verdad valga la pena compartir.
 - Puedes usar frases como "una que me gustó mucho", "esto me dejó pensando", "otra que me llamó la atención", siempre que se sientan naturales.
-- **MÁXIMO 5 PÁRRAFOS EN TODO EL POST**, contando el saludo y el cierre. Si te sale más largo, corta ideas hasta que quepa. Es una recomendación rápida, no un ensayo.
+- **MÁXIMO 5 BLOQUES DE TEXTO EN TODO EL POST.** Un bloque es cualquier cosa separada por línea en blanco: cuenta el saludo, cada idea, la frase destacada si la pones, la línea del link y la pregunta final. Todo suma.
+  Estructura que cabe en 5: (1) qué es y de quién, (2) primera idea, (3) segunda idea, (4) el link, (5) la pregunta.
+  Si quieres destacar una frase en su propia línea, ese es uno de los cinco bloques, así que te queda espacio para una sola idea desarrollada.
+  Antes de responder, CUENTA los bloques. Si son más de 5, quita ideas hasta que quepan. Es una recomendación rápida, no un ensayo.
 - Párrafos cortos, pero NO pongas cada oración en un renglón diferente.
 - **Español mexicano NEUTRO.** Nada de modismos ni expresiones de novela. Prohibidas por sonar forzadas: "se me quedó rondando en la cabeza", "me pegó fuerte", "me quedó picando", "se me quedó grabado", "me voló la cabeza", "me dejó helado", "no pude no compartirlo". Di las cosas de forma simple: "me pareció interesante", "me hizo pensar", "me llamó la atención", "me gustó".
 - Si hay una frase corta y potente del invitado o del autor, puedes destacarla en su propia línea.
