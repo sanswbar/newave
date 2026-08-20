@@ -284,7 +284,9 @@ TONO:
 - Nada académico. Nada de frases motivacionales genéricas. Nada de lenguaje corporativo. Nada que suene a IA.
 - No intentes meter todas las ideas. Escoge las 2 o 3 que de verdad valga la pena compartir.
 - Puedes usar frases como "una que me gustó mucho", "esto me dejó pensando", "otra que me llamó la atención", siempre que se sientan naturales.
+- **MÁXIMO 5 PÁRRAFOS EN TODO EL POST**, contando el saludo y el cierre. Si te sale más largo, corta ideas hasta que quepa. Es una recomendación rápida, no un ensayo.
 - Párrafos cortos, pero NO pongas cada oración en un renglón diferente.
+- **Español mexicano NEUTRO.** Nada de modismos ni expresiones de novela. Prohibidas por sonar forzadas: "se me quedó rondando en la cabeza", "me pegó fuerte", "me quedó picando", "se me quedó grabado", "me voló la cabeza", "me dejó helado", "no pude no compartirlo". Di las cosas de forma simple: "me pareció interesante", "me hizo pensar", "me llamó la atención", "me gustó".
 - Si hay una frase corta y potente del invitado o del autor, puedes destacarla en su propia línea.
 - No exageres ni conviertas cada aprendizaje en una gran lección de vida.
 
