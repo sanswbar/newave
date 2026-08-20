@@ -259,9 +259,11 @@ async function generarPuntos(item) {
   const cuerpo = await traerTexto(item.url) || item.resumen || '';
   if (cuerpo.length < 200) return null;
 
-  const prompt = `Escribes en el "Learning Spot" de Newave Academy, la comunidad de un programa que ayuda a profesionales de México y LATAM a conseguir trabajo remoto con empresas internacionales.
+  const prompt = `Vas a escribir un post para la comunidad de Newave Academy, un programa que ayuda a profesionales de México y LATAM a conseguir trabajo remoto con empresas internacionales.
 
-Este es el contenido a comentar:
+Escribes como Santiago, uno de los fundadores.
+
+Este es el contenido:
 
 FUENTE: ${item.fuente} (${item.tipo})
 TÍTULO: ${item.titulo}
@@ -270,59 +272,42 @@ LINK: ${item.url}
 CONTENIDO:
 ${cuerpo.slice(0, 12000)}
 
-Escribe el post completo, imitando esta estructura y esta voz. Este es un post real de Santiago, úsalo como modelo:
+Convierte esto en un post escrito como si Santiago lo hubiera consumido y estuviera compartiendo con la comunidad las ideas que más le llamaron la atención.
 
----
-Qué tal! Les dejo una recomendación de la semana que escuché y me gustó mucho.
+NO quieres un resumen del contenido.
 
-Es un episodio de The Knowledge Project con Mario Harik, CEO de XPO.
+Quieres que se sienta como: "Escuché esto, hubo un par de cosas que me dejaron pensando y se las quiero compartir."
 
-Hubo varias cosas que me llamaron la atención, pero una en particular: en sus reuniones, los líderes hablan al final.
+TONO:
+- Casual, humano y directo.
+- Como si estuviera escribiendo rápido algo que genuinamente le gustó.
+- Nada académico. Nada de frases motivacionales genéricas. Nada de lenguaje corporativo. Nada que suene a IA.
+- No intentes meter todas las ideas. Escoge las 2 o 3 que de verdad valga la pena compartir.
+- Puedes usar frases como "una que me gustó mucho", "esto me dejó pensando", "otra que me llamó la atención", siempre que se sientan naturales.
+- Párrafos cortos, pero NO pongas cada oración en un renglón diferente.
+- Si hay una frase corta y potente del invitado o del autor, puedes destacarla en su propia línea.
+- No exageres ni conviertas cada aprendizaje en una gran lección de vida.
 
-Por qué? Porque si el jefe habla primero, automáticamente condiciona lo que van a decir los demás. Incluso comenta que cuando todos están de acuerdo demasiado rápido, le preocupa porque probablemente nadie está retando la idea.
-
-También habla mucho de feedback. Él trata de nunca hacerlo subjetivo, siempre llevarlo a datos. Y en vez de esperar al típico review anual, prefiere dar feedback constantemente.
-
-Otra que me gustó mucho fue sobre delegar:
-
-Dile a la gente qué tiene que hacer, pero no cómo hacerlo.
-
-Porque si les dices exactamente cómo, estás limitando el resultado a tu propia forma de pensar.
-
-Creo que varias de estas ideas aplican muchísimo para los que trabajan o quieren trabajar remoto. En equipos internacionales se valora mucho que puedas pensar por tu cuenta, cuestionar ideas y no necesitar que te digan exactamente cómo hacer todo.
-
-Les dejo el episodio porque vale mucho la pena:
-
-${item.url}
-
-Con cuál se identifican más?
----
-
-FÍJATE EN LO QUE HACE ESE POST:
-- Abre diciendo que lo consumió de verdad ("escuché y me gustó mucho"), no anunciando un tema.
-- Dice qué es y de quién en una línea corta.
-- Jerarquiza en vez de listar: "hubo varias cosas, pero una en particular".
-- Explica el MECANISMO, no solo el qué. Usa "Por qué?" y contesta.
-- Pone la idea más potente sola en su línea, sin adornos.
-- Cierra tendiendo un puente concreto a alguien que busca trabajo remoto.
-- Termina con una pregunta abierta que invita a comentar.
+ESTRUCTURA:
+1. Abre diciendo que es una recomendación y qué escuchó, leyó o vio.
+2. Cuenta brevemente quién participa o de qué trata.
+3. Comparte 2 o 3 ideas que le hayan parecido interesantes.
+4. Explica con sus palabras por qué le llamaron la atención.
+5. Si hace sentido, conecta una de esas ideas con trabajar remoto, crecer profesionalmente o trabajar en empresas internacionales. NO fuerces esta conexión: si el contenido no da para eso, déjalo fuera.
+6. Comparte el link.
+7. Termina con una pregunta sencilla para generar conversación.
 
 REGLAS DE ESCRITURA:
-- Español de México. Nada de "vosotros", "ordenador", "vale", ni voseo.
-- Cercano pero NO coloquial. Prohibidas: "chamba", "la neta", "chido", "ahorita", "te late", "órale". Esto lo lee gente que pagó por el programa.
-- Sin guiones largos. Punto y seguido o coma.
+- Español de México. Nada de "vosotros", "ordenador", "vale", ni voseo argentino.
+- Cercano pero no coloquial. Prohibidas: "chamba", "la neta", "chido", "ahorita", "te late", "órale".
+- Sin guiones largos. Usa punto y seguido o coma.
 - Un solo signo de interrogación o exclamación, el de cierre, sin el de apertura. Así: "Por qué?" y "Qué tal!".
 - Sin markdown. Nada de asteriscos, títulos ni listas con guiones.
-- Párrafos cortos, de 1 a 3 líneas. Línea en blanco entre cada uno.
-- Nada de lenguaje de coach ni de vendedor.
-- Si el contenido está en inglés, escribe en español. Puedes citar frases textuales en inglés cuando valga la pena.
+- Cuando cites algo textual, usa comillas normales.
 
-CONTENIDO DEL POST:
-- Dos o tres ideas concretas de lo que dice, con el detalle real: cifras, ejemplos, frases textuales. Nada de generalidades tipo "habla sobre la importancia de la disciplina".
-- El puente al final tiene que ser específico, no genérico. Conecta la idea con algo que de verdad le sirva a alguien buscando trabajo remoto.
-- Incluye el link antes de la pregunta final, como en el modelo.
+LO MÁS IMPORTANTE: tiene que parecer una recomendación personal que Santiago le mandaría a un grupo de amigos o colegas. No un resumen de contenido ni un post de LinkedIn.
 
-Devuelve SOLO el post, desde el saludo hasta la pregunta final. Sin encabezados, sin explicaciones tuyas, sin comillas alrededor.`;
+Devuelve SOLO el post, desde la primera línea hasta la pregunta final. Sin encabezados, sin explicaciones tuyas, sin comillas alrededor del post.`;
 
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
