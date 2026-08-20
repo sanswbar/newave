@@ -128,6 +128,21 @@
   }
   #vistaMetricas { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
   #vistaVacantes { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+  #vistaContenido { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+
+  /* ── Contenido ── */
+  .cont-item {
+    max-width: 940px; padding: 0.9rem 1rem; border: 1px solid var(--linea);
+    border-radius: 6px; margin-bottom: 0.7rem; cursor: pointer;
+  }
+  .cont-item:hover { border-color: #FC7342; background: var(--superficie); }
+  .cont-item.on { border-color: #FC7342; background: var(--superficie); }
+  .cont-meta {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #FC7342; margin-bottom: 0.3rem;
+  }
+  .cont-tit { font-size: 0.92rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.25rem; }
+  .cont-res { font-size: 0.78rem; color: var(--ink-3); line-height: 1.5; }
 
   /* ── Vacantes ── */
   .vac-head { max-width: 940px; margin-bottom: 1.5rem; }
@@ -275,6 +290,7 @@
       <button class="tab on" data-v="chats" onclick="verVista('chats')">Conversaciones</button>
       <button class="tab" data-v="metricas" onclick="verVista('metricas')">Métricas</button>
       <button class="tab" data-v="vacantes" onclick="verVista('vacantes')">Vacantes</button>
+      <button class="tab" data-v="contenido" onclick="verVista('contenido')">Contenido</button>
     </div>
 
     <div id="vistaChats" style="flex:1;display:flex;flex-direction:column;min-height:0">
@@ -295,6 +311,7 @@
 
     <div id="vistaMetricas"></div>
     <div id="vistaVacantes"></div>
+    <div id="vistaContenido"></div>
   </div>
 </div>
 
@@ -475,9 +492,11 @@
     document.getElementById('vistaChats').style.display    = v === 'chats'    ? 'flex'  : 'none';
     document.getElementById('vistaMetricas').style.display = v === 'metricas' ? 'block' : 'none';
     document.getElementById('vistaVacantes').style.display = v === 'vacantes' ? 'block' : 'none';
+    document.getElementById('vistaContenido').style.display = v === 'contenido' ? 'block' : 'none';
     document.getElementById('sidebar').style.display       = v === 'chats'    ? 'flex'  : 'none';
     if (v === 'metricas') cargarMetricas();
     if (v === 'vacantes') pintarVacantes();
+    if (v === 'contenido') pintarContenido();
   }
 
   async function cargarMetricas() {
@@ -1026,6 +1045,170 @@
       setTimeout(() => { btn.textContent = original; }, 1800);
     } catch (err) {
       alert('Título: ' + TEXTOS.titulo);
+    }
+  }
+
+
+  // ── Contenido para el Learning Spot ───────────────────────────────────
+  //
+  // Trae lo nuevo de las fuentes que ya seguimos y arma un borrador de post.
+  // El borrador es un punto de partida: estos posts funcionan porque se nota
+  // que alguien de verdad consumió el contenido, así que la reacción y el
+  // "qué me movió" los pone una persona.
+
+  let CONTENIDO = null;
+  let ELEGIDO = null;
+
+  function pintarContenido() {
+    const cont = document.getElementById('vistaContenido');
+    if (CONTENIDO) return;
+
+    cont.innerHTML = `
+      <div class="vac-head">
+        <h2>Contenido para la comunidad</h2>
+        <p>Lo nuevo de las fuentes que seguimos: Naval, Founders, Farnam Street, Lenny, Modern Wisdom y otras. Elige uno y se arma el borrador del post.</p>
+        <div class="vac-acciones">
+          <button class="vac-btn" id="btnContenido" onclick="buscarContenido()">Buscar contenido</button>
+        </div>
+      </div>`;
+  }
+
+  async function buscarContenido() {
+    const btn = document.getElementById('btnContenido');
+    btn.disabled = true;
+    btn.textContent = 'Buscando...';
+    try {
+      const resp = await fetch('/api/contenido?clave=' + encodeURIComponent(CLAVE));
+      const d = await resp.json();
+      if (!resp.ok || d.error) throw new Error(d.error || 'Error');
+      CONTENIDO = d;
+      renderContenido();
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Buscar contenido';
+      alert('No se pudo traer el contenido: ' + err.message);
+    }
+  }
+
+  function renderContenido() {
+    const d = CONTENIDO;
+    const cont = document.getElementById('vistaContenido');
+
+    let html = `
+      <div class="vac-head">
+        <h2>Contenido para la comunidad</h2>
+        <p>${d.total} piezas relevantes de ${d.revisados} revisadas. Da click en una para armar el borrador del post.</p>
+        <div class="vac-acciones">
+          <button class="vac-btn sec" onclick="CONTENIDO=null;ELEGIDO=null;pintarContenido()">Buscar de nuevo</button>
+        </div>
+      </div>`;
+
+    d.items.forEach((it, i) => {
+      html += `
+        <div class="cont-item" id="ci${i}" onclick="elegirContenido(${i})">
+          <div class="cont-meta">${escapeHtml(it.fuente)} · ${escapeHtml(it.tipo)}</div>
+          <div class="cont-tit">${escapeHtml(it.titulo)}</div>
+          <div class="cont-res">${escapeHtml((it.resumen || '').slice(0, 180))}${it.resumen && it.resumen.length > 180 ? '...' : ''}</div>
+        </div>`;
+    });
+
+    html += '<div id="contPost" style="display:none"></div>';
+    cont.innerHTML = html;
+  }
+
+  function elegirContenido(i) {
+    ELEGIDO = CONTENIDO.items[i];
+    document.querySelectorAll('.cont-item').forEach((el, n) =>
+      el.classList.toggle('on', n === i));
+
+    const cont = document.getElementById('contPost');
+    cont.style.display = 'block';
+    cont.innerHTML = `
+      <div class="vac-head" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--linea)">
+        <h2>Borrador del post</h2>
+        <p>Un punto de partida. Métele tu reacción y lo que a ti te movió: estos posts funcionan porque se nota que alguien de verdad lo consumió.</p>
+        <div class="vac-acciones">
+          <button class="vac-btn" onclick="copiarContenido()">Copiar borrador</button>
+          <button class="vac-btn sec" onclick="otroBorrador()">Otra versión</button>
+          <a class="vac-btn sec" href="${escapeHtml(ELEGIDO.url)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Abrir original</a>
+        </div>
+      </div>
+      <div id="vacPost">${escapeHtml(armarBorrador())}</div>`;
+  }
+
+  // Aperturas y cierres con la voz que ya usan Jaime y Santiago en el
+  // Learning Spot: personal, sin corporativismo, y siempre cerrando con una
+  // pregunta que invite a comentar.
+  const CONT_APERTURAS = [
+    'Hola Newave!! Hoy les quiero recomendar',
+    'Buen día! Les comparto algo que vale mucho la pena:',
+    'Hola a todos! Me topé con esto y no pude no compartirlo:',
+    'Qué tal! Les dejo una recomendación de la semana:',
+    'Hola! Esto me pareció buenísimo y creo que les puede servir:',
+  ];
+
+  const CONT_CIERRES = [
+    'Ustedes qué opinan? 👀',
+    'Me encantaría saber qué piensan de esto.',
+    'Se identifican con algo de esto? 👀',
+    'Cuéntenme si les resonó tanto como a mí.',
+    'Vale toda la pena. Ya me dirán qué les pareció.',
+  ];
+
+  let CONT_TEXTOS = null;
+
+  function otroBorrador() {
+    CONT_TEXTOS = null;
+    const cont = document.getElementById('vacPost');
+    if (cont) cont.textContent = armarBorrador();
+  }
+
+  function armarBorrador() {
+    const it = ELEGIDO;
+    if (!CONT_TEXTOS) {
+      const al = a => a[Math.floor(Math.random() * a.length)];
+      CONT_TEXTOS = { ap: al(CONT_APERTURAS), ci: al(CONT_CIERRES) };
+    }
+
+    const que = it.tipo === 'podcast' ? 'este episodio'
+              : it.tipo === 'ensayo'  ? 'este artículo'
+              : 'esto';
+
+    // El resumen del feed sirve como base para los puntos, pero hay que
+    // reescribirlo: viene en inglés y en tono de marketing.
+    const resumen = (it.resumen || '').slice(0, 400);
+
+    return `TÍTULO: ${it.titulo}
+${'─'.repeat(50)}
+
+${CONT_TEXTOS.ap} ${que} de ${it.fuente}.
+
+${it.titulo}
+${it.url}
+
+[Aquí va lo tuyo: 2 o 3 puntos que te movieron. Sé concreto, con lo que
+de verdad dijeron, no generalidades.]
+
+[Y por qué le sirve a alguien que está buscando trabajo remoto.]
+
+${CONT_TEXTOS.ci}
+
+${'─'.repeat(50)}
+DE QUÉ TRATA (del feed, para que no tengas que abrirlo):
+${resumen || 'Sin descripción en el feed. Abre el original.'}`;
+  }
+
+  async function copiarContenido() {
+    const btn = event.target;
+    const original = btn.textContent;
+    // Solo la parte del post, sin las notas de referencia
+    const texto = armarBorrador().split('─'.repeat(50))[1].trim();
+    try {
+      await navigator.clipboard.writeText(texto);
+      btn.textContent = 'Copiado';
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    } catch (err) {
+      alert('No se pudo copiar. Selecciona el texto y cópialo a mano.');
     }
   }
 
