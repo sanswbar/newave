@@ -971,7 +971,10 @@
     let html = `<p>${escapeHtml(TEXTOS.saludo)}</p><p>${escapeHtml(TEXTOS.intro)}</p>`;
 
     for (const [cat, items] of Object.entries(porCat)) {
-      html += `<p>${escapeHtml(cat)}:</p><ul>`;
+      // Párrafo vacío antes de cada categoría: dentro de una lista los
+      // elementos van pegados (que es lo que queremos), pero entre una
+      // categoría y la siguiente sí hace falta aire.
+      html += `<p><br></p><p>${escapeHtml(cat)}:</p><ul>`;
       for (const c of items) {
         const texto = `${c.dataset.emp} - ${c.dataset.tit}: `;
         html += `<li>${escapeHtml(texto)}<a href="${escapeHtml(c.dataset.url)}">${escapeHtml(c.dataset.url)}</a></li>`;
@@ -979,6 +982,7 @@
       html += '</ul>';
     }
 
+    html += '<p><br></p>';
     html += `<p>${escapeHtml(TEXTOS.cierre)}</p>`;
     return html;
   }
