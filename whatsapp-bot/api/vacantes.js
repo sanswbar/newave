@@ -40,8 +40,8 @@ const EXCLUIR_UBICACION = [
 // Roles que no van con el perfil de la comunidad
 const EXCLUIR_PUESTO = [
   'engineer', 'developer', 'devops', 'sre ', 'architect',
-  'data scientist', 'machine learning', 'security', 'qa ',
-  'intern', 'internship', 'trainee',
+  'data scientist', 'security', 'qa ',
+  'intern', 'internship', 'trainee', 'practicante', 'becari',
   'vice president', 'vp ', 'chief ', 'head of', 'senior director',
 ];
 
@@ -68,36 +68,41 @@ const BLOQUEA_ELEGIBILIDAD = [
 ];
 
 const CATEGORIAS = [
-  ['📋 Project / Program Management', [
-    'project manager', 'program manager', 'product manager',
-    'technical program', 'delivery manager', 'scrum master',
+  ['💼 Ventas y Desarrollo de Negocio', [
+    'account executive', 'sales', 'business development', 'bdr', 'sdr',
+    'partnerships', 'solutions consultant', 'revenue', 'commercial',
+    'account manager',
   ]],
   ['🤝 Customer Success', [
     'customer success', 'customer support', 'customer experience',
-    'account manager', 'client success', 'implementation',
-    'onboarding specialist',
+    'client success', 'retention', 'renewals', 'implementation',
+    'onboarding specialist', 'customer operations',
   ]],
-  ['💼 Account Management / Sales', [
-    'account executive', 'sales', 'business development', 'bdr', 'sdr',
-    'revenue', 'partnerships', 'solutions consultant',
+  ['📋 Project / Program Management', [
+    'project manager', 'program manager', 'product manager',
+    'technical program', 'delivery manager', 'project coordinator',
+    'scrum master', 'product operations',
   ]],
-  ['🎨 Graphic Design / UX-UI', [
-    'designer', 'design ', 'ux', 'ui ', 'creative', 'brand ',
+  ['📣 Marketing y Growth', [
+    'marketing', 'growth', 'content', 'social media', 'seo',
+    'brand ', 'lifecycle', 'demand generation', 'communications',
+    'community manager', 'paid media',
   ]],
-  ['📣 Digital Marketing', [
-    'marketing manager', 'marketing specialist', 'marketing analyst',
-    'growth', 'content', 'social media', 'seo', 'brand marketing',
-    'lifecycle', 'demand generation', 'communications',
-  ]],
-  ['⚙️ Operations', [
+  ['⚙️ Operaciones', [
     'operations', 'ops', 'business analyst', 'process',
     'supply chain', 'logistics', 'people ', 'recruiter', 'talent',
+    'compliance', 'administrative',
   ]],
-  ['💰 Finance', [
+  ['💰 Finanzas', [
     'finance', 'accounting', 'accountant', 'controller',
-    'financial', 'payroll', 'treasury', 'fp&a',
+    'financial', 'payroll', 'treasury', 'fp&a', 'billing',
   ]],
 ];
+
+// Cuántas vacantes lleva el post. Se reparten entre las categorías que
+// tengan resultados, priorizando siempre las que mencionan México o LATAM
+// explícitamente: son las que la gente puede tomar con más certeza.
+const TOTAL_POST = 10;
 
 function limpiarHtml(texto) {
   if (!texto) return '';
@@ -179,6 +184,26 @@ function elegibilidadOk(v) {
   return !BLOQUEA_ELEGIBILIDAD.some(f => v.descripcion.includes(f));
 }
 
+
+// Qué tan segura es la vacante para alguien en México. Las que lo dicen
+// explícitamente van primero: son las que puede tomar sin dudas.
+function puntuar(v) {
+  const texto = `${v.titulo} ${v.ubicacion}`.toLowerCase();
+  const desc = v.descripcion || '';
+
+  // Lo dice en el título o la ubicación: máxima certeza
+  if (/\b(mexico|méxico|latam|latin america)\b/.test(texto)) return 100;
+  // Abierta a las Américas
+  if (/\b(americas|north america)\b/.test(texto)) return 80;
+  // Lo dice en la descripción
+  if (/\b(mexico|méxico|latam|latin america)\b/.test(desc)) return 70;
+  // Global o desde cualquier lado
+  if (/\b(worldwide|anywhere|globally|global)\b/.test(texto)) return 60;
+  if (desc.includes('countries around the world') || desc.includes('anywhere in the world')) return 55;
+  // Remota sin restricción detectada
+  return 30;
+}
+
 function categorizar(titulo) {
   const t = titulo.toLowerCase();
   for (const [nombre, claves] of CATEGORIAS) {
@@ -205,25 +230,59 @@ module.exports = async function handler(req, res) {
       v.titulo && v.url && esRemotaLatam(v) && elegibilidadOk(v)
     );
 
-    // Agrupa por categoría, respetando el orden de CATEGORIAS
+    // Agrupa por categoría y ordena cada una por qué tan claro está que
+    // contratan en México/LATAM.
     const porCategoria = {};
     for (const [nombre] of CATEGORIAS) porCategoria[nombre] = [];
     for (const v of filtradas) {
       const c = categorizar(v.titulo);
-      if (c) {
-        // La descripción pesa mucho y no se usa en el front
-        const { descripcion, ...resto } = v;
-        porCategoria[c].push(resto);
-      }
+      if (c) porCategoria[c].push({ ...v, puntaje: puntuar(v) });
+    }
+    for (const c of Object.keys(porCategoria)) {
+      porCategoria[c].sort((a, b) => b.puntaje - a.puntaje);
     }
 
-    const total = Object.values(porCategoria).reduce((n, a) => n + a.length, 0);
+    // Reparte TOTAL_POST entre las categorías con resultados: una vuelta
+    // dando la mejor de cada una, luego otra, hasta llegar al total. Así el
+    // post sale variado en vez de diez vacantes de la misma categoría.
+    const conResultados = Object.keys(porCategoria).filter(c => porCategoria[c].length);
+    const elegidas = {};
+    for (const c of conResultados) elegidas[c] = [];
+    const empresasUsadas = new Set();
+    let n = 0, vuelta = 0;
+
+    while (n < TOTAL_POST && vuelta < 20) {
+      let agregoAlgo = false;
+      for (const c of conResultados) {
+        if (n >= TOTAL_POST) break;
+        // Una vacante por empresa en todo el post, para no repetir compañía
+        const cand = porCategoria[c].find(v =>
+          !empresasUsadas.has(v.empresa) && !elegidas[c].includes(v)
+        );
+        if (cand) {
+          elegidas[c].push(cand);
+          empresasUsadas.add(cand.empresa);
+          n++;
+          agregoAlgo = true;
+        }
+      }
+      if (!agregoAlgo) break; // ya no hay de dónde sacar
+      vuelta++;
+    }
+
+    // Limpia la descripción antes de mandar al front (pesa mucho)
+    const salida = {};
+    for (const [c, vs] of Object.entries(elegidas)) {
+      if (!vs.length) continue;
+      salida[c] = vs.map(({ descripcion, ...resto }) => resto);
+    }
 
     return res.status(200).json({
       ok: true,
       revisadas: todas.length,
-      total,
-      categorias: porCategoria,
+      candidatas: filtradas.length,
+      total: n,
+      categorias: salida,
     });
   } catch (err) {
     console.error('[vacantes] Error:', err);

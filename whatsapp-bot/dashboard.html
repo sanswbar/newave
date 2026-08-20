@@ -816,7 +816,7 @@
     let html = `
       <div class="vac-head">
         <h2>Vacantes para la comunidad</h2>
-        <p>${d.total} vacantes remotas abiertas a México y LATAM, de ${d.revisadas} revisadas. Desmarca las que no sirvan y copia el post.</p>
+        <p>${d.total} vacantes seleccionadas de ${d.candidatas} candidatas, sobre ${d.revisadas} revisadas. Las que dicen México o LATAM van primero. Desmarca las que no sirvan y copia el post.</p>
         <div class="vac-acciones">
           <button class="vac-btn" onclick="copiarPost()">Copiar post</button>
           <button class="vac-btn sec" onclick="VACANTES=null;pintarVacantes()">Buscar de nuevo</button>
@@ -832,7 +832,7 @@
         const id = 'v' + (i++);
         // Las primeras 4 de cada categoría vienen marcadas: es el tamaño
         // típico del post. El resto queda disponible por si alguna no sirve.
-        const marcada = vs.indexOf(v) < 4 ? 'checked' : '';
+        const marcada = 'checked'; // ya vienen filtradas al total del post
         html += `
           <div class="vac-item">
             <input type="checkbox" id="${id}" ${marcada}
@@ -875,9 +875,9 @@
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    const n = seleccionadas().length;
-    let out = `Vacantes de la Semana 💻\n\n`;
-    out += `Les comparto esta lista de ${n} vacantes remotas divididas en ${Object.keys(porCat).length} categorías.\n`;
+    let out = 'Hola, cómo están?\n\n';
+    out += 'Les comparto unas buenas vacantes que encontramos esta semana. ';
+    out += 'Recuerden que la diferencia la hace tener los documentos listos y aplicar con estrategia, tal como lo vemos en el curso.\n';
 
     for (const [cat, items] of Object.entries(porCat)) {
       out += `\n${cat}\n`;
@@ -885,6 +885,8 @@
         out += `${c.dataset.emp} - ${c.dataset.tit}\n${c.dataset.url}\n`;
       }
     }
+
+    out += '\nMucho éxito a todos. Cualquier duda sobre cómo aplicar, la vemos en las sesiones.';
     return out.trim();
   }
 
