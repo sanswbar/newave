@@ -127,6 +127,42 @@
     --superficie:  #141418;
   }
   #vistaMetricas { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+  #vistaVacantes { display: none; flex: 1; overflow-y: auto; padding: 2rem 2rem 4rem; }
+
+  /* ── Vacantes ── */
+  .vac-head { max-width: 940px; margin-bottom: 1.5rem; }
+  .vac-head h2 { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.3rem; }
+  .vac-head p  { font-size: 0.82rem; color: var(--ink-3); margin: 0 0 1.1rem; max-width: 60ch; }
+  .vac-btn {
+    background: #FC7342; color: #fff; border: 0; border-radius: 6px;
+    padding: 0.7rem 1.4rem; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+  }
+  .vac-btn:hover:not(:disabled) { background: #e85f2e; }
+  .vac-btn:disabled { opacity: 0.5; cursor: default; }
+  .vac-btn.sec { background: transparent; border: 1px solid var(--linea); color: var(--ink-2); }
+  .vac-btn.sec:hover:not(:disabled) { background: var(--superficie); color: var(--ink); }
+  .vac-acciones { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+  .vac-cat { max-width: 940px; margin-bottom: 1.75rem; }
+  .vac-cat h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 0.6rem; }
+  .vac-item {
+    display: flex; gap: 0.7rem; align-items: flex-start;
+    padding: 0.55rem 0.7rem; border-radius: 5px;
+  }
+  .vac-item:hover { background: var(--superficie); }
+  .vac-item input { margin-top: 0.25rem; cursor: pointer; flex-shrink: 0; }
+  .vac-item label { cursor: pointer; font-size: 0.87rem; line-height: 1.45; }
+  .vac-emp { font-weight: 600; }
+  .vac-loc { color: var(--ink-3); font-size: 0.78rem; }
+  .vac-item a { color: var(--ink-3); font-size: 0.75rem; text-decoration: none; word-break: break-all; }
+  .vac-item a:hover { color: #FC7342; text-decoration: underline; }
+  #vacPost {
+    max-width: 940px; margin-top: 1.5rem; background: var(--superficie);
+    border: 1px solid var(--linea); border-radius: 6px; padding: 1.1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.78rem; line-height: 1.6; white-space: pre-wrap;
+    color: var(--ink-2); max-height: 420px; overflow-y: auto;
+  }
   .m-wrap { max-width: 940px; }
   .m-seccion { margin-bottom: 3rem; }
   .m-seccion h3 {
@@ -238,6 +274,7 @@
     <div id="tabs">
       <button class="tab on" data-v="chats" onclick="verVista('chats')">Conversaciones</button>
       <button class="tab" data-v="metricas" onclick="verVista('metricas')">Métricas</button>
+      <button class="tab" data-v="vacantes" onclick="verVista('vacantes')">Vacantes</button>
     </div>
 
     <div id="vistaChats" style="flex:1;display:flex;flex-direction:column;min-height:0">
@@ -257,6 +294,7 @@
     </div>
 
     <div id="vistaMetricas"></div>
+    <div id="vistaVacantes"></div>
   </div>
 </div>
 
@@ -434,11 +472,12 @@
 
   function verVista(v) {
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.v === v));
-    const chats = v === 'chats';
-    document.getElementById('vistaChats').style.display = chats ? 'flex' : 'none';
-    document.getElementById('vistaMetricas').style.display = chats ? 'none' : 'block';
-    document.getElementById('sidebar').style.display = chats ? 'flex' : 'none';
-    if (!chats) cargarMetricas();
+    document.getElementById('vistaChats').style.display    = v === 'chats'    ? 'flex'  : 'none';
+    document.getElementById('vistaMetricas').style.display = v === 'metricas' ? 'block' : 'none';
+    document.getElementById('vistaVacantes').style.display = v === 'vacantes' ? 'block' : 'none';
+    document.getElementById('sidebar').style.display       = v === 'chats'    ? 'flex'  : 'none';
+    if (v === 'metricas') cargarMetricas();
+    if (v === 'vacantes') pintarVacantes();
   }
 
   async function cargarMetricas() {
@@ -726,6 +765,139 @@
         ${nota}
       </div>`;
     }).join('');
+  }
+
+
+  // ── Vacantes ──────────────────────────────────────────────────────────
+  //
+  // Busca vacantes remotas en las bolsas de las empresas que ya conocemos y
+  // arma el post para la comunidad. Se pueden desmarcar las que no sirvan
+  // antes de copiar: el filtro automático es bueno pero no perfecto.
+
+  let VACANTES = null;
+
+  function pintarVacantes() {
+    const cont = document.getElementById('vistaVacantes');
+    if (VACANTES) return; // ya cargadas, no re-pintar y perder lo desmarcado
+
+    cont.innerHTML = `
+      <div class="vac-head">
+        <h2>Vacantes para la comunidad</h2>
+        <p>Busca vacantes remotas abiertas a México y LATAM en las bolsas de las empresas que ya publicamos. Revisa la lista, quita las que no sirvan y copia el post.</p>
+        <div class="vac-acciones">
+          <button class="vac-btn" id="btnBuscar" onclick="buscarVacantes()">Buscar vacantes</button>
+        </div>
+      </div>`;
+  }
+
+  async function buscarVacantes() {
+    const btn = document.getElementById('btnBuscar');
+    btn.disabled = true;
+    btn.textContent = 'Buscando...';
+
+    try {
+      const resp = await fetch('/api/vacantes?clave=' + encodeURIComponent(CLAVE));
+      const d = await resp.json();
+      if (!resp.ok || d.error) throw new Error(d.error || 'Error al buscar');
+
+      VACANTES = d;
+      renderVacantes();
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Buscar vacantes';
+      alert('No se pudieron traer las vacantes: ' + err.message);
+    }
+  }
+
+  function renderVacantes() {
+    const d = VACANTES;
+    const cont = document.getElementById('vistaVacantes');
+
+    let html = `
+      <div class="vac-head">
+        <h2>Vacantes para la comunidad</h2>
+        <p>${d.total} vacantes remotas abiertas a México y LATAM, de ${d.revisadas} revisadas. Desmarca las que no sirvan y copia el post.</p>
+        <div class="vac-acciones">
+          <button class="vac-btn" onclick="copiarPost()">Copiar post</button>
+          <button class="vac-btn sec" onclick="VACANTES=null;pintarVacantes()">Buscar de nuevo</button>
+          <span class="vac-loc" id="vacConteo"></span>
+        </div>
+      </div>`;
+
+    let i = 0;
+    for (const [cat, vs] of Object.entries(d.categorias)) {
+      if (!vs.length) continue;
+      html += `<div class="vac-cat"><h3>${escapeHtml(cat)}</h3>`;
+      for (const v of vs) {
+        const id = 'v' + (i++);
+        // Las primeras 4 de cada categoría vienen marcadas: es el tamaño
+        // típico del post. El resto queda disponible por si alguna no sirve.
+        const marcada = vs.indexOf(v) < 4 ? 'checked' : '';
+        html += `
+          <div class="vac-item">
+            <input type="checkbox" id="${id}" ${marcada}
+                   data-cat="${escapeHtml(cat)}"
+                   data-emp="${escapeHtml(v.empresa)}"
+                   data-tit="${escapeHtml(v.titulo)}"
+                   data-url="${escapeHtml(v.url)}"
+                   onchange="actualizarConteo()">
+            <label for="${id}">
+              <span class="vac-emp">${escapeHtml(v.empresa)}</span> - ${escapeHtml(v.titulo)}
+              ${v.ubicacion ? `<span class="vac-loc"> · ${escapeHtml(v.ubicacion)}</span>` : ''}
+              <br><a href="${escapeHtml(v.url)}" target="_blank" rel="noopener">${escapeHtml(v.url)}</a>
+            </label>
+          </div>`;
+      }
+      html += '</div>';
+    }
+
+    html += '<div id="vacPost"></div>';
+    cont.innerHTML = html;
+    actualizarConteo();
+  }
+
+  function seleccionadas() {
+    return [...document.querySelectorAll('#vistaVacantes input:checked')];
+  }
+
+  function actualizarConteo() {
+    const n = seleccionadas().length;
+    const el = document.getElementById('vacConteo');
+    if (el) el.textContent = n + (n === 1 ? ' vacante seleccionada' : ' vacantes seleccionadas');
+    const post = document.getElementById('vacPost');
+    if (post) post.textContent = armarPost();
+  }
+
+  function armarPost() {
+    const porCat = {};
+    for (const c of seleccionadas()) {
+      const cat = c.dataset.cat;
+      (porCat[cat] = porCat[cat] || []).push(c);
+    }
+
+    const n = seleccionadas().length;
+    let out = `Vacantes de la Semana 💻\n\n`;
+    out += `Les comparto esta lista de ${n} vacantes remotas divididas en ${Object.keys(porCat).length} categorías.\n`;
+
+    for (const [cat, items] of Object.entries(porCat)) {
+      out += `\n${cat}\n`;
+      for (const c of items) {
+        out += `${c.dataset.emp} - ${c.dataset.tit}\n${c.dataset.url}\n`;
+      }
+    }
+    return out.trim();
+  }
+
+  async function copiarPost() {
+    try {
+      await navigator.clipboard.writeText(armarPost());
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = 'Copiado';
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    } catch (err) {
+      alert('No se pudo copiar. Selecciona el texto de abajo y cópialo a mano.');
+    }
   }
 
   function formatearHora(iso) {
