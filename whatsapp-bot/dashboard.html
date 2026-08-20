@@ -951,21 +951,43 @@
     return bloques.join('\n\n');
   }
 
-  // Copia el post conservando los saltos de línea.
+  // Arma el post como HTML con listas reales.
   //
-  // El editor de Skool pega el texto plano como un solo párrafo corrido: los
-  // \n se pierden y quedan las 10 vacantes en un bloque ilegible. La salida
-  // es ponerlo también como HTML con <br> reales, que Skool sí respeta. El
-  // navegador ofrece los dos formatos y el destino toma el que entiende.
+  // Skool le mete margen a cada párrafo, así que un texto plano con saltos
+  // de línea sale con huecos enormes. Pero su editor SÍ respeta las listas
+  // (<ul><li>): dentro de una lista los elementos van pegados, sin margen.
+  //
+  // Ya se probó y NO funciona: doble salto de línea, <br> en el portapapeles
+  // y U+2028. La lista es la única estructura que el editor reconoce.
+  function armarPostHtml() {
+    if (!TEXTOS) elegirTextos();
+
+    const porCat = {};
+    for (const c of seleccionadas()) {
+      const cat = c.dataset.cat;
+      (porCat[cat] = porCat[cat] || []).push(c);
+    }
+
+    let html = `<p>${escapeHtml(TEXTOS.saludo)}</p><p>${escapeHtml(TEXTOS.intro)}</p>`;
+
+    for (const [cat, items] of Object.entries(porCat)) {
+      html += `<p>${escapeHtml(cat)}:</p><ul>`;
+      for (const c of items) {
+        const texto = `${c.dataset.emp} - ${c.dataset.tit}: `;
+        html += `<li>${escapeHtml(texto)}<a href="${escapeHtml(c.dataset.url)}">${escapeHtml(c.dataset.url)}</a></li>`;
+      }
+      html += '</ul>';
+    }
+
+    html += `<p>${escapeHtml(TEXTOS.cierre)}</p>`;
+    return html;
+  }
+
   async function copiarPost() {
     const btn = event.target;
     const original = btn.textContent;
     const texto = armarPost();
-
-    const html = texto
-      .split('\n')
-      .map(l => l.trim() === '' ? '<br>' : escapeHtml(l))
-      .join('<br>');
+    const html = armarPostHtml();
 
     try {
       if (navigator.clipboard.write && window.ClipboardItem) {
@@ -981,7 +1003,6 @@
       btn.textContent = 'Copiado';
       setTimeout(() => { btn.textContent = original; }, 1800);
     } catch (err) {
-      // Respaldo para navegadores que no dejan escribir HTML al portapapeles
       try {
         await navigator.clipboard.writeText(texto);
         btn.textContent = 'Copiado (texto)';
