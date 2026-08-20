@@ -801,6 +801,7 @@
       if (!resp.ok || d.error) throw new Error(d.error || 'Error al buscar');
 
       VACANTES = d;
+      elegirTextos();
       renderVacantes();
     } catch (err) {
       btn.disabled = false;
@@ -819,6 +820,7 @@
         <p>${d.total} vacantes seleccionadas de ${d.candidatas} candidatas, sobre ${d.revisadas} revisadas. Las que dicen México o LATAM van primero. Desmarca las que no sirvan y copia el post.</p>
         <div class="vac-acciones">
           <button class="vac-btn" onclick="copiarPost()">Copiar post</button>
+          <button class="vac-btn sec" onclick="otroMensaje()">Otro mensaje</button>
           <button class="vac-btn sec" onclick="VACANTES=null;pintarVacantes()">Buscar de nuevo</button>
           <span class="vac-loc" id="vacConteo"></span>
         </div>
@@ -868,16 +870,58 @@
     if (post) post.textContent = armarPost();
   }
 
+  // Variantes del texto del post. Publicando cada semana, el mismo mensaje
+  // se lee automatizado para el tercer post. Se elige una al azar cada vez
+  // que se busca, y el botón de abajo permite cambiarla si no convence.
+  const SALUDOS = [
+    'Hola, cómo están?',
+    'Buen día a todos!',
+    'Qué tal, cómo va la semana?',
+    'Hola a todos!',
+    'Cómo van por acá?',
+    'Buenas! Espero que vayan bien.',
+  ];
+
+  const INTROS = [
+    'Les comparto unas buenas vacantes que encontramos esta semana. Recuerden que la diferencia la hace tener los documentos listos y aplicar con estrategia, tal como lo vemos en el curso.',
+    'Estuvimos buscando y salieron varias que valen la pena. Antes de aplicar, revisen que su CV y LinkedIn estén como los trabajamos en el curso: ahí es donde se gana o se pierde el proceso.',
+    'Aquí van las vacantes de esta semana. Ya saben, aplicar sin preparar el perfil es tirar el tiro. Usen las plantillas y la estrategia que vemos adentro.',
+    'Les dejo lo que encontramos esta semana. La mayoría de la gente aplica en automático y por eso no le contestan. Ustedes tienen el método, úsenlo.',
+    'Estas son las vacantes que salieron esta semana. Tómense el tiempo de adaptar el CV a cada una, no manden el mismo a todas.',
+    'Van las vacantes de la semana. Recuerden revisar bien la descripción antes de aplicar y ajustar su perfil a lo que están pidiendo.',
+  ];
+
+  const CIERRES = [
+    'Mucho éxito a todos. Cualquier duda sobre cómo aplicar, la vemos en las sesiones.',
+    'Si alguna les interesa y quieren que revisemos su aplicación, escriban en la comunidad.',
+    'Cualquier cosa que necesiten para aplicar, aquí andamos. Éxito!',
+    'Ánimo con las aplicaciones. Nos vemos en la sesión de esta semana.',
+    'Si aplican a alguna, cuéntennos cómo les fue. Éxito!',
+    'A darle. Cualquier duda la resolvemos en la comunidad.',
+  ];
+
+  let TEXTOS = null;
+
+  function elegirTextos() {
+    const al = a => a[Math.floor(Math.random() * a.length)];
+    TEXTOS = { saludo: al(SALUDOS), intro: al(INTROS), cierre: al(CIERRES) };
+  }
+
+  function otroMensaje() {
+    elegirTextos();
+    actualizarConteo();
+  }
+
   function armarPost() {
+    if (!TEXTOS) elegirTextos();
+
     const porCat = {};
     for (const c of seleccionadas()) {
       const cat = c.dataset.cat;
       (porCat[cat] = porCat[cat] || []).push(c);
     }
 
-    let out = 'Hola, cómo están?\n\n';
-    out += 'Les comparto unas buenas vacantes que encontramos esta semana. ';
-    out += 'Recuerden que la diferencia la hace tener los documentos listos y aplicar con estrategia, tal como lo vemos en el curso.\n';
+    let out = `${TEXTOS.saludo}\n\n${TEXTOS.intro}\n`;
 
     for (const [cat, items] of Object.entries(porCat)) {
       out += `\n${cat}\n`;
@@ -886,7 +930,7 @@
       }
     }
 
-    out += '\nMucho éxito a todos. Cualquier duda sobre cómo aplicar, la vemos en las sesiones.';
+    out += `\n${TEXTOS.cierre}`;
     return out.trim();
   }
 
