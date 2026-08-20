@@ -265,7 +265,10 @@ Devuelve SOLO los puntos y el párrafo, sin encabezados ni explicaciones tuyas.`
       return null;
     }
     const bloque = Array.isArray(d.content) ? d.content.find(b => b.type === 'text') : null;
-    return bloque?.text?.trim() || null;
+    // El prompt pide separar con "---" para que el modelo distinga las dos
+    // partes, pero en el post no debe aparecer.
+    const texto = bloque?.text?.trim();
+    return texto ? texto.replace(/\n*---+\n*/g, '\n\n') : null;
   } catch (err) {
     console.error('[contenido] generarPuntos falló:', err);
     return null;
