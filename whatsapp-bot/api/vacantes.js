@@ -11,16 +11,27 @@
 // La capa 3 es la que de verdad decide: muchas dicen "Remote" arriba y
 // "must be authorized to work in the US" abajo.
 
+const { vacantesPublicadas, marcarVacantesPublicadas } = require('./db');
+
 const GREENHOUSE = [
   'gitlab', 'canonical', 'sezzle', 'twilio', 'customerio', 'cloudbeds',
   'varicent', 'remotecom', 'alpaca', 'stackblitz', 'consensys',
   'deel', 'sourcegraph', 'grafanalabs', 'airbyte', 'dbtlabs',
   'clipboardhealth', 'mercury', 'vercel', 'cabify', 'nubank',
+  // Con pocas empresas el post repite las mismas marcas cada semana aunque
+  // cambien las vacantes. Estas son del mismo perfil: SaaS internacional
+  // que contrata fuera de USA.
+  'automattic', 'zapier', 'hotjar', 'toptal', 'elastic',
+  'hashicorp', 'confluent', 'datadog', 'mongodb', 'doximity',
+  'thoughtworks', 'coinbase', 'kraken', 'bitso', 'rappi',
+  'konfio', 'clip', 'clara', 'lodgify', 'jobber',
 ];
 
 const ASHBY = [
   'supabase', 'oyster', 'hopper', 'linear', 'ramp', 'clerk',
   'replit', 'posthog', 'browserbase', 'openphone',
+  'multiverse', 'runway', 'notion', 'vanta', 'deepgram',
+  'astronomer', 'tailscale', 'railway', 'render', 'neon',
 ];
 
 const PISTAS_REMOTO = ['remote', 'remoto', 'anywhere', 'distributed', 'global'];
@@ -103,6 +114,13 @@ const CATEGORIAS = [
 // tengan resultados, priorizando siempre las que mencionan México o LATAM
 // explícitamente: son las que la gente puede tomar con más certeza.
 const TOTAL_POST = 10;
+
+// Días que una empresa descansa antes de volver a salir. No es que repetir
+// esté mal —si la vacante sigue abierta, sirve— es que el post no se sienta
+// el mismo cada semana.
+const DIAS_DESCANSO_EMPRESA = 14;
+// Después de esto una vacante puede repetirse.
+const DIAS_REPETIR_VACANTE = 90;
 
 function limpiarHtml(texto) {
   if (!texto) return '';
@@ -238,8 +256,35 @@ module.exports = async function handler(req, res) {
       const c = categorizar(v.titulo);
       if (c) porCategoria[c].push({ ...v, puntaje: puntuar(v) });
     }
+    // Historial: qué ya se propuso y qué empresas salieron hace poco.
+    // Si la base falla, seguimos sin historial en vez de tronar el buscador.
+    let urlsVistas = new Set();
+    let empresasRecientes = new Set();
+    try {
+      const previas = await vacantesPublicadas(DIAS_REPETIR_VACANTE);
+      urlsVistas = new Set(previas.map(p => p.url));
+      const corte = Date.now() - DIAS_DESCANSO_EMPRESA * 86400000;
+      empresasRecientes = new Set(
+        previas.filter(p => new Date(p.publicada_en).getTime() > corte)
+               .map(p => p.empresa)
+      );
+    } catch (err) {
+      console.error('[vacantes] historial no disponible:', err.message);
+    }
+
+    // Ordena por: nunca propuesta > empresa que no salió hace poco > puntaje.
+    // El puntaje sigue mandando dentro de cada grupo, así que las que dicen
+    // México/LATAM siguen saliendo primero entre las candidatas frescas.
     for (const c of Object.keys(porCategoria)) {
-      porCategoria[c].sort((a, b) => b.puntaje - a.puntaje);
+      porCategoria[c].sort((a, b) => {
+        const na = urlsVistas.has(a.url) ? 1 : 0;
+        const nb = urlsVistas.has(b.url) ? 1 : 0;
+        if (na !== nb) return na - nb;
+        const ra = empresasRecientes.has(a.empresa) ? 1 : 0;
+        const rb = empresasRecientes.has(b.empresa) ? 1 : 0;
+        if (ra !== rb) return ra - rb;
+        return b.puntaje - a.puntaje;
+      });
     }
 
     // Reparte TOTAL_POST entre las categorías con resultados: una vuelta
@@ -275,6 +320,18 @@ module.exports = async function handler(req, res) {
     for (const [c, vs] of Object.entries(elegidas)) {
       if (!vs.length) continue;
       salida[c] = vs.map(({ descripcion, ...resto }) => resto);
+    }
+
+    // Guarda lo propuesto para no repetirlo la próxima. Si falla, el post
+    // igual se entrega: perder el historial de una semana no vale un error.
+    try {
+      await marcarVacantesPublicadas(
+        Object.values(elegidas).flat().map(v => ({
+          url: v.url, empresa: v.empresa, titulo: v.titulo,
+        }))
+      );
+    } catch (err) {
+      console.error('[vacantes] no se pudo guardar el historial:', err.message);
     }
 
     return res.status(200).json({

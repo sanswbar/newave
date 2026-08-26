@@ -14,11 +14,14 @@ Uso:
 
 import html
 import json
+import os
+import random
 import re
 import sys
 import urllib.request
 import urllib.error
 from collections import defaultdict
+from datetime import datetime
 
 # Empresas que ya han publicado vacantes remotas para LATAM. Las de la lista
 # del post anterior más otras del mismo perfil: SaaS internacional, contratan
@@ -28,11 +31,20 @@ GREENHOUSE = [
     'varicent', 'remotecom', 'alpaca', 'stackblitz', 'consensys',
     'deel', 'sourcegraph', 'grafanalabs', 'airbyte', 'dbtlabs',
     'clipboardhealth', 'mercury', 'vercel', 'cabify', 'nubank',
+    # Agregadas para que el post no repita las mismas marcas cada semana:
+    # con pocas empresas el descanso no alcanza a rotar.
+    'automattic', 'zapier', 'hotjar', 'toptal', 'crossover',
+    'elastic', 'hashicorp', 'confluent', 'datadog', 'mongodb',
+    'doximity', 'thoughtworks', 'shopify', 'coinbase', 'kraken',
+    'bitso', 'rappi', 'konfio', 'clip', 'clara',
+    'jobgether', 'teamtailor', 'lodgify', 'jobber', 'float',
 ]
 
 ASHBY = [
     'supabase', 'oyster', 'hopper', 'linear', 'ramp', 'clerk',
     'replit', 'posthog', 'browserbase', 'openphone',
+    'multiverse', 'runway', 'notion', 'vanta', 'deepgram',
+    'astronomer', 'tailscale', 'railway', 'render', 'neon',
 ]
 
 # Una vacante sirve si es remota Y no está restringida a un solo país que no
@@ -273,22 +285,114 @@ def buscar():
     return por_cat
 
 
-def escribir_post(por_cat, max_por_cat=4):
+# Historial de lo ya publicado. Sin esto el scraper vuelve a proponer las
+# mismas vacantes cada semana: siguen abiertas y siguen saliendo primero en
+# la respuesta de la API.
+HISTORIAL = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'publicadas.json')
+
+# Después de este tiempo una vacante puede repetirse (por si el post anterior
+# se perdió o la persona no alcanzó a verla).
+DIAS_PARA_REPETIR = 90
+
+
+def leer_historial():
+    if not os.path.exists(HISTORIAL):
+        return {}
+    try:
+        with open(HISTORIAL, encoding='utf-8') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        # Historial corrupto: mejor empezar de cero que tronar el post
+        print('  ! historial ilegible, se empieza de cero', file=sys.stderr)
+        return {}
+
+
+# Cuántas semanas descansa una empresa antes de volver a salir. No es que
+# repetir esté mal —si la vacante sigue abierta, sirve— es que el post no se
+# sienta el mismo cada semana. Con 2 semanas una empresa nunca sale dos
+# semanas seguidas, pero puede volver pronto si tiene algo bueno.
+SEMANAS_DESCANSO_EMPRESA = 2
+
+
+def empresas_recientes(hist, semanas=SEMANAS_DESCANSO_EMPRESA):
+    """Empresas publicadas en los últimos N*7 días."""
+    limite = datetime.now().toordinal() - (semanas * 7)
+    out = set()
+    for dato in hist.values():
+        if not isinstance(dato, dict):
+            continue  # formato viejo: solo fecha, sin empresa
+        try:
+            if datetime.strptime(dato['fecha'], '%Y-%m-%d').toordinal() >= limite:
+                out.add(dato['empresa'])
+        except (KeyError, ValueError):
+            continue
+    return out
+
+
+def guardar_historial(hist, publicadas):
+    hoy = datetime.now().strftime('%Y-%m-%d')
+    for v in publicadas:
+        hist[v['url']] = {'fecha': hoy, 'empresa': v['empresa']}
+    # Suelta las viejas para que el archivo no crezca sin fin
+    limite = (datetime.now().toordinal() - DIAS_PARA_REPETIR)
+    def vigente(d):
+        fecha = d['fecha'] if isinstance(d, dict) else d
+        try:
+            return datetime.strptime(fecha, '%Y-%m-%d').toordinal() >= limite
+        except ValueError:
+            return False
+    hist = {u: d for u, d in hist.items() if vigente(d)}
+    try:
+        with open(HISTORIAL, 'w', encoding='utf-8') as f:
+            json.dump(hist, f, indent=2, ensure_ascii=False)
+    except OSError as e:
+        print(f'  ! no se pudo guardar el historial: {e}', file=sys.stderr)
+    return hist
+
+
+def escribir_post(por_cat, max_por_cat=4, hist=None, semilla=None):
+    hist = hist if hist is not None else {}
+    recientes = empresas_recientes(hist)
+    # La semilla cambia cada semana: dentro de la misma semana el post se puede
+    # regenerar igual, pero la siguiente rota a otras empresas.
+    rnd = random.Random(semilla if semilla is not None
+                        else datetime.now().strftime('%Y-%W'))
+
     lineas = []
     total = 0
+    nuevas = []
+    repetidas_usadas = 0
     # Respeta el orden de CATEGORIAS, no el de aparición
     for nombre, _ in CATEGORIAS:
         vs = por_cat.get(nombre, [])
         if not vs:
             continue
+
+        # Tres niveles de prioridad, de mejor a peor:
+        #   1. vacante nueva de empresa que no ha salido hace semanas
+        #   2. vacante nueva de empresa que sí salió hace poco
+        #   3. vacante ya publicada (último recurso)
+        frescas_nuevas = [v for v in vs
+                          if v['url'] not in hist and v['empresa'] not in recientes]
+        frescas_repes = [v for v in vs
+                         if v['url'] not in hist and v['empresa'] in recientes]
+        vistas_antes = [v for v in vs if v['url'] in hist]
+        for grupo in (frescas_nuevas, frescas_repes, vistas_antes):
+            rnd.shuffle(grupo)
+        candidatas = frescas_nuevas + frescas_repes + vistas_antes
+
         # Una vacante por empresa dentro de cada categoría, para que la lista
         # no se llene de la misma compañía
         vistas, elegidas = set(), []
-        for v in vs:
+        for v in candidatas:
             if v['empresa'] in vistas:
                 continue
             vistas.add(v['empresa'])
             elegidas.append(v)
+            if v['url'] in hist:
+                repetidas_usadas += 1
+            else:
+                nuevas.append({'url': v['url'], 'empresa': v['empresa']})
             if len(elegidas) >= max_por_cat:
                 break
 
@@ -298,7 +402,13 @@ def escribir_post(por_cat, max_por_cat=4):
             lineas.append(v['url'])
             total += 1
 
-    return '\n'.join(lineas).strip(), total
+    if repetidas_usadas:
+        print(f'  {repetidas_usadas} ya se habían publicado (no había suficientes nuevas)',
+              file=sys.stderr)
+    if recientes:
+        print(f'  {len(recientes)} empresas en descanso ({SEMANAS_DESCANSO_EMPRESA} semanas)',
+              file=sys.stderr)
+    return '\n'.join(lineas).strip(), total, nuevas
 
 
 if __name__ == '__main__':
@@ -306,8 +416,13 @@ if __name__ == '__main__':
     if '--json' in sys.argv:
         print(json.dumps(por_cat, indent=2, ensure_ascii=False))
     else:
-        cuerpo, total = escribir_post(por_cat)
+        hist = leer_historial()
+        print(f'  {len(hist)} vacantes en el historial', file=sys.stderr)
+        cuerpo, total, nuevas = escribir_post(por_cat, hist=hist)
         print(f'\n{"="*60}')
         print(f'{total} VACANTES LISTAS PARA PUBLICAR')
         print('='*60)
         print(cuerpo)
+        if '--no-guardar' not in sys.argv:
+            guardar_historial(hist, nuevas)
+            print(f'\n({len(nuevas)} nuevas guardadas en el historial)', file=sys.stderr)

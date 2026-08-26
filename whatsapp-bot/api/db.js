@@ -19,6 +19,18 @@ async function asegurarTabla() {
   `;
   await sql`CREATE INDEX IF NOT EXISTS idx_mensajes_numero ON mensajes (numero);`;
 
+  // Vacantes ya propuestas en el dashboard. Sin esto el buscador vuelve a
+  // traer las mismas cada semana: siguen abiertas y siguen puntuando alto.
+  await sql`
+    CREATE TABLE IF NOT EXISTS vacantes_publicadas (
+      url TEXT PRIMARY KEY,
+      empresa TEXT,
+      titulo TEXT,
+      publicada_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_vac_fecha ON vacantes_publicadas (publicada_en);`;
+
   // Datos del formulario, para que el bot sepa con quién habla antes de que
   // la persona se lo cuente. El número es la llave: es lo único que tenemos
   // en común entre el formulario y quien escribe por WhatsApp.
@@ -242,6 +254,30 @@ async function liberarLockConversacion(numero) {
 
 // Hash determinista a entero de 32 bits con signo, que es lo que acepta
 // pg_try_advisory_lock.
+// Vacantes ya propuestas en los últimos N días, para no repetirlas.
+async function vacantesPublicadas(dias = 90) {
+  await asegurarTabla();
+  const { rows } = await sql`
+    SELECT url, empresa, publicada_en
+    FROM vacantes_publicadas
+    WHERE publicada_en > NOW() - (${dias} || ' days')::interval
+  `;
+  return rows;
+}
+
+// Marca como publicadas las que el dashboard acaba de proponer.
+async function marcarVacantesPublicadas(vacantes) {
+  if (!vacantes?.length) return;
+  await asegurarTabla();
+  for (const v of vacantes) {
+    await sql`
+      INSERT INTO vacantes_publicadas (url, empresa, titulo)
+      VALUES (${v.url}, ${v.empresa}, ${v.titulo})
+      ON CONFLICT (url) DO UPDATE SET publicada_en = NOW()
+    `;
+  }
+}
+
 function hashNumero(numero) {
   let h = 0;
   const s = String(numero);
@@ -251,4 +287,4 @@ function hashNumero(numero) {
   return h;
 }
 
-module.exports = { guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta, numerosConConversacion, estadisticasBot, intentarLockConversacion, liberarLockConversacion };
+module.exports = { vacantesPublicadas, marcarVacantesPublicadas, guardarMensaje, listarConversaciones, obtenerConversacion, borrarConversacion, guardarLead, obtenerLead, guardarEtiqueta, numerosConConversacion, estadisticasBot, intentarLockConversacion, liberarLockConversacion };
