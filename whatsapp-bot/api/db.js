@@ -257,10 +257,13 @@ async function liberarLockConversacion(numero) {
 // Vacantes ya propuestas en los últimos N días, para no repetirlas.
 async function vacantesPublicadas(dias = 90) {
   await asegurarTabla();
+  // El intervalo se arma con make_interval: concatenar el número con
+  // ' days' falla cuando llega como parámetro tipado, y el error se lo
+  // tragaba el catch de arriba dejando el historial siempre vacío.
   const { rows } = await sql`
     SELECT url, empresa, publicada_en
     FROM vacantes_publicadas
-    WHERE publicada_en > NOW() - (${dias} || ' days')::interval
+    WHERE publicada_en > NOW() - make_interval(days => ${dias})
   `;
   return rows;
 }

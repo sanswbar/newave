@@ -269,6 +269,7 @@ module.exports = async function handler(req, res) {
     // Si la base falla, seguimos sin historial en vez de tronar el buscador.
     let urlsVistas = new Set();
     let empresasRecientes = new Set();
+    let historialError = null;
     try {
       const previas = await vacantesPublicadas(DIAS_REPETIR_VACANTE);
       urlsVistas = new Set(previas.map(p => p.url));
@@ -278,6 +279,9 @@ module.exports = async function handler(req, res) {
                .map(p => p.empresa)
       );
     } catch (err) {
+      // Se reporta en la respuesta: si el historial falla en silencio, el
+      // post repite las mismas vacantes y no hay forma de notarlo.
+      historialError = err.message;
       console.error('[vacantes] historial no disponible:', err.message);
     }
 
@@ -361,6 +365,8 @@ module.exports = async function handler(req, res) {
       revisadas: todas.length,
       candidatas: filtradas.length,
       elegibles: Object.values(porCategoria).reduce((n, vs) => n + vs.length, 0),
+      yaPropuestas: urlsVistas.size,
+      historialError,
       total: n,
       categorias: salida,
     });
