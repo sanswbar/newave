@@ -122,6 +122,12 @@ const DIAS_DESCANSO_EMPRESA = 14;
 // Después de esto una vacante puede repetirse.
 const DIAS_REPETIR_VACANTE = 90;
 
+// Piso de elegibilidad. Abajo de esto la vacante no dice de dónde contrata
+// o dice un lugar que no es el nuestro ("Remote - Cyprus", "San Francisco
+// HQ"). Es mejor un post de 6 vacantes que alguien puede tomar que uno de
+// 10 con cuatro que no.
+const PUNTAJE_MINIMO = 55;
+
 function limpiarHtml(texto) {
   if (!texto) return '';
   return texto
@@ -254,7 +260,10 @@ module.exports = async function handler(req, res) {
     for (const [nombre] of CATEGORIAS) porCategoria[nombre] = [];
     for (const v of filtradas) {
       const c = categorizar(v.titulo);
-      if (c) porCategoria[c].push({ ...v, puntaje: puntuar(v) });
+      if (!c) continue;
+      const puntaje = puntuar(v);
+      if (puntaje < PUNTAJE_MINIMO) continue;  // no la puede tomar nadie de acá
+      porCategoria[c].push({ ...v, puntaje });
     }
     // Historial: qué ya se propuso y qué empresas salieron hace poco.
     // Si la base falla, seguimos sin historial en vez de tronar el buscador.
@@ -351,6 +360,7 @@ module.exports = async function handler(req, res) {
       ok: true,
       revisadas: todas.length,
       candidatas: filtradas.length,
+      elegibles: Object.values(porCategoria).reduce((n, vs) => n + vs.length, 0),
       total: n,
       categorias: salida,
     });
