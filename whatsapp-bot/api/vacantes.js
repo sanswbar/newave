@@ -272,17 +272,30 @@ module.exports = async function handler(req, res) {
       console.error('[vacantes] historial no disponible:', err.message);
     }
 
-    // Ordena por: nunca propuesta > empresa que no salió hace poco > puntaje.
-    // El puntaje sigue mandando dentro de cada grupo, así que las que dicen
-    // México/LATAM siguen saliendo primero entre las candidatas frescas.
+    // El puntaje manda: lo que importa es que la persona pueda aplicar de
+    // verdad desde México. Una vacante que dice "Mexico" o "LATAM" vale más
+    // que una variada pero que no la puede tomar nadie.
+    //
+    // La rotación solo desempata entre vacantes igual de buenas: dentro del
+    // mismo nivel de certeza, primero las que no se han propuesto y las de
+    // empresas que no salieron hace poco. Así el post cambia sin perder
+    // elegibilidad.
+    //
+    // Los puntajes se agrupan en niveles porque 100 vs 80 sí es una
+    // diferencia real (lo dice vs se infiere), pero dentro de cada nivel
+    // podemos rotar libremente.
+    const nivel = (p) => (p >= 100 ? 3 : p >= 70 ? 2 : p >= 55 ? 1 : 0);
+
     for (const c of Object.keys(porCategoria)) {
       porCategoria[c].sort((a, b) => {
+        const la = nivel(a.puntaje), lb = nivel(b.puntaje);
+        if (la !== lb) return lb - la;             // certeza primero
         const na = urlsVistas.has(a.url) ? 1 : 0;
         const nb = urlsVistas.has(b.url) ? 1 : 0;
-        if (na !== nb) return na - nb;
+        if (na !== nb) return na - nb;             // luego lo no propuesto
         const ra = empresasRecientes.has(a.empresa) ? 1 : 0;
         const rb = empresasRecientes.has(b.empresa) ? 1 : 0;
-        if (ra !== rb) return ra - rb;
+        if (ra !== rb) return ra - rb;             // luego rotación de marca
         return b.puntaje - a.puntaje;
       });
     }
