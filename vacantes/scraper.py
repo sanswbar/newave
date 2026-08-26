@@ -27,24 +27,25 @@ from datetime import datetime
 # del post anterior más otras del mismo perfil: SaaS internacional, contratan
 # fuera de USA, usan Greenhouse o Ashby.
 GREENHOUSE = [
+    # Verificadas: responden y publican vacantes. Las que daban 404 se
+    # quitaron (cambiaron de plataforma o de slug) — dejarlas solo achicaba
+    # el pool sin que se notara.
     'gitlab', 'canonical', 'sezzle', 'twilio', 'customerio', 'cloudbeds',
     'varicent', 'remotecom', 'alpaca', 'stackblitz', 'consensys',
-    'deel', 'sourcegraph', 'grafanalabs', 'airbyte', 'dbtlabs',
-    'clipboardhealth', 'mercury', 'vercel', 'cabify', 'nubank',
-    # Agregadas para que el post no repita las mismas marcas cada semana:
-    # con pocas empresas el descanso no alcanza a rotar.
-    'automattic', 'zapier', 'hotjar', 'toptal', 'crossover',
-    'elastic', 'hashicorp', 'confluent', 'datadog', 'mongodb',
-    'doximity', 'thoughtworks', 'shopify', 'coinbase', 'kraken',
-    'bitso', 'rappi', 'konfio', 'clip', 'clara',
-    'jobgether', 'teamtailor', 'lodgify', 'jobber', 'float',
+    'grafanalabs', 'mercury', 'vercel', 'cabify',
+    'elastic', 'datadog', 'mongodb', 'doximity', 'thoughtworks',
+    'coinbase', 'bitso', 'clara',
+    # LATAM: contratan en la región
+    'quintoandar', 'ebanx', 'vtex', 'wizeline', 'cobre',
 ]
 
 ASHBY = [
     'supabase', 'oyster', 'hopper', 'linear', 'ramp', 'clerk',
-    'replit', 'posthog', 'browserbase', 'openphone',
+    'replit', 'posthog', 'browserbase',
     'multiverse', 'runway', 'notion', 'vanta', 'deepgram',
-    'astronomer', 'tailscale', 'railway', 'render', 'neon',
+    'astronomer', 'railway', 'render', 'neon',
+    # LATAM
+    'nubank', 'modus', 'gorilla', 'swap', 'simetrik',
 ]
 
 # Una vacante sirve si es remota Y no está restringida a un solo país que no

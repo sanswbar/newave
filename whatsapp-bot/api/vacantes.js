@@ -14,24 +14,25 @@
 const { vacantesPublicadas, marcarVacantesPublicadas } = require('./db');
 
 const GREENHOUSE = [
+  // Verificadas: responden y publican vacantes. Las que devuelven 404 se
+  // quitaron (cambiaron de plataforma o de slug) — dejarlas solo hacía
+  // ruido en los logs y achicaba el pool sin que se notara.
   'gitlab', 'canonical', 'sezzle', 'twilio', 'customerio', 'cloudbeds',
   'varicent', 'remotecom', 'alpaca', 'stackblitz', 'consensys',
-  'deel', 'sourcegraph', 'grafanalabs', 'airbyte', 'dbtlabs',
-  'clipboardhealth', 'mercury', 'vercel', 'cabify', 'nubank',
-  // Con pocas empresas el post repite las mismas marcas cada semana aunque
-  // cambien las vacantes. Estas son del mismo perfil: SaaS internacional
-  // que contrata fuera de USA.
-  'automattic', 'zapier', 'hotjar', 'toptal', 'elastic',
-  'hashicorp', 'confluent', 'datadog', 'mongodb', 'doximity',
-  'thoughtworks', 'coinbase', 'kraken', 'bitso', 'rappi',
-  'konfio', 'clip', 'clara', 'lodgify', 'jobber',
+  'grafanalabs', 'mercury', 'vercel', 'cabify',
+  'elastic', 'datadog', 'mongodb', 'doximity', 'thoughtworks',
+  'coinbase', 'bitso', 'clara',
+  // LATAM: contratan en la región y publican en español e inglés
+  'quintoandar', 'ebanx', 'vtex', 'wizeline', 'cobre',
 ];
 
 const ASHBY = [
   'supabase', 'oyster', 'hopper', 'linear', 'ramp', 'clerk',
-  'replit', 'posthog', 'browserbase', 'openphone',
+  'replit', 'posthog', 'browserbase',
   'multiverse', 'runway', 'notion', 'vanta', 'deepgram',
-  'astronomer', 'tailscale', 'railway', 'render', 'neon',
+  'astronomer', 'railway', 'render', 'neon',
+  // LATAM
+  'nubank', 'modus', 'gorilla', 'swap', 'simetrik',
 ];
 
 const PISTAS_REMOTO = ['remote', 'remoto', 'anywhere', 'distributed', 'global'];
