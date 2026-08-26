@@ -60,7 +60,7 @@ const EXCLUIR_PUESTO = [
 const PISTAS_LATAM = [
   'latam', 'latin america', 'south america', 'mexico', 'méxico',
   'brazil', 'brasil', 'colombia', 'argentina', 'chile', 'americas',
-  'north america', 'global', 'anywhere', 'worldwide',
+  'global', 'anywhere', 'worldwide',
 ];
 
 // Lo que aparece cuando la vacante EXIGE estar en otro país
@@ -218,8 +218,10 @@ function puntuar(v) {
 
   // Lo dice en el título o la ubicación: máxima certeza
   if (/\b(mexico|méxico|latam|latin america)\b/.test(texto)) return 100;
-  // Abierta a las Américas
-  if (/\b(americas|north america)\b/.test(texto)) return 80;
+  // "The Americas" incluye la región. "North America" no: en la práctica
+  // las empresas lo usan para decir Estados Unidos y Canadá.
+  if (/\bamericas\b/.test(texto) && !/\bnorth america\b/.test(texto)) return 80;
+  if (/\bnorth america\b/.test(texto)) return 40;
   // Lo dice en la descripción
   if (/\b(mexico|méxico|latam|latin america)\b/.test(desc)) return 70;
   // Global o desde cualquier lado

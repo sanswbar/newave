@@ -81,7 +81,7 @@ EXCLUIR_PUESTO = [
 PISTAS_LATAM = [
     'latam', 'latin america', 'south america', 'mexico', 'méxico',
     'brazil', 'brasil', 'colombia', 'argentina', 'chile', 'americas',
-    'north america', 'global', 'anywhere', 'worldwide',
+    'global', 'anywhere', 'worldwide',
 ]
 
 # Las categorías del post, con las palabras que las identifican en el título.
