@@ -217,6 +217,15 @@
     input::placeholder { color: rgba(232,231,231,0.3); }
     input.error { border-color: #e05555 !important; }
 
+    /* Explica para qué sirve un dato, debajo del campo. Va en voz baja:
+       acompaña, no pide. */
+    .field-hint {
+      margin: 0.45rem 0 0;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--subtle);
+    }
+
     .field-error {
       font-size: 0.75rem;
       color: #e05555;
@@ -658,6 +667,7 @@
       <div class="field">
         <label for="linkedin">Perfil de LinkedIn <span style="color:var(--subtle);font-weight:400">(opcional)</span></label>
         <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" autocomplete="url" inputmode="url" />
+        <p class="field-hint">Con tu LinkedIn podemos entender mejor tu carrera y perfil.</p>
       </div>
       <button class="btn-primary" onclick="nextStep(1)">Continuar →</button>
     </div>
