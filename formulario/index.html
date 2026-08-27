@@ -346,6 +346,20 @@
       font-weight: 700;
       color: var(--white);
     }
+    /* Nota de trayectoria bajo los planes. Va en voz baja: acompaña al
+       precio, no compite con él. */
+    .trayectoria {
+      margin: 1.5rem auto 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: 46ch;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: var(--subtle);
+      text-align: center;
+      text-wrap: pretty;
+    }
+
     .opt-cancel {
       font-size: 0.68rem;
       font-weight: 400;
@@ -556,6 +570,7 @@
       .card { padding: 1.5rem 1.1rem; border-radius: 14px; }
       .step-title { font-size: 1.2rem; }
       .step-sub { font-size: 0.85rem; margin-bottom: 1.25rem; }
+      .trayectoria { font-size: 0.75rem; margin-top: 1.25rem; padding-top: 1rem; }
       .result-title { font-size: 1.25rem; }
       .result-body { font-size: 0.88rem; }
       .btn-primary { font-size: 1rem; padding: 1rem; }
@@ -749,8 +764,6 @@
       <h2 class="step-title">Gracias por tus respuestas.</h2>
       <p class="step-sub">Tenemos distintos planes, la diferencia está en el nivel de personalización y acompañamiento que buscas.</p>
       <p class="step-sub"><strong style="color:var(--white);font-size:1.05rem">Todos incluyen 7 días de prueba gratis.</strong></p>
-      <p class="step-sub" style="font-size:0.85rem">Los precios están en dólares estadounidenses (USD).</p>
-      <p class="step-sub" style="font-size:0.9rem;color:var(--white)">Desde 2020 con Nomad District hasta hoy con NEWAVE, más de 500 profesionales han conseguido su trabajo remoto. La metodología funciona, solo hay que seguirla.</p>
 
       <div class="options" id="opts-inversion">
         <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
@@ -794,6 +807,8 @@
           </div>
         </div>
       </div>
+      <p class="trayectoria">Desde 2020 con Nomad District hasta hoy con NEWAVE, más de 500 profesionales han conseguido su trabajo remoto. La metodología funciona, solo hay que seguirla.</p>
+
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
 
       <div class="nav-row">
