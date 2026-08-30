@@ -226,6 +226,17 @@
       color: var(--subtle);
     }
 
+    /* Lo que pasa después del botón. Va justo antes para que nadie llegue
+       al checkout de Skool sin saber que le van a pedir tarjeta: ahí es
+       donde se estaba yendo la gente. */
+    .aviso-tarjeta {
+      margin: 1.25rem 0 0;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--subtle);
+      text-align: center;
+    }
+
     .field-error {
       font-size: 0.75rem;
       color: #e05555;
@@ -565,6 +576,7 @@
       .card { padding: 1.5rem 1.1rem; border-radius: 14px; }
       .step-title { font-size: 1.2rem; }
       .step-sub { font-size: 0.85rem; margin-bottom: 1.25rem; }
+      .aviso-tarjeta { font-size: 0.72rem; margin-top: 1rem; }
       .field-hint { font-size: 0.72rem; }
       .result-title { font-size: 1.25rem; }
       .result-body { font-size: 0.88rem; }
@@ -804,6 +816,8 @@
         </div>
       </div>
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
+
+      <p class="aviso-tarjeta">Skool te pedirá una tarjeta para activar la prueba. No se cobra nada durante los 7 días.</p>
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
