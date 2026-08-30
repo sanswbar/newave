@@ -11,6 +11,11 @@ const VERIFY_TOKEN   = process.env.VERIFY_TOKEN;          // el que tú inventes
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;        // token de la Cloud API de Meta
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;      // ID del número de WhatsApp (de Meta)
 const ANTHROPIC_KEY  = process.env.ANTHROPIC_API_KEY;     // API key de Claude
+
+// Interruptor del bot. En true, el webhook guarda los mensajes pero no
+// contesta. Se apagó el 30 ago 2026 porque la llamada a Claude fallaba y
+// todos recibían el mensaje de error.
+const BOT_APAGADO = true;
 const SKOOL_LINK     = 'https://www.skool.com/newave/plans';
 
 // El cerebro (system prompt). Busca el archivo en varias rutas posibles
@@ -77,6 +82,21 @@ module.exports = async function handler(req, res) {
 
       // Marca como leído y muestra "escribiendo..." mientras se genera la respuesta
       await marcarComoLeido(message.id);
+
+      // BOT APAGADO (30 ago 2026). Estaba contestando "Perdón, tuve un
+      // problemita" a todos: la llamada a Claude fallaba y caía al mensaje de
+      // error en cada conversación. Peor que no contestar, porque la persona
+      // escribe con una duda y recibe eso.
+      //
+      // Los mensajes se siguen guardando para no perder el historial ni el
+      // contexto de quien escribió. Para reactivarlo: quitar este bloque
+      // después de verificar que la API responde.
+      if (BOT_APAGADO) {
+        console.log(`[bot apagado] mensaje de ${from} guardado sin responder`);
+        await guardarMensaje(from, name, 'user', text)
+          .catch(err => console.error('[DB] Error guardando mensaje:', err));
+        return res.status(200).send('ok');
+      }
 
       // Un solo mensaje a la vez por conversación. Si la persona manda dos
       // seguidos rápido, la segunda invocación no contesta: guarda el mensaje
