@@ -226,17 +226,6 @@
       color: var(--subtle);
     }
 
-    /* Lo que pasa después del botón. Va justo antes para que nadie llegue
-       al checkout de Skool sin saber que le van a pedir tarjeta: ahí es
-       donde se estaba yendo la gente. */
-    .aviso-tarjeta {
-      margin: 1.25rem 0 0;
-      font-size: 0.78rem;
-      line-height: 1.5;
-      color: var(--subtle);
-      text-align: center;
-    }
-
     .field-error {
       font-size: 0.75rem;
       color: #e05555;
@@ -576,7 +565,6 @@
       .card { padding: 1.5rem 1.1rem; border-radius: 14px; }
       .step-title { font-size: 1.2rem; }
       .step-sub { font-size: 0.85rem; margin-bottom: 1.25rem; }
-      .aviso-tarjeta { font-size: 0.72rem; margin-top: 1rem; }
       .field-hint { font-size: 0.72rem; }
       .result-title { font-size: 1.25rem; }
       .result-body { font-size: 0.88rem; }
@@ -784,7 +772,7 @@
               <li>Comunidad activa NEWAVE</li>
               <li>Bolsas de trabajo 100% remotas</li>
             </ul>
-            <div class="opt-price">$199 USD/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
+            <div class="opt-price">$199/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
           </div>
         </div>
         <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
@@ -797,7 +785,7 @@
               <li>Estrategia de aplicación y negociación de sueldo</li>
               <li>Sesiones semanales de Q&A en vivo</li>
             </ul>
-            <div class="opt-price">$249 USD/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
+            <div class="opt-price">$249/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
           </div>
         </div>
         <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
@@ -811,13 +799,11 @@
               <li>Sesiones en vivo para aprender a usar Inteligencia Artificial en tu vida profesional</li>
               <li>Te conectamos a través de Newave Hire con nuestra red de empresas 100% remotas</li>
             </ul>
-            <div class="opt-price">$299 USD/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
+            <div class="opt-price">$299/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
           </div>
         </div>
       </div>
       <div class="field-error" id="err-inversion" style="margin-top:0.5rem">Por favor selecciona una opción.</div>
-
-      <p class="aviso-tarjeta">Te pediremos una tarjeta para empezar tu prueba. No te cobraremos nada durante los 7 días.<br>Puedes cancelar cuando quieras.</p>
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
