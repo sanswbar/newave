@@ -813,18 +813,19 @@ function enviarNotificacionSlack(data) {
       },
       {
         type: 'section',
-        fields: [
-          { type: 'mrkdwn', text: '*Nivel de inglés*\n' + oNada(data.ingles) },
-          { type: 'mrkdwn', text: '*LinkedIn*\n' + lineaLinkedin },
-        ],
-      },
-      {
-        type: 'section',
         text: { type: 'mrkdwn', text: '*Trabajo actual*\n' + oNada(data.trabajo) },
       },
       {
         type: 'section',
         text: { type: 'mrkdwn', text: '*Razón del cambio*\n' + oNada(data.razon) },
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: '*LinkedIn*\n' + lineaLinkedin },
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: '*Nivel de inglés*\n' + oNada(data.ingles) },
       },
     ],
   };
