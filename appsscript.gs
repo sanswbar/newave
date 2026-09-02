@@ -34,6 +34,13 @@ const COL_CORREO_AL_CONVERTIR = 14;
 // están hardcodeadas por número y meter una en medio rompería el registro.
 const COL_FUENTE = 15;
 
+// Columnas que lee la notificación de Slack. No están hardcodeadas en ningún
+// otro lado, pero se declaran aquí para no repetir números mágicos.
+const COL_LINKEDIN = 5;
+const COL_INGLES   = 6;
+const COL_TRABAJO  = 7;
+const COL_RAZON    = 8;
+
 // Email sequence delays (ms after signup)
 const EMAIL_DELAYS = {
   1: 2 * 60 * 1000,            // 2 min
@@ -389,6 +396,7 @@ function onEdit(e) {
     // propósito: ese bloque hace return si la celda ya tiene valor, y eso
     // impediría encolar cuando se re-edita el estatus.
     queueOnboarding(sheet, fila);
+    queueSlack(sheet, fila);
 
     // Si ya se registró antes, no pisarlo (por si se re-edita la celda)
     const celdaDestino = sheet.getRange(fila, COL_CORREO_AL_CONVERTIR);
@@ -714,8 +722,136 @@ function processQueue() {
     }
   }
 
+  // Cola de Slack. Va aparte de las de Gmail: no consume cuota de correo, así
+  // que no la limita `sinCuotaGmail` ni MAX_POR_CORRIDA.
+  for (const key in allProps) {
+    if (key.indexOf('slack_') !== 0) continue;
+    if (key.indexOf('slack_hecho_') === 0) continue; // marca de control
+
+    let data;
+    try {
+      data = JSON.parse(allProps[key]);
+    } catch (err) {
+      props.deleteProperty(key);
+      continue;
+    }
+
+    try {
+      enviarNotificacionSlack(data);
+      Logger.log('[slack] notificado trial de fila ' + data.row);
+    } catch (err) {
+      // Un fallo de Slack no debe atorar la cola ni tocar el estatus del lead:
+      // es una notificación interna, no parte del flujo del cliente.
+      Logger.log('[slack] ERROR fila ' + data.row + ': ' + (err.message || err));
+    }
+    props.deleteProperty(key);
+  }
+
   // Al final de cada corrida: ¿lleva el sheet demasiado sin leads nuevos?
   vigilarSilencioDeLeads();
+}
+
+// ─── SLACK: aviso al equipo cuando alguien entra al trial ──────────────────
+//
+// Se dispara al marcar "trial" en la columna L, igual que el correo de
+// onboarding. La idea es que el equipo vea el perfil sin abrir el sheet.
+//
+// Mismo patrón que la cola de WhatsApp: onEdit es un trigger simple y no
+// puede hacer llamadas HTTP (UrlFetchApp requiere autorización), así que aquí
+// solo se escribe en Script Properties y processQueue —que corre con trigger
+// instalable— es quien manda el mensaje.
+function queueSlack(sheet, fila) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const marca = 'slack_hecho_' + fila;
+    if (props.getProperty(marca)) return; // ya se avisó de esta fila
+
+    const val = function (col) {
+      return (sheet.getRange(fila, col).getValue() || '').toString().trim();
+    };
+
+    const data = {
+      row:      fila,
+      nombre:   val(COL_NOMBRE),
+      trabajo:  val(COL_TRABAJO),
+      razon:    val(COL_RAZON),
+      linkedin: val(COL_LINKEDIN),
+      ingles:   val(COL_INGLES),
+    };
+
+    props.setProperty('slack_' + fila, JSON.stringify(data));
+    props.setProperty(marca, '1'); // no se borra: bloquea avisos repetidos
+  } catch (err) {
+    Logger.log('[slack] no se pudo encolar fila ' + fila + ': ' + err);
+  }
+}
+
+// Manda el mensaje al canal. El webhook vive en Script Properties como
+// SLACK_WEBHOOK_URL — no se pone aquí porque es una credencial.
+function enviarNotificacionSlack(data) {
+  const url = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
+  if (!url) throw new Error('Falta SLACK_WEBHOOK_URL en Script Properties');
+
+  // Los campos vacíos se marcan en vez de dejarse en blanco, para que se note
+  // la diferencia entre "no contestó" y "se rompió el mensaje".
+  const oNada = function (v) { return v || '_Sin dato_'; };
+
+  // El LinkedIn se guarda a veces con https:// y a veces sin. Se normaliza
+  // para que Slack lo muestre como liga clicable en los dos casos.
+  let linkedin = data.linkedin;
+  if (linkedin && linkedin.indexOf('http') !== 0) linkedin = 'https://' + linkedin;
+  const lineaLinkedin = linkedin
+    ? '<' + linkedin + '|Ver perfil>'
+    : '_Sin LinkedIn_';
+
+  const payload = {
+    text: '🎉 Nuevo trial: ' + (data.nombre || 'Sin nombre'),
+    blocks: [
+      {
+        type: 'header',
+        text: { type: 'plain_text', text: '🎉 Nuevo trial: ' + (data.nombre || 'Sin nombre'), emoji: true },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: '*Nivel de inglés*\n' + oNada(data.ingles) },
+          { type: 'mrkdwn', text: '*LinkedIn*\n' + lineaLinkedin },
+        ],
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: '*Trabajo actual*\n' + oNada(data.trabajo) },
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: '*Razón del cambio*\n' + oNada(data.razon) },
+      },
+    ],
+  };
+
+  const resp = UrlFetchApp.fetch(url, {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true,
+  });
+
+  const code = resp.getResponseCode();
+  if (code >= 300) throw new Error('Slack ' + code + ': ' + resp.getContentText());
+}
+
+// Prueba manual: correr desde el editor para verificar que el webhook y el
+// formato funcionan, sin tener que marcar un trial real.
+function probarSlack() {
+  enviarNotificacionSlack({
+    row: 0,
+    nombre: 'Prueba desde Apps Script',
+    trabajo: 'Product Designer en una consultora',
+    razon: 'Quiero triplicar mi salario y seguir creciendo profesionalmente',
+    linkedin: 'linkedin.com/in/ejemplo',
+    ingles: 'Intermedio',
+  });
+  Logger.log('Si no truena, el webhook funciona. Revisa el canal.');
 }
 
 // ─── WATCHDOG: alerta si el sheet se queda en silencio ────────────────────
