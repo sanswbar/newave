@@ -780,7 +780,9 @@ function queueSlack(sheet, fila) {
     };
 
     props.setProperty('slack_' + fila, JSON.stringify(data));
-    props.setProperty(marca, '1'); // no se borra: bloquea avisos repetidos
+    // Se guarda el timestamp, no un '1': limpiarMarcasViejas() lo usa para
+    // saber qué marcas ya son viejas y se pueden borrar.
+    props.setProperty(marca, String(Date.now()));
   } catch (err) {
     Logger.log('[slack] no se pudo encolar fila ' + fila + ': ' + err);
   }
@@ -839,6 +841,49 @@ function enviarNotificacionSlack(data) {
 
   const code = resp.getResponseCode();
   if (code >= 300) throw new Error('Slack ' + code + ': ' + resp.getContentText());
+}
+
+// Guarda el webhook de Slack desde código.
+//
+// Existe porque la interfaz de Script Properties se vuelve de solo lectura al
+// pasar de 50 propiedades, y las marcas `onb_hecho_<fila>` (una por trial) ya
+// pasaron ese tope. Pega la URL abajo, corre esta función UNA VEZ, y después
+// vuelve a dejar la constante vacía para no dejar la credencial en el código.
+function guardarWebhookSlack() {
+  const URL = ''; // <-- pega aquí la URL de https://hooks.slack.com/services/...
+
+  if (!URL) throw new Error('Pega la URL del webhook en la constante URL antes de correr esto.');
+  PropertiesService.getScriptProperties().setProperty('SLACK_WEBHOOK_URL', URL);
+  Logger.log('Guardado. Ahora corre probarSlack para verificar.');
+}
+
+// Borra las marcas `onb_hecho_` y `slack_hecho_` de filas viejas, que son las
+// que llenaron el cupo de 50 propiedades visibles. Solo conserva las de los
+// últimos 30 días: las viejas ya no sirven para nada porque esos trials no se
+// van a re-marcar.
+//
+// Correr cuando la lista de propiedades vuelva a crecer de más.
+function limpiarMarcasViejas() {
+  const props = PropertiesService.getScriptProperties();
+  const todas = props.getProperties();
+  const corte = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  let borradas = 0;
+
+  for (const key in todas) {
+    const esMarca = key.indexOf('onb_hecho_') === 0 || key.indexOf('slack_hecho_') === 0;
+    if (!esMarca) continue;
+
+    // El valor de onb_hecho_ es un timestamp; el de slack_hecho_ es '1'. Las
+    // que no traen fecha se borran igual: son marcas de control sin utilidad
+    // una vez pasado el trial.
+    const val = parseInt(todas[key], 10);
+    if (!isNaN(val) && val > corte) continue; // reciente, se conserva
+
+    props.deleteProperty(key);
+    borradas++;
+  }
+
+  Logger.log('Marcas borradas: ' + borradas);
 }
 
 // Prueba manual: correr desde el editor para verificar que el webhook y el
