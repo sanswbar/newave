@@ -603,7 +603,7 @@ function processQueue() {
   // Activación: para quien sí llegó a Skool. Ya no hay que convencerlo de
   // entrar, sino de usar lo que tiene y de subir a Premium.
   const sendersActivacion = {
-    2: sendAct2, 3: sendAct3, 4: sendAct4, 5: sendAct5,
+    2: sendAct3, 3: sendAct4, 4: sendAct5,
   };
 
   let enviados = 0;
@@ -1182,38 +1182,20 @@ function sendEmail5(nombre, correo) {
 // habla de precio. Vender en el primer correo a alguien que apenas entró es
 // la forma más rápida de perderlo.
 
-// ─── ACTIVACIÓN 2 — 24 h · que se presente ────────────────────────────────
-
-function sendAct2(nombre, correo) {
-  const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Preséntate en la comunidad';
-  const url = POST_BIENVENIDA_URL + '?utm_source=email&utm_medium=activacion&utm_campaign=act2';
-
-  const html = `
-<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Ya estás dentro. Si tienes dos minutos, preséntate en la comunidad: así sabemos a qué te dedicas y qué estás buscando.</p>
-  <p>Preséntate aquí: <a href="${url}">Preséntate en Newave</a></p>
-  <p>Y si tienes tu CV a la mano, pásalo por el bot. Te dice qué le falta para el mercado internacional.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
-</div>`;
-
-  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
-}
-
-// ─── ACTIVACIÓN 3 — 2 días · el CV como puente a Premium ──────────────────
+// ─── ACTIVACIÓN 2 — 24 h · presentarse y pasar el CV por el bot ───────────
 
 function sendAct3(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = '¿Ya pasaste tu CV por el bot?';
+  const subject = 'Dos cosas para empezar';
   const url = SKOOL_URL + '?utm_source=email&utm_medium=activacion&utm_campaign=act3';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Casi todos los CV que revisamos tienen el mismo problema: están escritos para el mercado local. Un reclutador de fuera busca otras cosas.</p>
-  <p>El bot te dice cuáles te faltan.</p>
-  <p>Pásalo aquí: <a href="${url}">Newave Academy</a></p>
+  <p>Ya estás dentro. Dos cosas que valen la pena hacer esta semana.</p>
+  <p>La primera: preséntate en la comunidad, así sabemos a qué te dedicas y qué buscas.</p>
+  <p>La segunda: pasa tu CV por el bot. Casi todos los que revisamos están escritos para el mercado local, y un reclutador de fuera busca otras cosas. El bot te dice cuáles te faltan.</p>
+  <p>Las dos están aquí: <a href="${url}">Newave Academy</a></p>
   <p>Si te sale algo que no sabes cómo arreglar, escríbeme y te digo por dónde.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -1221,7 +1203,7 @@ function sendAct3(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── ACTIVACIÓN 4 — 4 días · caso de éxito + qué hay en Premium ───────────
+// ─── ACTIVACIÓN 3 — 3 días · caso de éxito + qué hay en Premium ───────────
 
 function sendAct4(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
@@ -1241,7 +1223,7 @@ function sendAct4(nombre, correo) {
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
 }
 
-// ─── ACTIVACIÓN 5 — 7 días · el costo de seguir solo ──────────────────────
+// ─── ACTIVACIÓN 4 — 7 días · cómo le fue la primera semana ────────────────
 
 function sendAct5(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
