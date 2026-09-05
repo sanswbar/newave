@@ -1072,7 +1072,7 @@ function sendEmail1(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p style="margin:0 0 16px">Hola ${firstName},</p>
   <p style="margin:0 0 16px">Te escribe Santiago, cofundador de Newave Academy.</p>
-  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. Tu acceso al plan Standard está listo: es gratis, sin tarjeta, y te da entrada a la comunidad, a las sesiones de Q&amp;A y a la auditoría de tu CV con nuestro bot.</p>
+  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. Tu acceso al plan Standard ya está listo: entras a la comunidad, a las sesiones de Q&amp;A semanales y a la auditoría de tu CV con nuestro bot.</p>
   <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más.</p>
   <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
@@ -1097,7 +1097,7 @@ function sendEmail2(nombre, correo) {
   <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
-  <p>El plan Standard es gratis y no pide tarjeta. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
+  <p>Tu lugar en la comunidad sigue disponible. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -1138,7 +1138,7 @@ function sendEmail4(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>No tienes que decidir hoy si Newave es para ti. Entra al plan gratis y compruébalo por tu cuenta.</p>
-  <p>Sin tarjeta, sin compromiso. Si no es lo tuyo, no pasa nada.</p>
+  <p>Si no es lo tuyo, lo dejas y ya.</p>
   <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
@@ -1160,7 +1160,7 @@ function sendEmail5(nombre, correo) {
   <p>Este es el último correo que te mando sobre esto.</p>
   <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
   <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
-  <p>Newave sigue abierto para ti. El plan Standard es gratis y no pide tarjeta. Lo único que tienes que hacer es entrar.</p>
+  <p>Newave sigue abierto para ti. Lo único que tienes que hacer es entrar.</p>
   <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
   <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
   <p>Tú decides.</p>
