@@ -269,11 +269,9 @@
     }
     .opt:hover { border-color: rgba(252,115,66,0.35); }
 
-    /* El Standard es gratis y funciona como gancho, pero el negocio está en
-       Premium y VIP. Estas reglas hacen que los de pago pesen más en la
-       página: el gratis se ve discreto y el recomendado lleva el acento. */
-    .opt-gratis { opacity: 0.72; }
-    .opt-gratis:hover, .opt-gratis.selected { opacity: 1; }
+    /* El gratis va primero y a la misma altura que los demás: es la puerta de
+       entrada del modelo, esconderlo se leería como que queremos vender a
+       fuerza. El acento se reserva para el plan que queremos recomendar. */
     .opt-destacado {
       border-color: rgba(252,115,66,0.55);
       background: rgba(252,115,66,0.06);
@@ -286,12 +284,6 @@
       font-size: 0.62rem; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
       padding: 0.2rem 0.55rem; border-radius: 999px;
-    }
-    .opt-nota {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.55);
-      margin: 0.4rem 0 0;
-      line-height: 1.45;
     }
     .opt.selected {
       border-color: var(--orange);
@@ -786,6 +778,19 @@
       <p class="step-sub">Elige con qué plan quieres empezar. El Standard es gratis y te da acceso a la comunidad; el curso y el acompañamiento empiezan en Premium.</p>
 
       <div class="options" id="opts-inversion">
+        <div class="opt" data-val="Standard gratis" data-track="free" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">
+            <div class="opt-head">Standard</div>
+            <ul class="opt-features">
+              <li>Comunidad para hacer networking</li>
+              <li>Sesiones semanales de Q&amp;A</li>
+              <li>Revisor automático de CV</li>
+              <li>Vacantes remotas en dólares</li>
+            </ul>
+            <div class="opt-price">Gratis <span class="opt-cancel">· Sujeto a aprobación</span></div>
+          </div>
+        </div>
         <div class="opt" data-val="Premium 199" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
@@ -813,20 +818,6 @@
               <li>AI aplicada a tu búsqueda y carrera profesional</li>
             </ul>
             <div class="opt-price">$299/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
-          </div>
-        </div>
-        <div class="opt opt-gratis" data-val="Standard gratis" data-track="free" onclick="selectOpt('inversion', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">
-            <div class="opt-head">Standard</div>
-            <ul class="opt-features">
-              <li>Comunidad de profesionales que buscan crecer y hacer networking</li>
-              <li>Sesiones semanales de Q&amp;A para resolver dudas</li>
-              <li>Revisor automático de CV</li>
-              <li>Vacantes remotas filtradas que pagan en dólares</li>
-            </ul>
-            <div class="opt-price">Gratis <span class="opt-cancel">· Sujeto a aprobación</span></div>
-            <p class="opt-nota">No incluye el programa ni las revisiones personalizadas.</p>
           </div>
         </div>
       </div>
