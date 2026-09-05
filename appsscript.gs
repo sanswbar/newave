@@ -1072,7 +1072,7 @@ function sendEmail1(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p style="margin:0 0 16px">Hola ${firstName},</p>
   <p style="margin:0 0 16px">Te escribe Santiago, cofundador de Newave Academy.</p>
-  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. Tu acceso al plan Standard ya está listo: entras a la comunidad, a las sesiones de Q&amp;A semanales y a la auditoría de tu CV con nuestro bot.</p>
+  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. Ya puedes entrar: adentro está la comunidad, las sesiones de Q&amp;A cada semana y el bot que audita tu CV y te dice qué está frenando tus aplicaciones.</p>
   <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más.</p>
   <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
@@ -1093,11 +1093,11 @@ function sendEmail2(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Ayer llenaste el formulario y todavía no entras. Te dejo el acceso otra vez.</p>
+  <p>Ayer llenaste el formulario. Te dejo el acceso por si se te pasó.</p>
   <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
-  <p>Tu lugar en la comunidad sigue disponible. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
+  <p>Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -1192,10 +1192,9 @@ function sendAct2(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Ya estás dentro. Lo primero que te pediría es algo de dos minutos: preséntate en la comunidad.</p>
-  <p>No es un trámite. Es cómo sabemos a qué te dedicas y qué buscas, y es lo que hace que otros miembros te conecten con lo que necesitas.</p>
+  <p>Ya estás dentro. Si tienes dos minutos, preséntate en la comunidad: así sabemos a qué te dedicas y qué estás buscando.</p>
   <p>Preséntate aquí: <a href="${url}">Preséntate en Newave</a></p>
-  <p>Y si tienes tu CV a la mano, pásalo por el bot de auditoría. Te dice en minutos qué está frenando tus aplicaciones.</p>
+  <p>Y si tienes tu CV a la mano, pásalo por el bot. Te dice qué le falta para el mercado internacional.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
@@ -1212,10 +1211,10 @@ function sendAct3(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>La mayoría de la gente que no consigue entrevistas tiene el mismo problema: su CV está escrito para el mercado local, no para el internacional.</p>
-  <p>El bot te lo dice en minutos. Está en tu plan, no cuesta nada.</p>
+  <p>Casi todos los CV que revisamos tienen el mismo problema: están escritos para el mercado local. Un reclutador de fuera busca otras cosas.</p>
+  <p>El bot te dice cuáles te faltan.</p>
   <p>Pásalo aquí: <a href="${url}">Newave Academy</a></p>
-  <p>Cuando veas el diagnóstico vas a entender por qué el programa empieza justo ahí.</p>
+  <p>Si te sale algo que no sabes cómo arreglar, escríbeme y te digo por dónde.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
@@ -1226,16 +1225,16 @@ function sendAct3(nombre, correo) {
 
 function sendAct4(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'La diferencia entre mirar y avanzar';
+  const subject = 'Cómo le hizo Rebeca';
   const url = SKOOL_URL + '/plans?utm_source=email&utm_medium=activacion&utm_campaign=act4';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>En la comunidad puedes ver lo que otros están logrando. Eso ya te sirve.</p>
+  <p>Rebeca entró igual que tú, sin saber bien qué esperar.</p>
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
-  <p>Lo que Rebeca tuvo y el plan gratis no incluye: el programa paso a paso, la asesoría 1:1 por chat y las plantillas de CV y LinkedIn que sí funcionan con reclutadores de fuera.</p>
-  <p>Eso está en Premium: <a href="${url}">Ver los planes</a></p>
+  <p>Ella hizo el programa completo: los módulos en orden, su CV revisado, y las dudas resueltas por chat conforme aplicaba. Eso es lo que hay en Premium.</p>
+  <p><a href="${url}">Ver los planes</a></p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
@@ -1246,17 +1245,15 @@ function sendAct4(nombre, correo) {
 
 function sendAct5(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Cuánto cuesta seguir aplicando solo';
+  const subject = '¿Qué tal la primera semana?';
   const url = SKOOL_URL + '/plans?utm_source=email&utm_medium=activacion&utm_campaign=act5';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Llevas una semana con acceso. Ojalá ya hayas visto de qué va esto.</p>
-  <p>Te dejo una cuenta rápida: cada mes que sigues aplicando sin método es un mes más en el mismo sueldo. Premium cuesta 199 dólares al año. Un solo trabajo remoto lo paga en la primera quincena.</p>
-  <p>No lo digo para presionarte. Lo digo porque la diferencia entre los que consiguen y los que no rara vez es el talento.</p>
-  <p><a href="${url}">Ver los planes</a></p>
-  <p>Y si tienes dudas de cuál te conviene, contéstame este correo y lo vemos.</p>
+  <p>Llevas una semana con acceso. ¿Qué tal te ha ido?</p>
+  <p>Te lo pregunto en serio: si algo no te está sirviendo o no encuentras lo que buscabas, contéstame este correo. Leo todos.</p>
+  <p>Y si ya viste que esto es para ti, el programa completo está en Premium: <a href="${url}">ver los planes</a>.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
