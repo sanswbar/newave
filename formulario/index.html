@@ -268,23 +268,6 @@
       user-select: none;
     }
     .opt:hover { border-color: rgba(252,115,66,0.35); }
-
-    /* El gratis va primero y a la misma altura que los demás: es la puerta de
-       entrada del modelo, esconderlo se leería como que queremos vender a
-       fuerza. El acento se reserva para el plan que queremos recomendar. */
-    .opt-destacado {
-      border-color: rgba(252,115,66,0.55);
-      background: rgba(252,115,66,0.06);
-      position: relative;
-    }
-    .opt-badge {
-      position: absolute;
-      top: -0.6rem; right: 0.9rem;
-      background: #FC7342; color: #fff;
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 0.2rem 0.55rem; border-radius: 999px;
-    }
     .opt.selected {
       border-color: var(--orange);
       background: rgba(252,115,66,0.08);
@@ -775,47 +758,46 @@
     <div class="step" id="step-6">
       <div class="step-eyebrow">Paso 6 de 6</div>
       <h2 class="step-title">Gracias por tus respuestas.</h2>
-      <p class="step-sub">Elige con qué plan quieres empezar. El Standard es gratis y te da acceso a la comunidad; el curso y el acompañamiento empiezan en Premium.</p>
+      <p class="step-sub">Tenemos distintos planes, la diferencia está en el nivel de personalización y acompañamiento que buscas.</p>
+      <p class="step-sub"><strong style="color:var(--white);font-size:1.05rem">Todos incluyen 7 días de prueba gratis.</strong></p>
 
       <div class="options" id="opts-inversion">
-        <div class="opt" data-val="Standard gratis" data-track="free" onclick="selectOpt('inversion', this)">
+        <div class="opt" data-val="100-150 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
             <div class="opt-head">Standard</div>
             <ul class="opt-features">
-              <li>Acceso a la comunidad para hacer networking</li>
-              <li>Auditoría de CV con Newave Bot</li>
-              <li>Acceso a Q&amp;As semanales para resolver dudas</li>
-            </ul>
-            <div class="opt-price">Gratis <span class="opt-cancel">· Sujeto a aprobación</span></div>
-          </div>
-        </div>
-        <div class="opt" data-val="Premium 199" data-track="low" onclick="selectOpt('inversion', this)">
-          <div class="opt-radio"></div>
-          <div class="opt-text">
-            <div class="opt-head">Premium</div>
-            <ul class="opt-features">
-              <li>Todo del Plan Standard +</li>
               <li>Programa paso a paso para conseguir tu trabajo remoto</li>
-              <li>Asesoría 1:1 por chat privado</li>
               <li>Plantillas de CV, Cover Letter y LinkedIn</li>
+              <li>Comunidad + sesiones semanales de Q&amp;A</li>
               <li>Bolsas de trabajo con vacantes remotas en dólares</li>
             </ul>
             <div class="opt-price">$199/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
           </div>
         </div>
-        <div class="opt opt-destacado" data-val="VIP 299" data-track="low" onclick="selectOpt('inversion', this)">
-          <span class="opt-badge">El más completo</span>
+        <div class="opt" data-val="150-200 usd" data-track="low" onclick="selectOpt('inversion', this)">
+          <div class="opt-radio"></div>
+          <div class="opt-text">
+            <div class="opt-head">Premium</div>
+            <ul class="opt-features">
+              <li>Todo lo del plan anterior +</li>
+              <li>Revisión personalizada de CV, Cover Letter y LinkedIn</li>
+              <li>Estrategia de aplicaciones, entrevistas y negociación salarial</li>
+              <li>Certificaciones para fortalecer tu perfil profesional</li>
+            </ul>
+            <div class="opt-price">$249/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
+          </div>
+        </div>
+        <div class="opt" data-val="200-300 usd" data-track="low" onclick="selectOpt('inversion', this)">
           <div class="opt-radio"></div>
           <div class="opt-text">
             <div class="opt-head">VIP</div>
             <ul class="opt-features">
-              <li>Todo lo del plan Premium +</li>
-              <li>Revisión personalizada de documentos de aplicación (CV, Cover Letter y LinkedIn)</li>
-              <li>Sesión 1:1 con Jaime o Santiago para perfilamiento y estrategia de aplicación</li>
+              <li>Todo lo del plan anterior +</li>
+              <li>Sesión 1:1 con un Career Coach</li>
+              <li>Vacantes seleccionadas para tu perfil cada semana</li>
+              <li>Conexión con reclutadores contratando remoto</li>
               <li>AI aplicada a tu búsqueda y carrera profesional</li>
-              <li>Estrategia de aplicaciones, entrevistas y negociación salarial</li>
-              <li>Certificaciones para fortalecer tu perfil profesional</li>
             </ul>
             <div class="opt-price">$299/año <span class="opt-cancel">· Cancela cuando quieras</span></div>
           </div>
@@ -825,7 +807,7 @@
 
       <div class="nav-row">
         <button class="btn-back" onclick="prevStep(6)">← Atrás</button>
-        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Continuar →</button>
+        <button class="btn-primary" style="width:auto;margin-top:0" id="btnSubmit" onclick="submitForm()">Comenzar prueba gratis →</button>
       </div>
     </div>
 
@@ -1365,14 +1347,10 @@
       document.getElementById('lowNombre').textContent = nombre;
 
       const listo = answers.compromiso === 'Listo para tomar accion';
-      // Los valores vienen de data-val en el paso 6. Cambiaron el 5 sep 2026
-      // al pasar a freemium: antes eran rangos de inversión ('100-150 usd'),
-      // ahora son el plan directo, porque la persona ya no declara cuánto
-      // puede pagar — elige un plan con precio a la vista.
       const planMap = {
-        'Standard gratis': { nombre: 'Plan Standard' },
-        'Premium 199':     { nombre: 'Plan Premium'  },
-        'VIP 299':         { nombre: 'Plan VIP'      },
+        '100-150 usd': { nombre: 'Plan Standard' },
+        '150-200 usd': { nombre: 'Plan Premium'  },
+        '200-300 usd': { nombre: 'Plan VIP'      },
       };
       const plan = planMap[answers.inversion] || { nombre: '' };
       document.getElementById('lowPlanNombre').textContent = plan.nombre;
@@ -1384,12 +1362,12 @@
         intro.textContent = 'Te invitamos a conocer el programa por 7 días. Si no es para ti, cancelas.';
       }
 
-      // Todos van a /plans: ahí se elige el plan. Mandar a
+      // Todos van a /plans: ahí es donde se activa la prueba gratis. Mandar a
       // /about a quien ya llenó los 6 pasos lo obligaba a empezar de cero, y
       // esa página no permite iniciar el trial. El copy sí cambia según el
       // nivel de compromiso, el destino no.
       const btn = document.getElementById('lowPlanBtn');
-      btn.textContent = 'Ir a mi plan →';
+      btn.textContent = 'Comenzar prueba gratis →';
       btn.href = 'https://www.skool.com/newave/plans';
       btn.addEventListener('click', function() {
         if (window.clarity) clarity('event', listo ? 'click_unirme_ahora' : 'click_conocer_programa');

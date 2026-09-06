@@ -595,15 +595,8 @@ function processQueue() {
   const allProps = props.getProperties();
   const now = Date.now();
 
-  // Captación: para quien llenó el formulario y no llegó a Skool.
   const senders = {
     1: sendEmail1, 2: sendEmail2, 3: sendEmail3, 4: sendEmail4, 5: sendEmail5,
-  };
-
-  // Activación: para quien sí llegó a Skool. Ya no hay que convencerlo de
-  // entrar, sino de usar lo que tiene y de subir a Premium.
-  const sendersActivacion = {
-    2: sendAct3, 3: sendAct4, 4: sendAct5,
   };
 
   let enviados = 0;
@@ -630,44 +623,17 @@ function processQueue() {
 
     const row = buscarFilaPorCorreo(sheet, data.correo);
 
-    // Dos cadenas distintas a partir del correo 2, según si la persona llegó
-    // a Skool o no. El correo 1 es igual para todos.
-    //
-    //   NO dio click  → cadena de captación: que entre al plan gratis
-    //   SÍ dio click  → cadena de activación: que use lo que ya tiene y suba
-    //                   a Premium
-    //
-    // Quien ya pagó o entró al trial sale de las dos: no tiene sentido
-    // seguirle vendiendo lo que ya compró.
-    const yaEsCliente = row && isTrialOrPaid(sheet, row);
-    const llegoASkool = row && dioClickAlPlan(sheet, row);
+    // Email 1 always sends; 2-5 skip if the lead already started trial or paid
+    const skip = (data.emailNum !== 1) && row && isTrialOrPaid(sheet, row);
 
-    if (yaEsCliente && data.emailNum !== 1) {
-      props.deleteProperty(key);
-      continue;
-    }
-    if (!data.correo) {
-      props.deleteProperty(key);
-      continue;
-    }
-
-    // La cadena de activación reemplaza a la de captación para quien ya llegó
-    // a Skool. Mismo número de correo, contenido distinto.
-    const enviar = (data.emailNum !== 1 && llegoASkool)
-      ? sendersActivacion[data.emailNum]
-      : senders[data.emailNum];
-
-    if (!enviar) {
+    if (skip || !data.correo) {
       props.deleteProperty(key);
       continue;
     }
 
     try {
-      enviar(data.nombre, data.correo);
-      // Se anota qué cadena salió: sin esto no hay forma de saber después si
-      // alguien recibió el correo de captación o el de activación.
-      const etiqueta = (data.emailNum !== 1 && llegoASkool) ? 'activación ' : 'email ';
-      if (row) sheet.getRange(row, COL_ESTATUS).setValue('Correo enviado: ' + etiqueta + data.emailNum);
+      senders[data.emailNum](data.nombre, data.correo);
+      if (row) sheet.getRange(row, COL_ESTATUS).setValue('Correo enviado: email ' + data.emailNum);
       enviados++;
       props.deleteProperty(key);
     } catch (err) {
@@ -1047,20 +1013,6 @@ function isTrialOrPaid(sheet, rowNumber) {
   return estatus.includes('pago') || estatus.includes('trial');
 }
 
-// ¿Esta persona le dio click al plan y se fue a Skool?
-//
-// La columna M la llena registrarClickPlan() desde la página de gracias, sin
-// que nadie tenga que marcar nada a mano. Con el modelo freemium entra mucha
-// más gente de la que se puede marcar una por una, así que la cadena de
-// correos se bifurca con este dato en vez de con la marca manual de "trial".
-//
-// Ojo con lo que significa: el click NO prueba que se haya unido, solo que
-// llegó a Skool. Es la mejor señal automática que tenemos, no una certeza.
-function dioClickAlPlan(sheet, rowNumber) {
-  const click = sheet.getRange(rowNumber, COL_CLICK).getValue().toString().trim().toLowerCase();
-  return click === 'sí' || click === 'si';
-}
-
 // ─── EMAIL 1 — 2 minutos ──────────────────────────────────────────────────
 
 function sendEmail1(nombre, correo) {
@@ -1072,8 +1024,8 @@ function sendEmail1(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p style="margin:0 0 16px">Hola ${firstName},</p>
   <p style="margin:0 0 16px">Te escribe Santiago, cofundador de Newave Academy.</p>
-  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. Ya puedes entrar: adentro está la comunidad, las sesiones de Q&amp;A cada semana y el bot que audita tu CV y te dice qué está frenando tus aplicaciones.</p>
-  <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más.</p>
+  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
+  <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
   <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
   <p style="margin:0">Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
@@ -1093,11 +1045,11 @@ function sendEmail2(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>Ayer llenaste el formulario. Te dejo el acceso por si se te pasó.</p>
+  <p>Ayer llenaste el formulario. No quiero que se te pase.</p>
   <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
   <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
-  <p>Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
+  <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -1119,7 +1071,7 @@ function sendEmail3(nombre, correo) {
   <p>Uno de nuestros miembros llevaba alrededor de dos meses aplicando. Hace poco quedó en una posición de ADR en Samsara, una empresa de tech.</p>
   <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"De lo más valioso en mi proceso fue lograr una creación espectacular de mi currículum gracias a los videos y el acompañamiento. En el flujo de entrevistas llegué con el CCO de México y lo primero que me dijo fue: 'estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar, tengo muy claro todos tus logros'. Eso fue oro para mí."</p>
   <p>Fíjate en el detalle: no fue suerte. Fue tener un CV que comunica tus logros en el lenguaje correcto. Eso es lo que te enseñamos a construir.</p>
-  <p>Entra gratis aquí: <a href="${utmUrl3}">Newave Academy</a></p>
+  <p>Pruébalo gratis 7 días: <a href="${utmUrl3}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
@@ -1137,8 +1089,8 @@ function sendEmail4(nombre, correo) {
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
-  <p>No tienes que decidir hoy si Newave es para ti. Entra al plan gratis y compruébalo por tu cuenta.</p>
-  <p>Si no es lo tuyo, lo dejas y ya.</p>
+  <p>No tienes que decidir hoy si Newave es para ti. Solo entra y compruébalo.</p>
+  <p>7 días gratis. Acceso completo. Si no es lo tuyo, sales sin pagar.</p>
   <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
   <p>Nos vemos dentro.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
@@ -1160,82 +1112,10 @@ function sendEmail5(nombre, correo) {
   <p>Este es el último correo que te mando sobre esto.</p>
   <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
   <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
-  <p>Newave sigue abierto para ti. Lo único que tienes que hacer es entrar.</p>
+  <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
   <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
   <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
   <p>Tú decides.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
-</div>`;
-
-  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// CADENA DE ACTIVACIÓN — para quien ya llegó a Skool (columna M = "Sí")
-// ═══════════════════════════════════════════════════════════════════════════
-//
-// A esta persona no hay que convencerla de entrar: ya dio el paso. Lo que
-// falta es que use lo que tiene y que vea por qué Premium vale la pena.
-//
-// El orden es deliberado: primero se le pide algo fácil (presentarse), luego
-// se le muestra lo que le falta (auditoría de CV), y hasta el final se le
-// habla de precio. Vender en el primer correo a alguien que apenas entró es
-// la forma más rápida de perderlo.
-
-// ─── ACTIVACIÓN 2 — 24 h · presentarse y pasar el CV por el bot ───────────
-
-function sendAct3(nombre, correo) {
-  const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Dos cosas para empezar';
-  const url = SKOOL_URL + '?utm_source=email&utm_medium=activacion&utm_campaign=act3';
-
-  const html = `
-<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Ya estás dentro. Dos cosas que valen la pena hacer esta semana.</p>
-  <p>La primera: preséntate en la comunidad, así sabemos a qué te dedicas y qué buscas.</p>
-  <p>La segunda: pasa tu CV por el bot. Casi todos los que revisamos están escritos para el mercado local, y un reclutador de fuera busca otras cosas. El bot te dice cuáles te faltan.</p>
-  <p>Las dos están aquí: <a href="${url}">Newave Academy</a></p>
-  <p>Si te sale algo que no sabes cómo arreglar, escríbeme y te digo por dónde.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
-</div>`;
-
-  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
-}
-
-// ─── ACTIVACIÓN 3 — 3 días · caso de éxito + qué hay en Premium ───────────
-
-function sendAct4(nombre, correo) {
-  const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Cómo le hizo Rebeca';
-  const url = SKOOL_URL + '/plans?utm_source=email&utm_medium=activacion&utm_campaign=act4';
-
-  const html = `
-<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Rebeca entró igual que tú, sin saber bien qué esperar.</p>
-  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
-  <p>Ella hizo el programa completo: los módulos en orden, su CV revisado, y las dudas resueltas por chat conforme aplicaba. Eso es lo que hay en Premium.</p>
-  <p><a href="${url}">Ver los planes</a></p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
-</div>`;
-
-  GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
-}
-
-// ─── ACTIVACIÓN 4 — 7 días · cómo le fue la primera semana ────────────────
-
-function sendAct5(nombre, correo) {
-  const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = '¿Qué tal la primera semana?';
-  const url = SKOOL_URL + '/plans?utm_source=email&utm_medium=activacion&utm_campaign=act5';
-
-  const html = `
-<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Llevas una semana con acceso. ¿Qué tal te ha ido?</p>
-  <p>Te lo pregunto en serio: si algo no te está sirviendo o no encuentras lo que buscabas, contéstame este correo. Leo todos.</p>
-  <p>Y si ya viste que esto es para ti, el programa completo está en Premium: <a href="${url}">ver los planes</a>.</p>
   <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
 </div>`;
 
