@@ -1044,16 +1044,16 @@ function sendEmail2(nombre, correo) {
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hay algo que veo todo el tiempo.</p>
-  <p>Personas con buenos perfiles que llevan semanas aplicando y no reciben respuestas.</p>
-  <p>Entonces hacen lo lógico: aplican todavía más.</p>
-  <p>Pero ${firstName}, si algo no está funcionando, mandar otras 50 aplicaciones probablemente no lo va a arreglar.</p>
-  <p>A veces el problema es tu CV. A veces estás buscando los puestos equivocados. A veces estás buscando en los lugares equivocados.</p>
-  <p>Y muchas veces simplemente no estás comunicando bien lo que sabes hacer.</p>
-  <p>Antes de aplicar más, hay que entender qué está fallando.</p>
-  <p>Eso es gran parte de lo que hacemos en Newave.</p>
-  <p><a href="${utmUrl2}">Ver cómo funciona</a></p>
-  <p>Santiago</p>
+  <p style="margin:0 0 16px">Hay algo que veo todo el tiempo.</p>
+  <p style="margin:0 0 16px">Personas con buenos perfiles que llevan semanas aplicando y no reciben respuestas.</p>
+  <p style="margin:0 0 16px">Entonces hacen lo lógico: aplican todavía más.</p>
+  <p style="margin:0 0 16px">Pero ${firstName}, si algo no está funcionando, mandar otras 50 aplicaciones probablemente no lo va a arreglar.</p>
+  <p style="margin:0 0 16px">A veces el problema es tu CV. A veces estás buscando los puestos equivocados. A veces estás buscando en los lugares equivocados.</p>
+  <p style="margin:0 0 16px">Y muchas veces simplemente no estás comunicando bien lo que sabes hacer.</p>
+  <p style="margin:0 0 16px">Antes de aplicar más, hay que entender qué está fallando.</p>
+  <p style="margin:0 0 16px">Eso es gran parte de lo que hacemos en Newave.</p>
+  <p style="margin:0 0 16px"><a href="${utmUrl2}">Ver cómo funciona</a></p>
+  <p style="margin:0">Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1068,17 +1068,17 @@ function sendEmail3(nombre, correo) {
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Uno de nuestros miembros llevaba alrededor de dos meses buscando trabajo.</p>
-  <p>Terminó consiguiendo una posición de ADR en Samsara.</p>
-  <p>Pero hay una parte de su historia que me encanta.</p>
-  <p>Cuando llegó a una de sus entrevistas, el CCO de México le dijo:</p>
-  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar. Tengo muy claro todos tus logros."</p>
-  <p>Había trabajado su CV con la metodología y el acompañamiento de Newave.</p>
-  <p>Y ese es un error que veo muchísimo, ${firstName}.</p>
-  <p>Puedes tener 5, 10 o 15 años de experiencia, pero si una empresa tarda 20 segundos en ver tu CV y no entiende qué has logrado, esa experiencia sirve de poco.</p>
-  <p>No siempre necesitas más experiencia. A veces necesitas aprender a comunicar mejor la que ya tienes.</p>
-  <p><a href="${utmUrl3}">Entrar a Newave</a></p>
-  <p>Santiago</p>
+  <p style="margin:0 0 16px">Uno de nuestros miembros llevaba alrededor de dos meses buscando trabajo.</p>
+  <p style="margin:0 0 16px">Terminó consiguiendo una posición de ADR en Samsara.</p>
+  <p style="margin:0 0 16px">Pero hay una parte de su historia que me encanta.</p>
+  <p style="margin:0 0 16px">Cuando llegó a una de sus entrevistas, el CCO de México le dijo:</p>
+  <p style="margin:0 0 16px;border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar. Tengo muy claro todos tus logros."</p>
+  <p style="margin:0 0 16px">Había trabajado su CV con la metodología y el acompañamiento de Newave.</p>
+  <p style="margin:0 0 16px">Y ese es un error que veo muchísimo, ${firstName}.</p>
+  <p style="margin:0 0 16px">Puedes tener 5, 10 o 15 años de experiencia, pero si una empresa tarda 20 segundos en ver tu CV y no entiende qué has logrado, esa experiencia sirve de poco.</p>
+  <p style="margin:0 0 16px">No siempre necesitas más experiencia. A veces necesitas aprender a comunicar mejor la que ya tienes.</p>
+  <p style="margin:0 0 16px"><a href="${utmUrl3}">Entrar a Newave</a></p>
+  <p style="margin:0">Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1093,14 +1093,14 @@ function sendEmail4(nombre, correo) {
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Esta probablemente es una de las preguntas que más recibimos.</p>
-  <p>"¿Pero esto funciona para mi perfil?"</p>
-  <p>Hemos visto abogados, ingenieros, marketers, personas de ventas, finanzas, operaciones, hospitality y muchos otros perfiles buscando exactamente lo mismo: trabajar para una empresa internacional sin estar atados a una oficina.</p>
-  <p>El trabajo remoto no es una profesión. Es una forma de trabajar.</p>
-  <p>Lo importante, ${firstName}, es entender qué habilidades de tu experiencia pueden competir en ese mercado y aprender a comunicarlas correctamente.</p>
-  <p>Eso es lo que te ayudamos a hacer.</p>
-  <p><a href="${utmUrl4}">Probar Newave 7 días gratis</a></p>
-  <p>Santiago</p>
+  <p style="margin:0 0 16px">Esta probablemente es una de las preguntas que más recibimos.</p>
+  <p style="margin:0 0 16px">"¿Pero esto funciona para mi perfil?"</p>
+  <p style="margin:0 0 16px">Hemos visto abogados, ingenieros, marketers, personas de ventas, finanzas, operaciones, hospitality y muchos otros perfiles buscando exactamente lo mismo: trabajar para una empresa internacional sin estar atados a una oficina.</p>
+  <p style="margin:0 0 16px">El trabajo remoto no es una profesión. Es una forma de trabajar.</p>
+  <p style="margin:0 0 16px">Lo importante, ${firstName}, es entender qué habilidades de tu experiencia pueden competir en ese mercado y aprender a comunicarlas correctamente.</p>
+  <p style="margin:0 0 16px">Eso es lo que te ayudamos a hacer.</p>
+  <p style="margin:0 0 16px"><a href="${utmUrl4}">Probar Newave 7 días gratis</a></p>
+  <p style="margin:0">Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1115,18 +1115,18 @@ function sendEmail5(nombre, correo) {
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Este es el último correo que te mando sobre esto.</p>
-  <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación.</p>
+  <p style="margin:0 0 16px">Hola ${firstName},</p>
+  <p style="margin:0 0 16px">Este es el último correo que te mando sobre esto.</p>
+  <p style="margin:0 0 16px">Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación.</p>
   <p style="margin:0 0 16px">Trabajar remoto.<br>Ganar en dólares.<br>Tener más libertad.</p>
-  <p>Esa razón sigue ahí.</p>
-  <p>La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
-  <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
-  <p><a href="${utmUrl5}">Entrar a Newave</a></p>
-  <p>Si decides que no es tu momento, lo entiendo.</p>
-  <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
-  <p>Tú decides.</p>
-  <p>Santiago<br><strong>Co-Founder, NEWAVE</strong></p>
+  <p style="margin:0 0 16px">Esa razón sigue ahí.</p>
+  <p style="margin:0 0 16px">La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
+  <p style="margin:0 0 16px">Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
+  <p style="margin:0 0 16px"><a href="${utmUrl5}">Entrar a Newave</a></p>
+  <p style="margin:0 0 16px">Si decides que no es tu momento, lo entiendo.</p>
+  <p style="margin:0 0 16px">Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
+  <p style="margin:0 0 16px">Tú decides.</p>
+  <p style="margin:0">Santiago<br><strong>Co-Founder, NEWAVE</strong></p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
