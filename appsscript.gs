@@ -1017,18 +1017,19 @@ function isTrialOrPaid(sheet, rowNumber) {
 
 function sendEmail1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Llenaste nuestro formulario. Te queremos en Newave Academy.';
+  const subject = 'Llenaste nuestro formulario. Te queremos en Newave.';
   const utmUrl1 = SKOOL_URL + '?utm_source=email&utm_medium=registro&utm_campaign=email1';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p style="margin:0 0 16px">Hola ${firstName},</p>
-  <p style="margin:0 0 16px">Te escribe Santiago, cofundador de Newave Academy.</p>
-  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque te interesa conseguir un trabajo remoto. No sé qué te frenó para unirte, pero te invitamos a probar Newave gratis durante 7 días, sin pagar nada si no te convence.</p>
-  <p style="margin:0 0 16px">Funciona para cualquier perfil profesional, no solo tech: marketing, ventas, diseño, finanzas, operaciones, hospitalidad y más. Dentro tienes el curso completo, plantillas de CV/LinkedIn, comunidad privada, herramientas de AI y bolsa de trabajo con vacantes 100% remotas.</p>
-  <p style="margin:0 0 16px">Entra aquí: <a href="${utmUrl1}">Newave Academy</a></p>
+  <p style="margin:0 0 16px">Soy Santiago, cofundador de Newave.</p>
+  <p style="margin:0 0 16px">Vimos que llenaste nuestro formulario porque quieres conseguir un trabajo remoto.</p>
+  <p style="margin:0 0 16px">No sé qué te frenó para entrar, pero quiero invitarte a probar Newave durante 7 días gratis.</p>
+  <p style="margin:0 0 16px">Dentro tienes todo lo que necesitas para conseguir tu trabajo remoto: nuestra metodología, herramientas, comunidad, acompañamiento y vacantes remotas.</p>
+  <p style="margin:0 0 16px"><a href="${utmUrl1}">Entrar a Newave</a></p>
   <p style="margin:0 0 16px">Nos vemos dentro.</p>
-  <p style="margin:0">Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+  <p style="margin:0">Santiago<br><strong>Co-Founder, NEWAVE</strong></p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1038,20 +1039,21 @@ function sendEmail1(nombre, correo) {
 
 function sendEmail2(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Te estamos esperando';
+  const subject = 'Mandar más CVs no siempre funciona';
   const utmUrl2 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email2';
-  const utmComunidad = 'https://www.newaveacademy.com/?utm_source=email&utm_medium=followup&utm_campaign=email2#comunidad';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Ayer llenaste el formulario. No quiero que se te pase.</p>
-  <p>Las personas que están dentro hoy tenían las mismas dudas que tú. La diferencia es que entraron.</p>
-  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Mis mejores entrevistas y procesos fueron gracias a que me uní a esta comunidad. Sí funciona."<br>— Rebeca Cruz, consiguió oferta en Stripe</p>
-  <p>Si quieres ver más historias: <a href="${utmComunidad}">Historias de egresados</a></p>
-  <p>7 días gratis. Entra aquí: <a href="${utmUrl2}">Newave Academy</a></p>
-  <p>Nos vemos dentro.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+  <p>Hay algo que veo todo el tiempo.</p>
+  <p>Personas con buenos perfiles que llevan semanas aplicando y no reciben respuestas.</p>
+  <p>Entonces hacen lo lógico: aplican todavía más.</p>
+  <p>Pero ${firstName}, si algo no está funcionando, mandar otras 50 aplicaciones probablemente no lo va a arreglar.</p>
+  <p>A veces el problema es tu CV. A veces estás buscando los puestos equivocados. A veces estás buscando en los lugares equivocados.</p>
+  <p>Y muchas veces simplemente no estás comunicando bien lo que sabes hacer.</p>
+  <p>Antes de aplicar más, hay que entender qué está fallando.</p>
+  <p>Eso es gran parte de lo que hacemos en Newave.</p>
+  <p><a href="${utmUrl2}">Ver cómo funciona</a></p>
+  <p>Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1061,19 +1063,22 @@ function sendEmail2(nombre, correo) {
 
 function sendEmail3(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Quedó en una empresa de tech en 2 meses';
+  const subject = 'Lo primero que le dijeron fue sobre su CV';
   const utmUrl3 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email3';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>Hace unos días llenaste el formulario. Quiero contarte algo que pasó dentro de Newave.</p>
-  <p>Uno de nuestros miembros llevaba alrededor de dos meses aplicando. Hace poco quedó en una posición de ADR en Samsara, una empresa de tech.</p>
-  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"De lo más valioso en mi proceso fue lograr una creación espectacular de mi currículum gracias a los videos y el acompañamiento. En el flujo de entrevistas llegué con el CCO de México y lo primero que me dijo fue: 'estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar, tengo muy claro todos tus logros'. Eso fue oro para mí."</p>
-  <p>Fíjate en el detalle: no fue suerte. Fue tener un CV que comunica tus logros en el lenguaje correcto. Eso es lo que te enseñamos a construir.</p>
-  <p>Pruébalo gratis 7 días: <a href="${utmUrl3}">Newave Academy</a></p>
-  <p>Nos vemos dentro.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+  <p>Uno de nuestros miembros llevaba alrededor de dos meses buscando trabajo.</p>
+  <p>Terminó consiguiendo una posición de ADR en Samsara.</p>
+  <p>Pero hay una parte de su historia que me encanta.</p>
+  <p>Cuando llegó a una de sus entrevistas, el CCO de México le dijo:</p>
+  <p style="border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar. Tengo muy claro todos tus logros."</p>
+  <p>Había trabajado su CV con la metodología y el acompañamiento de Newave.</p>
+  <p>Y ese es un error que veo muchísimo, ${firstName}.</p>
+  <p>Puedes tener 5, 10 o 15 años de experiencia, pero si una empresa tarda 20 segundos en ver tu CV y no entiende qué has logrado, esa experiencia sirve de poco.</p>
+  <p>No siempre necesitas más experiencia. A veces necesitas aprender a comunicar mejor la que ya tienes.</p>
+  <p><a href="${utmUrl3}">Entrar a Newave</a></p>
+  <p>Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1083,17 +1088,19 @@ function sendEmail3(nombre, correo) {
 
 function sendEmail4(nombre, correo) {
   const firstName = nombre.split(' ')[0] || 'hola';
-  const subject = 'Solo necesitas una semana';
+  const subject = '¿Mi perfil aplica?';
   const utmUrl4 = SKOOL_URL + '?utm_source=email&utm_medium=followup&utm_campaign=email4';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p>Hola ${firstName},</p>
-  <p>No tienes que decidir hoy si Newave es para ti. Solo entra y compruébalo.</p>
-  <p>7 días gratis. Acceso completo. Si no es lo tuyo, sales sin pagar.</p>
-  <p>Entra aquí: <a href="${utmUrl4}">Newave Academy</a></p>
-  <p>Nos vemos dentro.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+  <p>Esta probablemente es una de las preguntas que más recibimos.</p>
+  <p>"¿Pero esto funciona para mi perfil?"</p>
+  <p>Hemos visto abogados, ingenieros, marketers, personas de ventas, finanzas, operaciones, hospitality y muchos otros perfiles buscando exactamente lo mismo: trabajar para una empresa internacional sin estar atados a una oficina.</p>
+  <p>El trabajo remoto no es una profesión. Es una forma de trabajar.</p>
+  <p>Lo importante, ${firstName}, es entender qué habilidades de tu experiencia pueden competir en ese mercado y aprender a comunicarlas correctamente.</p>
+  <p>Eso es lo que te ayudamos a hacer.</p>
+  <p><a href="${utmUrl4}">Probar Newave 7 días gratis</a></p>
+  <p>Santiago</p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1110,13 +1117,16 @@ function sendEmail5(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p>Hola ${firstName},</p>
   <p>Este es el último correo que te mando sobre esto.</p>
-  <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación. Trabajar remoto. Ganar en dólares. Tener más libertad.</p>
-  <p>Esa razón sigue ahí. La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
+  <p>Hace días diste un paso: llenaste el formulario porque algo te dijo que querías cambiar tu situación.</p>
+  <p style="margin:0 0 16px">Trabajar remoto.<br>Ganar en dólares.<br>Tener más libertad.</p>
+  <p>Esa razón sigue ahí.</p>
+  <p>La pregunta es si vas a hacer algo al respecto o lo vas a dejar pasar otra vez.</p>
   <p>Newave sigue abierto para ti. 7 días gratis, sin compromiso. Lo único que tienes que hacer es entrar.</p>
-  <p>Entra aquí: <a href="${utmUrl5}">Newave Academy</a></p>
-  <p>Si decides que no es tu momento, lo entiendo. Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
+  <p><a href="${utmUrl5}">Entrar a Newave</a></p>
+  <p>Si decides que no es tu momento, lo entiendo.</p>
+  <p>Pero si tu meta sigue siendo trabajar remoto para una empresa internacional, este es tu mejor camino.</p>
   <p>Tú decides.</p>
-  <p>Santiago<br><strong>Co-Founder</strong><br><em>NEWAVE</em></p>
+  <p>Santiago<br><strong>Co-Founder, NEWAVE</strong></p>
 </div>`;
 
   GmailApp.sendEmail(correo, subject, '', { name: FROM_NAME, replyTo: FROM_EMAIL, htmlBody: html });
@@ -1126,17 +1136,26 @@ function sendEmail5(nombre, correo) {
 
 function sendOnboarding1(nombre, correo) {
   const firstName = nombre.split(' ')[0] || '';
-  const subject = 'Te escribí por Newave';
+  // El nombre va en el asunto, pero hay registros con iniciales o basura en
+  // ese campo. Sin nombre el asunto queda 'Ya estás dentro' a secas, que se
+  // lee bien igual.
+  const subject = firstName ? ('Ya estás dentro, ' + firstName) : 'Ya estás dentro';
+  const urlModulo = SKOOL_URL + '/classroom?utm_source=email&utm_medium=onboarding&utm_campaign=onb1';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
-  <p style="margin:0 0 16px">Hola${firstName ? ' ' + firstName : ''},</p>
-  <p style="margin:0 0 16px">Ya estás dentro de Newave. Qué bueno tenerte por acá.</p>
-  <p style="margin:0 0 16px">Te mandé un mensaje directo en la plataforma. Contéstame ahí y te ayudo con lo que necesites.</p>
-  <p style="margin:0 0 16px">Mientras tanto, preséntate en el post de bienvenida. Así te conocemos y entendemos qué estás buscando.</p>
-  <p style="margin:0 0 16px">Tres líneas bastan. De dónde eres, a qué te dedicas, y qué estás buscando.</p>
-  <p style="margin:0 0 16px">Preséntate aquí: <a href="${POST_BIENVENIDA_URL}">Post de bienvenida</a></p>
-  <p style="margin:0 0 16px">Presentarte es el primer paso. Ahí empieza el proceso.</p>
+  <p style="margin:0 0 16px">${firstName ? firstName + ', ya' : 'Ya'} estás dentro.</p>
+  <p style="margin:0 0 16px">Ahora sí empieza el proceso.</p>
+  <p style="margin:0 0 16px">Te mandé un mensaje directo dentro de Newave. Respóndeme por ahí para saber que ya pudiste entrar.</p>
+  <p style="margin:0 0 16px">Después haz dos cosas:</p>
+  <p style="margin:0 0 8px"><strong>1. Preséntate en el post de bienvenida.</strong></p>
+  <p style="margin:0 0 16px">Cuéntanos de dónde eres, a qué te dedicas y qué quieres conseguir con un trabajo remoto.</p>
+  <p style="margin:0 0 16px"><a href="${POST_BIENVENIDA_URL}">Presentarme</a></p>
+  <p style="margin:0 0 8px"><strong>2. Empieza hoy el Módulo 1.</strong></p>
+  <p style="margin:0 0 16px">Es muy importante que empieces. No lo dejes para después porque probablemente no regreses.</p>
+  <p style="margin:0 0 16px"><a href="${urlModulo}">Ir al Módulo 1</a></p>
+  <p style="margin:0 0 16px">Todo lo que necesitas para conseguir tu trabajo remoto está dentro de Newave. Solo tienes que seguir el curso y aplicar lo que vas aprendiendo.</p>
+  <p style="margin:0 0 16px">Nos vemos dentro.</p>
   <p style="margin:0">Jaime</p>
 </div>`;
 
