@@ -1048,7 +1048,7 @@ function sendEmail2(nombre, correo) {
   <p style="margin:0 0 16px">Personas con buenos perfiles que llevan semanas aplicando y no reciben respuestas.</p>
   <p style="margin:0 0 16px">Entonces hacen lo lógico: aplican todavía más.</p>
   <p style="margin:0 0 16px">Pero ${firstName}, si algo no está funcionando, mandar otras 50 aplicaciones probablemente no lo va a arreglar.</p>
-  <p style="margin:0 0 16px">A veces el problema es tu CV. A veces estás buscando los puestos equivocados. A veces estás buscando en los lugares equivocados.</p>
+  <p style="margin:0 0 16px">A veces el problema es tu CV.<br>A veces estás buscando los puestos equivocados.<br>A veces estás buscando en los lugares equivocados.</p>
   <p style="margin:0 0 16px">Y muchas veces simplemente no estás comunicando bien lo que sabes hacer.</p>
   <p style="margin:0 0 16px">Antes de aplicar más, hay que entender qué está fallando.</p>
   <p style="margin:0 0 16px">Eso es gran parte de lo que hacemos en Newave.</p>
@@ -1075,7 +1075,8 @@ function sendEmail3(nombre, correo) {
   <p style="margin:0 0 16px;border-left:2px solid #d0d0d0;padding-left:14px;color:#555555;">"Estoy viendo tu currículum y definitivamente tienes una gran habilidad de comunicar. Tengo muy claro todos tus logros."</p>
   <p style="margin:0 0 16px">Había trabajado su CV con la metodología y el acompañamiento de Newave.</p>
   <p style="margin:0 0 16px">Y ese es un error que veo muchísimo, ${firstName}.</p>
-  <p style="margin:0 0 16px">Puedes tener 5, 10 o 15 años de experiencia, pero si una empresa tarda 20 segundos en ver tu CV y no entiende qué has logrado, esa experiencia sirve de poco.</p>
+  <p style="margin:0 0 16px">Puedes tener 5, 10 o 15 años de experiencia.</p>
+  <p style="margin:0 0 16px">Pero si una empresa tarda 20 segundos en ver tu CV y no entiende qué has logrado, esa experiencia sirve de poco.</p>
   <p style="margin:0 0 16px">No siempre necesitas más experiencia. A veces necesitas aprender a comunicar mejor la que ya tienes.</p>
   <p style="margin:0 0 16px"><a href="${utmUrl3}">Entrar a Newave</a></p>
   <p style="margin:0">Santiago</p>
@@ -1095,7 +1096,8 @@ function sendEmail4(nombre, correo) {
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
   <p style="margin:0 0 16px">Esta probablemente es una de las preguntas que más recibimos.</p>
   <p style="margin:0 0 16px">"¿Pero esto funciona para mi perfil?"</p>
-  <p style="margin:0 0 16px">Hemos visto abogados, ingenieros, marketers, personas de ventas, finanzas, operaciones, hospitality y muchos otros perfiles buscando exactamente lo mismo: trabajar para una empresa internacional sin estar atados a una oficina.</p>
+  <p style="margin:0 0 16px">Hemos visto abogados, ingenieros, marketers, gente de ventas, finanzas, operaciones y hospitality.</p>
+  <p style="margin:0 0 16px">Todos buscando lo mismo: trabajar para una empresa internacional sin estar atados a una oficina.</p>
   <p style="margin:0 0 16px">El trabajo remoto no es una profesión. Es una forma de trabajar.</p>
   <p style="margin:0 0 16px">Lo importante, ${firstName}, es entender qué habilidades de tu experiencia pueden competir en ese mercado y aprender a comunicarlas correctamente.</p>
   <p style="margin:0 0 16px">Eso es lo que te ayudamos a hacer.</p>
