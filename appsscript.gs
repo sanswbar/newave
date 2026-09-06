@@ -1140,7 +1140,11 @@ function sendOnboarding1(nombre, correo) {
   // ese campo. Sin nombre el asunto queda 'Ya estás dentro' a secas, que se
   // lee bien igual.
   const subject = firstName ? ('Ya estás dentro, ' + firstName) : 'Ya estás dentro';
-  const urlModulo = SKOOL_URL + '/classroom?utm_source=email&utm_medium=onboarding&utm_campaign=onb1';
+  // Link directo al Módulo 1, no al classroom completo: un click menos entre
+  // el correo y empezar. El `md=` es el módulo dentro del curso, así que el
+  // UTM va con & y no con ? — la URL ya trae query string.
+  const urlModulo = 'https://www.skool.com/newave/classroom/ec6bce91?md=bcb08855563a4dc6bf4205c7c59e31b8'
+    + '&utm_source=email&utm_medium=onboarding&utm_campaign=onb1';
 
   const html = `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#222222;">
